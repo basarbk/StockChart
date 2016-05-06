@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.bafoly.lib.stockcharts.model.AndroidCanvas;
 import com.bafoly.lib.stockcharts.model.BaseModel;
 import com.bafoly.lib.stockcharts.model.ChartData;
 import com.bafoly.lib.stockcharts.model.ChartProperties;
@@ -25,6 +26,7 @@ public class ChartView extends View {
 
     ChartData chartData;
 
+    AndroidCanvas androidCanvas;
 
 
     public ChartView(Context context) {
@@ -62,18 +64,25 @@ public class ChartView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        if(androidCanvas==null){
+            androidCanvas = new AndroidCanvas(canvas);
+        }
+
+        androidCanvas.setCanvas(canvas);
+
         if(main!=null){
-            main.getChartData().calculatePositionReferences(canvas);
-            main.draw(canvas);
+            main.getChartData().calculatePositionReferences(androidCanvas);
+            main.draw(androidCanvas);
 
 
 
         } else if (chartData!=null){
-            chartData.calculatePositionReferences(canvas);
-            chartData.draw(canvas);
+            chartData.calculatePositionReferences(androidCanvas);
+            chartData.draw(androidCanvas);
         } else {
             // empty
         }
+
 
 
         // measurements

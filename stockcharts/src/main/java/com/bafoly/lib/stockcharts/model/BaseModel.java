@@ -1,17 +1,12 @@
 package com.bafoly.lib.stockcharts.model;
 
-import android.graphics.Canvas;
-
-import com.bafoly.lib.stockcharts.draw.DrawLine;
-import com.bafoly.lib.stockcharts.draw.DrawStrategy;
-
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by basarb on 5/3/2016.
  */
-public class BaseModel implements Draw{
+public class BaseModel implements Draw {
 
     private String name;
 
@@ -46,7 +41,7 @@ public class BaseModel implements Draw{
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(CanvasAdapter canvas) {
         chartData.draw(canvas);
     }
 }

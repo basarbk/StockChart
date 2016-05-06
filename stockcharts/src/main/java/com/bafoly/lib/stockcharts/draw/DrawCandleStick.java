@@ -1,26 +1,27 @@
 package com.bafoly.lib.stockcharts.draw;
 
-import android.graphics.Canvas;
 import android.util.Log;
 
+import com.bafoly.lib.stockcharts.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.model.ChartData;
 import com.bafoly.lib.stockcharts.model.ChartProperties;
 import com.bafoly.lib.stockcharts.model.Draw;
-import com.bafoly.lib.stockcharts.model.axis.Axis;
+import com.bafoly.lib.stockcharts.model.PaintAdapter;
 import com.bafoly.lib.stockcharts.model.QuadrupleData;
-import com.bafoly.lib.stockcharts.model.BaseModel;
+import com.bafoly.lib.stockcharts.model.axis.Axis;
 
 import java.util.List;
 
 /**
  * Created by basarb on 5/5/2016.
  */
-public class DrawCandleStick implements DrawStrategy {
+public class DrawCandleStick extends DrawStrategy {
 
     private static final String TAG = "StockChart-CandleStick";
 
     @Override
-    public void draw(Canvas canvas, Draw drawableContent) {
+    public void draw(CanvasAdapter canvasAdapter, Draw drawableContent) {
+
 
         ChartProperties properties = ((ChartData)drawableContent).getChartProperties();
         Axis<? extends Number> axis = ((ChartData)drawableContent).getyAxis();
@@ -44,15 +45,15 @@ public class DrawCandleStick implements DrawStrategy {
             float yClose = (float)(axis.getMax().doubleValue()-close)*(properties.multiplierY);
             float x = (float)(i+1)*properties.multiplierX;
 
-            canvas.drawLine(x, yHigh, x, yLow, properties.getFramePaint());
+            canvasAdapter.drawLine(x, yHigh, x, yLow, properties.getPaint(PaintAdapter.FRAME_COLOR));
             if(open>close){
-                canvas.drawRect(x-barWidth, yOpen, x+barWidth, yClose, properties.getLowPaint());
-                canvas.drawRect(x-barWidth, yOpen, x+barWidth, yClose, properties.getFramePaint());
+                canvasAdapter.drawRect(x-barWidth, yOpen, x+barWidth, yClose, properties.getPaint(PaintAdapter.LOW_COLOR));
+                canvasAdapter.drawRect(x-barWidth, yOpen, x+barWidth, yClose, properties.getPaint(PaintAdapter.FRAME_COLOR));
             } else if (open<close){
-                canvas.drawRect(x-barWidth, yClose, x+barWidth, yOpen, properties.getHighPaint());
-                canvas.drawRect(x-barWidth, yClose, x+barWidth, yOpen, properties.getFramePaint());
+                canvasAdapter.drawRect(x-barWidth, yClose, x+barWidth, yOpen, properties.getPaint(PaintAdapter.HIGH_COLOR));
+                canvasAdapter.drawRect(x-barWidth, yClose, x+barWidth, yOpen, properties.getPaint(PaintAdapter.FRAME_COLOR));
             } else {
-                canvas.drawLine(x-barWidth, yClose, x+barWidth, yOpen, properties.getFramePaint());
+                canvasAdapter.drawLine(x-barWidth, yClose, x+barWidth, yOpen, properties.getPaint(PaintAdapter.FRAME_COLOR));
             }
 
         }

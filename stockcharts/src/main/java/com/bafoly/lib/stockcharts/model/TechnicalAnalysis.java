@@ -7,7 +7,7 @@ import com.bafoly.lib.stockcharts.draw.DrawStrategy;
 /**
  * Created by basarb on 5/6/2016.
  */
-public abstract class TechnicalAnalysis implements Draw{
+public abstract class TechnicalAnalysis implements Draw {
 
     private DrawStrategy drawStrategy;
 
@@ -16,7 +16,7 @@ public abstract class TechnicalAnalysis implements Draw{
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        drawStrategy.draw(canvas, this);
+    public void draw(CanvasAdapter canvasAdapter) {
+        drawStrategy.draw(canvasAdapter, this);
     }
 }

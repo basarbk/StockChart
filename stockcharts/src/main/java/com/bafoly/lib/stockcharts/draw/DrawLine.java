@@ -1,28 +1,28 @@
 package com.bafoly.lib.stockcharts.draw;
 
-import android.graphics.Canvas;
 import android.graphics.Path;
 import android.util.Log;
 
+import com.bafoly.lib.stockcharts.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.model.ChartData;
 import com.bafoly.lib.stockcharts.model.ChartProperties;
 import com.bafoly.lib.stockcharts.model.Draw;
-import com.bafoly.lib.stockcharts.model.axis.Axis;
+import com.bafoly.lib.stockcharts.model.PaintAdapter;
 import com.bafoly.lib.stockcharts.model.SingleData;
-import com.bafoly.lib.stockcharts.model.BaseModel;
+import com.bafoly.lib.stockcharts.model.axis.Axis;
 
 import java.util.List;
 
 /**
  * Created by basarb on 5/3/2016.
  */
-public class DrawLine implements DrawStrategy {
+public class DrawLine extends DrawStrategy {
 
     private static final String TAG = "StockChart-DrawLine";
     Path path;
 
     @Override
-    public void draw(Canvas canvas, Draw drawableContent) {
+    public void draw(CanvasAdapter canvasAdapter, Draw drawableContent) {
         Log.d(TAG, "drawing the content");
         if(path==null)
             path = new Path();
@@ -49,7 +49,7 @@ public class DrawLine implements DrawStrategy {
             }
         }
 
-        canvas.drawPath(path, properties.getLinePaint());
+        canvasAdapter.drawPath(path, properties.getPaint(PaintAdapter.LINE_COLOR));
 
 
     }

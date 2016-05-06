@@ -1,6 +1,7 @@
 package com.bafoly.lib.stockcharts.model;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.bafoly.lib.stockcharts.draw.DrawLine;
 import com.bafoly.lib.stockcharts.draw.DrawStrategy;
@@ -16,7 +17,9 @@ import java.util.List;
  * Axis X can be String, Date or maybe an Integer
  * Axis Y's type is Number
  */
-public class ChartData<X, Y extends Number> implements Draw{
+public class ChartData<X, Y extends Number> implements Draw {
+
+    private static final String TAG = "StockChart-ChartData";
 
     private final Axis<X> xAxis;
     private final Axis<? extends Number> yAxis;
@@ -26,7 +29,7 @@ public class ChartData<X, Y extends Number> implements Draw{
     private ChartProperties chartProperties;
 
     // this part is related to strategy pattern. we may set this to OHLC drawer etc
-    private DrawStrategy drawStrategy = new DrawLine();
+    private DrawStrategy drawStrategy;
 
     public ChartData(Axis xAxis, Axis<? extends Number> yAxis) {
         this.xAxis = xAxis;
@@ -67,12 +70,17 @@ public class ChartData<X, Y extends Number> implements Draw{
     }
 
     @Override
-    public void draw(Canvas canvas){
-        this.drawStrategy.draw(canvas, this);
+    public void draw(CanvasAdapter canvasAdapter){
+        if(this.drawStrategy==null){
+            Log.d(TAG,"The draw strategy is empty.. set a valid strategy");
+            return;
+        }
+        this.drawStrategy.draw(canvasAdapter, this);
     }
 
-    public void calculatePositionReferences(Canvas canvas){
+    public void calculatePositionReferences(CanvasAdapter canvasAdapter){
         this.chartProperties.calculateMaxMin(this);
-        this.chartProperties.calculateXYgaps(canvas, getyAxis());
+        this.chartProperties.calculateXYgaps(canvasAdapter, getyAxis());
     }
+
 }

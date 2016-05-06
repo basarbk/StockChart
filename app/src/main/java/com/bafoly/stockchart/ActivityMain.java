@@ -1,22 +1,20 @@
 package com.bafoly.stockchart;
 
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.bafoly.lib.stockcharts.draw.DrawOHLC;
-import com.bafoly.lib.stockcharts.model.ChartProperties;
 import com.bafoly.lib.stockcharts.ChartView;
-import com.bafoly.lib.stockcharts.model.ChartData;
-import com.bafoly.lib.stockcharts.model.axis.NumberAxis;
-import com.bafoly.lib.stockcharts.model.SingleData;
-import com.bafoly.lib.stockcharts.model.QuadrupleData;
-import com.bafoly.lib.stockcharts.model.axis.CategoryAxis;
-import com.bafoly.lib.stockcharts.model.Instrument;
 import com.bafoly.lib.stockcharts.draw.DrawCandleStick;
 import com.bafoly.lib.stockcharts.draw.DrawLine;
+import com.bafoly.lib.stockcharts.model.AndroidPainter;
+import com.bafoly.lib.stockcharts.model.ChartData;
+import com.bafoly.lib.stockcharts.model.ChartProperties;
+import com.bafoly.lib.stockcharts.model.QuadrupleData;
+import com.bafoly.lib.stockcharts.model.SingleData;
+import com.bafoly.lib.stockcharts.model.axis.CategoryAxis;
+import com.bafoly.lib.stockcharts.model.axis.NumberAxis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,17 +35,13 @@ public class ActivityMain extends AppCompatActivity {
 
         chartData = new ChartData<>(new CategoryAxis(null), new NumberAxis(null));
         chartData.setData(getSingleData());
+        chartData.setDrawStrategy(new DrawLine());
 
-
-        final Instrument instrument = new Instrument();
-        instrument.setChartData(chartData);
-        ChartProperties chartProperties = new ChartProperties();
-        chartProperties.setLineColor(Color.RED);
-//        instrument.setChartProperties(chartProperties);
+        ChartProperties chartProperties = new ChartProperties(new AndroidPainter());
 
         chartData.setChartProperties(chartProperties);
 
-        chartView.draw(instrument);
+        chartView.draw(chartData);
         chartView.invalidate();
 
 
