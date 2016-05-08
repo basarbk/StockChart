@@ -7,9 +7,23 @@ import com.bafoly.lib.stockcharts.model.axis.Axis;
  */
 public class ChartProperties {
 
-    private int xBegin;
+    // this must be less or equal to the length of the available data set
+    private int visibleDataCount;
 
-    private int xCurrent;
+    // we shouldn't be displaying less than this much entity
+    private int minimumVisibleData = 20;
+
+    private int visibleXbegin;
+
+    private int visibleXend;
+
+    int paddingTop;
+    int paddingBottom;
+    int paddingLeft;
+    int paddingRight;
+
+    private int chartWidth;
+    private int chartHeight;
 
     private int dataCount;
 
@@ -17,10 +31,6 @@ public class ChartProperties {
 
     private boolean drawX = false;
 
-    int paddingTop;
-    int paddingBottom;
-    int paddingLeft;
-    int paddingRight;
 
     PaintAdapter<?> paintAdapter;
 
@@ -32,39 +42,6 @@ public class ChartProperties {
         this.paintAdapter = paintAdapter;
     }
 
-    public int getxBegin() {
-        return xBegin;
-    }
-
-    public void setxBegin(int xBegin) {
-        this.xBegin = xBegin;
-    }
-
-    public int getxCurrent() {
-        return xCurrent;
-    }
-
-    public void setxCurrent(int xCurrent) {
-        this.xCurrent = xCurrent;
-    }
-
-    public float[] getReferenceValues() {
-        return referenceValues;
-    }
-
-    public void setReferenceValues(float[] referenceValues) {
-        this.referenceValues = referenceValues;
-    }
-
-    public boolean isDrawX() {
-        return drawX;
-    }
-
-    public void setDrawX(boolean drawX) {
-        this.drawX = drawX;
-    }
-
-
 
     public <T extends SingleData> void calculateMaxMin(ChartData chartData){
         dataCount = chartData.getData().size();
@@ -74,10 +51,13 @@ public class ChartProperties {
         }
     }
 
+    public void calculateMargins(ChartData chartData){
+    }
+
 
     public void calculateXYgaps(CanvasAdapter canvasAdapter, Axis<? extends Number> axis){
-        multiplierX = canvasAdapter.getWidth()/(float)(dataCount+1);
-        multiplierY = (float)(canvasAdapter.getHeight()/(axis.getDiff().doubleValue()));
+        multiplierX = canvasAdapter.getWidth()/(float)(dataCount+1); // - padding left, right
+        multiplierY = (float)(canvasAdapter.getHeight()/(axis.getDiff().doubleValue())); // - pedding bottom top
     }
 
 

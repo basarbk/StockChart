@@ -1,5 +1,6 @@
 package com.bafoly.lib.stockcharts.model.axis;
 
+import com.bafoly.lib.stockcharts.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.model.ChartData;
 
 /**
@@ -13,6 +14,14 @@ public abstract class Axis<T> {
     protected T max = null;
 
     protected T min = null;
+
+    // orientation either vertical or horizontal
+    boolean isVertical = false;
+
+    // major and minor ticks
+
+    float minSpace;
+
 
     public Axis() {
     }
@@ -37,4 +46,9 @@ public abstract class Axis<T> {
 
     public abstract String getTextValue(T value);
 
+    //public abstract void calculateMargins();
+
+    public abstract void draw(CanvasAdapter canvasAdapter);
+
+    public abstract void draw(CanvasAdapter canvasAdapter, T value);
 }

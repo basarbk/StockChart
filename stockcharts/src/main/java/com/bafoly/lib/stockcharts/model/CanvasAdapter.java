@@ -17,6 +17,8 @@ public abstract class CanvasAdapter<X, Y> {
 
     public abstract void drawPath(Object object, Y paint);
 
+    public abstract void drawPath(Y paint);
+
     public abstract int getWidth();
 
     public abstract int getHeight();
@@ -28,4 +30,10 @@ public abstract class CanvasAdapter<X, Y> {
     public void setCanvas(X canvas) {
         this.canvas = canvas;
     }
+
+    public abstract void createPath();
+
+    public abstract <T extends Number> void moveTo(T t1, T t2);
+
+    public abstract <T extends Number> void lineTo(T t1, T t2);
 }

@@ -12,8 +12,8 @@ import com.bafoly.lib.stockcharts.model.PaintAdapter;
  * Draw strategy can be implemented for different shapes
  * Line, Candle Stick, Histogram etc
  */
-public abstract class DrawStrategy {
+public interface DrawStrategy {
 
-    public abstract void draw(CanvasAdapter canvasAdapter, Draw drawableContent);
+    void draw(CanvasAdapter canvasAdapter, Draw drawableContent);
 
 }

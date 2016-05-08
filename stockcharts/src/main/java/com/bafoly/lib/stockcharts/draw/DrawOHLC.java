@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by basarb on 5/5/2016.
  */
-public class DrawOHLC extends DrawStrategy {
+public class DrawOHLC implements DrawStrategy {
 
     @Override
     public void draw(CanvasAdapter canvasAdapter, Draw drawableContent) {

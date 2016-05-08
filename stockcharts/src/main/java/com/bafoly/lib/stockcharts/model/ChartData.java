@@ -1,9 +1,7 @@
 package com.bafoly.lib.stockcharts.model;
 
-import android.graphics.Canvas;
 import android.util.Log;
 
-import com.bafoly.lib.stockcharts.draw.DrawLine;
 import com.bafoly.lib.stockcharts.draw.DrawStrategy;
 import com.bafoly.lib.stockcharts.model.axis.Axis;
 

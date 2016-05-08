@@ -1,7 +1,5 @@
 package com.bafoly.lib.stockcharts.model;
 
-import java.util.Date;
-
 /**
  * single XY data pair
  * X is generally the timeline. It could be set as Date, String or Integer

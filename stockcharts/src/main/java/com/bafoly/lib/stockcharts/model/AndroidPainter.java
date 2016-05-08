@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 

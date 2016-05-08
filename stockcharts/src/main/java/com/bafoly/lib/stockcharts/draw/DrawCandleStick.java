@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by basarb on 5/5/2016.
  */
-public class DrawCandleStick extends DrawStrategy {
+public class DrawCandleStick implements DrawStrategy {
 
     private static final String TAG = "StockChart-CandleStick";
 
