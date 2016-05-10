@@ -1,7 +1,5 @@
 package com.bafoly.lib.stockcharts.model.axis;
 
-import com.bafoly.lib.stockcharts.model.CanvasAdapter;
-
 /**
  * Created by basarb on 5/6/2016.
  */
@@ -27,13 +25,4 @@ public class StringDateAxis extends Axis<String> {
         return null;
     }
 
-    @Override
-    public void draw(CanvasAdapter canvasAdapter) {
-
-    }
-
-    @Override
-    public void draw(CanvasAdapter canvasAdapter, String value) {
-
-    }
 }

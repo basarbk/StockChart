@@ -1,12 +1,15 @@
-package com.bafoly.lib.stockcharts.model;
+package com.bafoly.lib.stockcharts.model.drawable;
+
+import com.bafoly.lib.stockcharts.model.Environment;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by basarb on 5/3/2016.
+ * This is base class for Stock instruments or indicators
+ *
  */
-public class BaseModel implements Draw {
+public abstract class BaseModel implements Drawable {
 
     private String name;
 
@@ -40,8 +43,9 @@ public class BaseModel implements Draw {
         this.chartData = chartData;
     }
 
+
     @Override
-    public void draw(CanvasAdapter canvas) {
-        chartData.draw(canvas);
+    public void draw(Environment environment) {
+        chartData.draw(environment);
     }
 }

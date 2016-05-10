@@ -3,6 +3,7 @@ package com.bafoly.lib.stockcharts.model;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 
 /**
  * Created by basarb on 5/6/2016.
@@ -10,6 +11,10 @@ import android.graphics.Path;
 public class AndroidCanvas extends CanvasAdapter<Canvas, Paint> {
 
     Path path;
+
+    public AndroidCanvas(){
+        super(null);
+    }
 
     public AndroidCanvas(Canvas canvas) {
         super(canvas);
@@ -58,5 +63,18 @@ public class AndroidCanvas extends CanvasAdapter<Canvas, Paint> {
     @Override
     public void drawPath(Paint paint) {
         canvas.drawPath(path, paint);
+    }
+
+    @Override
+    public Bounds getBounds(String text, Paint paint) {
+        Bounds b = new Bounds();
+        Rect r = new Rect();
+        paint.getTextBounds(text, 0, text.length(), r);
+
+        b.left = r.left;
+        b.bottom = r.bottom;
+        b.top = r.top;
+        b.width = r.right;
+        return b;
     }
 }

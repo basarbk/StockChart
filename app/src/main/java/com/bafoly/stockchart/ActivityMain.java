@@ -8,11 +8,10 @@ import android.widget.Button;
 import com.bafoly.lib.stockcharts.ChartView;
 import com.bafoly.lib.stockcharts.draw.DrawCandleStick;
 import com.bafoly.lib.stockcharts.draw.DrawLine;
-import com.bafoly.lib.stockcharts.model.AndroidPainter;
-import com.bafoly.lib.stockcharts.model.ChartData;
-import com.bafoly.lib.stockcharts.model.ChartProperties;
-import com.bafoly.lib.stockcharts.model.QuadrupleData;
-import com.bafoly.lib.stockcharts.model.SingleData;
+import com.bafoly.lib.stockcharts.model.drawable.ChartData;
+import com.bafoly.lib.stockcharts.model.Environment;
+import com.bafoly.lib.stockcharts.model.data.QuadrupleData;
+import com.bafoly.lib.stockcharts.model.data.SingleData;
 import com.bafoly.lib.stockcharts.model.axis.CategoryAxis;
 import com.bafoly.lib.stockcharts.model.axis.NumberAxis;
 
@@ -34,27 +33,25 @@ public class ActivityMain extends AppCompatActivity {
         chartView = (ChartView) findViewById(R.id.chart);
 
         chartData = new ChartData<>(new CategoryAxis(null), new NumberAxis(null));
+
         chartData.setData(getSingleData());
-        chartData.setDrawStrategy(new DrawLine());
-
-        ChartProperties chartProperties = new ChartProperties(new AndroidPainter());
-
-        chartData.setChartProperties(chartProperties);
+        chartData.setDataDrawStrategy(new DrawLine());
+        chartData.setEnvironment(new Environment());
 
         chartView.draw(chartData);
         chartView.invalidate();
 
 
-        ((Button) findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(isCandle){
-                    chartData.setDrawStrategy(new DrawLine());
+                    chartData.setDataDrawStrategy(new DrawLine());
                     isCandle = false;
                 } else {
 
                     chartData.setData(getData());
-                    chartData.setDrawStrategy(new DrawCandleStick());
+                    chartData.setDataDrawStrategy(new DrawCandleStick());
                     isCandle = true;
                 }
 

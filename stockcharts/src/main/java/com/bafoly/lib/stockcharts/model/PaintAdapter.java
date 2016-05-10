@@ -9,6 +9,7 @@ public interface PaintAdapter<T> {
     String HIGH_COLOR = "highColor";
     String LOW_COLOR = "lowColor";
     String FRAME_COLOR = "frameColor";
+    String AXIS_COLOR = "axisColor";
 
     T getPaint(String color);
 

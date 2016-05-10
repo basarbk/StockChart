@@ -1,18 +1,19 @@
 package com.bafoly.lib.stockcharts.model.axis;
 
-import com.bafoly.lib.stockcharts.model.CanvasAdapter;
-import com.bafoly.lib.stockcharts.model.ChartData;
-
 /**
- * Chart has two Axis'
- * If the data range is not set for the Axis, the data will be taken from the {@link ChartData}
+ * Chart has axises
+ * This class should be extended when customization is needed for axis styling
  */
 public abstract class Axis<T> {
 
+    // if this is a Date axis, the format is a data like "dd MM yyyy", etc
+    // if this is a float axis, the format could be like #.##
     protected String format;
 
+    // the maximum value in the range
     protected T max = null;
 
+    // the minimum value in the range
     protected T min = null;
 
     // orientation either vertical or horizontal
@@ -20,7 +21,7 @@ public abstract class Axis<T> {
 
     // major and minor ticks
 
-    float minSpace;
+    float minSpace = 50;
 
 
     public Axis() {
@@ -46,9 +47,4 @@ public abstract class Axis<T> {
 
     public abstract String getTextValue(T value);
 
-    //public abstract void calculateMargins();
-
-    public abstract void draw(CanvasAdapter canvasAdapter);
-
-    public abstract void draw(CanvasAdapter canvasAdapter, T value);
 }

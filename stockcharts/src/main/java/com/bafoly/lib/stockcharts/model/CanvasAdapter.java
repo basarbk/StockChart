@@ -1,7 +1,7 @@
 package com.bafoly.lib.stockcharts.model;
 
 /**
- * Created by basarb on 5/6/2016.
+ * This is the combination of Canvas and Paint
  */
 public abstract class CanvasAdapter<X, Y> {
 
@@ -36,4 +36,6 @@ public abstract class CanvasAdapter<X, Y> {
     public abstract <T extends Number> void moveTo(T t1, T t2);
 
     public abstract <T extends Number> void lineTo(T t1, T t2);
+
+    public abstract Bounds getBounds(String text, Y paint);
 }

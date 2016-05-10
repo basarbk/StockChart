@@ -1,7 +1,5 @@
 package com.bafoly.lib.stockcharts.model.axis;
 
-import com.bafoly.lib.stockcharts.model.CanvasAdapter;
-
 import java.text.DecimalFormat;
 
 /**
@@ -56,13 +54,4 @@ public class NumberAxis extends Axis<Number> {
         return null;
     }
 
-    @Override
-    public void draw(CanvasAdapter canvasAdapter) {
-
-    }
-
-    @Override
-    public void draw(CanvasAdapter canvasAdapter, Number value) {
-
-    }
 }

@@ -1,4 +1,4 @@
-package com.bafoly.lib.stockcharts.model;
+package com.bafoly.lib.stockcharts.model.drawable;
 
 import java.util.Collections;
 import java.util.List;

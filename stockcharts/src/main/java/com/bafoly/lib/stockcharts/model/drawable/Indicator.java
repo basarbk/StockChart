@@ -1,4 +1,4 @@
-package com.bafoly.lib.stockcharts.model;
+package com.bafoly.lib.stockcharts.model.drawable;
 
 /**
  * Created by basarb on 5/3/2016.

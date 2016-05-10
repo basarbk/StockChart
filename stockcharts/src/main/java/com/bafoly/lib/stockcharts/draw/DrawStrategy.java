@@ -1,19 +1,14 @@
 package com.bafoly.lib.stockcharts.draw;
 
-import android.graphics.Color;
-import android.graphics.CornerPathEffect;
-import android.graphics.Paint;
-
-import com.bafoly.lib.stockcharts.model.CanvasAdapter;
-import com.bafoly.lib.stockcharts.model.Draw;
-import com.bafoly.lib.stockcharts.model.PaintAdapter;
+import com.bafoly.lib.stockcharts.model.Environment;
+import com.bafoly.lib.stockcharts.model.drawable.Drawable;
 
 /**
- * Draw strategy can be implemented for different shapes
+ * Drawable strategy can be implemented for different shapes
  * Line, Candle Stick, Histogram etc
  */
 public interface DrawStrategy {
 
-    void draw(CanvasAdapter canvasAdapter, Draw drawableContent);
+    void draw(Environment environment, Drawable drawableContent);
 
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -12,8 +11,12 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import com.bafoly.lib.stockcharts.model.AndroidCanvas;
-import com.bafoly.lib.stockcharts.model.BaseModel;
-import com.bafoly.lib.stockcharts.model.ChartData;
+import com.bafoly.lib.stockcharts.model.AndroidPainter;
+import com.bafoly.lib.stockcharts.model.drawable.BaseModel;
+import com.bafoly.lib.stockcharts.model.drawable.ChartData;
+import com.bafoly.lib.stockcharts.model.Environment;
+import com.bafoly.lib.stockcharts.model.PaintAdapter;
+import com.bafoly.lib.stockcharts.model.axis.DateAxis;
 
 /**
  * Created by basarb on 4/28/2016.
@@ -31,7 +34,6 @@ public class ChartView extends View {
 
     ChartData chartData;
 
-    AndroidCanvas androidCanvas;
 
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector mGestureDetector;
@@ -59,8 +61,16 @@ public class ChartView extends View {
 
     public void draw(ChartData chartData){
         this.chartData = chartData;
-        this.main = null;
+        if(this.chartData.getEnvironment().getCanvasAdapter()==null){
+            this.chartData.getEnvironment().setCanvasAdapter(new AndroidCanvas());
+        }
 
+        if(this.chartData.getEnvironment().getPaintAdapter()==null){
+            this.chartData.getEnvironment().setPaintAdapter(new AndroidPainter());
+        }
+
+
+        this.main = null;
         invalidate();
     }
 
@@ -77,22 +87,18 @@ public class ChartView extends View {
 
         //drawTemp(canvas);
 
-
-        if(androidCanvas==null){
-            androidCanvas = new AndroidCanvas(canvas);
-        }
-
-        androidCanvas.setCanvas(canvas);
-
         if(main!=null){
-            main.getChartData().calculatePositionReferences(androidCanvas);
-            main.draw(androidCanvas);
+            main.getChartData().getEnvironment().getCanvasAdapter().setCanvas(canvas);
+            main.getChartData().calculatePositionReferences();
+            main.draw(null);
 
 
 
         } else if (chartData!=null){
-            chartData.calculatePositionReferences(androidCanvas);
-            chartData.draw(androidCanvas);
+            this.chartData.getEnvironment().getCanvasAdapter().setCanvas(canvas);
+
+            chartData.calculatePositionReferences();
+            chartData.draw(null);
         } else {
             // empty
         }
@@ -101,65 +107,58 @@ public class ChartView extends View {
 
     private void drawTemp(Canvas canvas){
 
-        Paint p = new Paint();
-        p.setColor(Color.BLACK);
-        p.setStyle(Paint.Style.STROKE);
+        AndroidCanvas ac = new AndroidCanvas(canvas);
 
-        p.setTextSize(45);
+        AndroidPainter ap = new AndroidPainter();
 
-        int padL = 40;
-        int padR = 40;
-        int padT = 30;
-        int padB = 50;
+        DateAxis axis = new DateAxis(null);
 
-        int buffer = 10;
+        Paint axisPaint = new Paint();
+        axisPaint.setColor(Color.BLACK);
+        axisPaint.setStyle(Paint.Style.STROKE);
+        axisPaint.setTextSize(36);
 
-        int dataCount = 20;
-
-        int space = 50;
-
-        String s = "01 Jan 16";
-
-        Rect bounds = new Rect();
-
-        p.getTextBounds(s,0,s.length(),bounds);
-
-        padB = bounds.height()*2;
+        ap.setPaint(PaintAdapter.AXIS_COLOR, axisPaint);
 
 
-        int chartWidth = canvas.getWidth()-padL- padR;
-        int chartHeight = canvas.getHeight() - padT - padB;
+        Environment cp = new Environment();
 
+        cp.setDataCount(20);
 
-        //canvas.drawRect(padL-buffer, padT, padL+chartWidth+buffer, padT+chartHeight, p);
+        cp.calculateAxisProperties(ac);
 
-        canvas.drawLines(
-                new float[]{
-                        (float)padL-buffer, (float) padT, (float) padL +chartWidth+buffer, (float) padT,
-                        (float)padL-buffer, (float) padT+chartHeight, (float) padL +chartWidth+buffer, (float) padT+chartHeight
-                }, p);
+        ChartData cd = new ChartData(axis, null);
+        cd.setEnvironment(cp);
 
-
-        int labelCount = chartWidth/(bounds.width()+space);
-
-        float multiplierX = chartWidth/(float)labelCount;
-
-        Paint red = new Paint();
-        red.setColor(Color.RED);
-        red.setStyle(Paint.Style.STROKE);
-        red.setStrokeWidth(1);
-
-        for(int i = 0;i<labelCount;i++){
-            canvas.drawLine(padL+(i*multiplierX), padT, padL+(i*multiplierX), padT+chartHeight, red);
-
-            canvas.drawLine(padL+(i*multiplierX), padT+chartHeight, padL+(i*multiplierX), padT+chartHeight+(bounds.height()/2), p);
-
-            canvas.drawText(s, padL+(i*multiplierX), padT+chartHeight+(bounds.height()/2)+bounds.height(), p);
-        }
-
-        canvas.drawLine(padL+((labelCount+1)*multiplierX), padT, padL+((labelCount+1)*multiplierX), padT+chartHeight, red);
-        canvas.drawLine(padL+((labelCount+1)*multiplierX), padT+chartHeight, padL+((labelCount+1)*multiplierX), padT+chartHeight+(bounds.height()/2), p);
-
+        //cp.drawGrid(ac, cd);
+//
+//
+//        int labelCount = chartWidth/(bounds.width()+space);
+//
+//        float multiplierX = chartWidth/(float)labelCount;
+//
+//        Paint red = new Paint();
+//        red.setColor(Color.RED);
+//        red.setStyle(Paint.Style.STROKE);
+//        red.setStrokeWidth(1);
+//
+//
+//        canvas.drawText("count: "+labelCount, 0, 100, axisPaint);
+//        for(int i = 0;i<labelCount;i++){
+//            int diff = 0;
+//            if(i!=0){
+//                diff = bounds.width()/2;
+//            }
+//            canvas.drawLine(padL+(i*multiplierX), padT, padL+(i*multiplierX), padT+chartHeight, red);
+//
+//            canvas.drawLine(padL+(i*multiplierX), padT+chartHeight, padL+(i*multiplierX), padT+chartHeight+(bounds.height()/2), axisPaint);
+//
+//            canvas.drawText(s, padL+(i*multiplierX)-diff, padT+chartHeight+(bounds.height()/2)+bounds.height(), axisPaint);
+//        }
+//
+//        canvas.drawLine(padL+((labelCount+1)*multiplierX), padT, padL+((labelCount+1)*multiplierX), padT+chartHeight, red);
+//        canvas.drawLine(padL+((labelCount+1)*multiplierX), padT+chartHeight, padL+((labelCount+1)*multiplierX), padT+chartHeight+(bounds.height()/2), axisPaint);
+//
 
     }
 

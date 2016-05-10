@@ -1,4 +1,4 @@
-package com.bafoly.lib.stockcharts.model;
+package com.bafoly.lib.stockcharts.model.data;
 
 /**
  * Three data on the Xth time

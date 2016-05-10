@@ -1,7 +1,5 @@
 package com.bafoly.lib.stockcharts.model.axis;
 
-import com.bafoly.lib.stockcharts.model.CanvasAdapter;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,13 +41,4 @@ public class DateAxis extends Axis<Date> {
         return value.toString();
     }
 
-    @Override
-    public void draw(CanvasAdapter canvasAdapter) {
-
-    }
-
-    @Override
-    public void draw(CanvasAdapter canvasAdapter, Date value) {
-
-    }
 }
