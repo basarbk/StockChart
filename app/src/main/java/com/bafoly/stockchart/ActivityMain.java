@@ -3,17 +3,16 @@ package com.bafoly.stockchart;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 
-import com.bafoly.lib.stockcharts.ChartView;
-import com.bafoly.lib.stockcharts.draw.DrawCandleStick;
-import com.bafoly.lib.stockcharts.draw.DrawLine;
-import com.bafoly.lib.stockcharts.model.drawable.ChartData;
-import com.bafoly.lib.stockcharts.model.Environment;
-import com.bafoly.lib.stockcharts.model.data.QuadrupleData;
-import com.bafoly.lib.stockcharts.model.data.SingleData;
-import com.bafoly.lib.stockcharts.model.axis.CategoryAxis;
-import com.bafoly.lib.stockcharts.model.axis.NumberAxis;
+import com.bafoly.lib.stockcharts.iki.ChartView;
+import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
+import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
+import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
+import com.bafoly.lib.stockcharts.iki.model.Environment;
+import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
+import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
+import com.bafoly.lib.stockcharts.iki.model.axis.CategoryAxis;
+import com.bafoly.lib.stockcharts.iki.model.axis.NumberAxis;
 
 import java.util.ArrayList;
 import java.util.List;
