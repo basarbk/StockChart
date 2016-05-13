@@ -17,8 +17,8 @@ import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
  */
 public abstract class XYData<X, Y extends Number> {
 
-    private Axis<X> xAxis;
-    private Axis<Y> yAxis;
+    private Axis xAxis;
+    private Axis yAxis;
 
     DrawStrategy dataDrawStrategy;
 
@@ -26,9 +26,12 @@ public abstract class XYData<X, Y extends Number> {
 
     Painter painter;
 
+    /**
+     * This method will be implemented to call the draw strategy
+     */
     public abstract void draw(Environment environment);
 
-    public Axis<X> getxAxis() {
+    public Axis getxAxis() {
         return xAxis;
     }
 
@@ -40,7 +43,7 @@ public abstract class XYData<X, Y extends Number> {
         return yAxis;
     }
 
-    public void setyAxis(Axis<Y> yAxis) {
+    public void setyAxis(Axis yAxis) {
         this.yAxis = yAxis;
     }
 

@@ -1,4 +1,4 @@
-package com.bafoly.lib.stockcharts.iki;
+package com.bafoly.lib.stockcharts.iki.android;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,8 +10,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-import com.bafoly.lib.stockcharts.iki.model.AndroidCanvas;
-import com.bafoly.lib.stockcharts.iki.model.DefaultPainter;
 import com.bafoly.lib.stockcharts.iki.model.drawable.BaseModel;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
@@ -31,9 +29,6 @@ public class ChartView extends View {
 
 
     BaseModel main;
-
-    ChartData chartData;
-
 
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector mGestureDetector;
@@ -59,25 +54,9 @@ public class ChartView extends View {
         mGestureDetector = new GestureDetector(context, mGestureListener);
     }
 
-    public void draw(ChartData chartData){
-        this.chartData = chartData;
-        if(this.chartData.getEnvironment().getCanvasAdapter()==null){
-            this.chartData.getEnvironment().setCanvasAdapter(new AndroidCanvas());
-        }
-
-        if(this.chartData.getEnvironment().getPainter()==null){
-            this.chartData.getEnvironment().setPainter(new DefaultPainter());
-        }
-
-
-        this.main = null;
-        invalidate();
-    }
-
     public void draw(BaseModel main){
-        this.chartData = null;
         this.main = main;
-
+        this.main.getEnvironment().setCanvasAdapter(new AndroidCanvas());
         invalidate();
     }
 
@@ -85,20 +64,16 @@ public class ChartView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        //drawTemp(canvas);
+
 
         if(main!=null){
-            main.getChartData().getEnvironment().getCanvasAdapter().setCanvas(canvas);
-            main.getChartData().calculatePositionReferences();
-            main.draw(null);
+            main.getEnvironment().getCanvasAdapter().setCanvas(canvas);
+            main.getEnvironment().calculateMaxMin(main.getChartData());
+            main.getEnvironment().calculateXYgaps(main.getChartData().getyAxis());
+            main.draw();
 
 
 
-        } else if (chartData!=null){
-            this.chartData.getEnvironment().getCanvasAdapter().setCanvas(canvas);
-
-            chartData.calculatePositionReferences();
-            chartData.draw(null);
         } else {
             // empty
         }
@@ -125,10 +100,10 @@ public class ChartView extends View {
 
         cp.setDataCount(20);
 
-        cp.calculateAxisProperties(ac);
-
-        ChartData cd = new ChartData(axis, null);
-        cd.setEnvironment(cp);
+//        cp.calculateAxisProperties(ac);
+//
+//        ChartData cd = new ChartData(axis, null);
+//        cd.setEnvironment(cp);
 
         //cp.drawGrid(ac, cd);
 //

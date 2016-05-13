@@ -11,7 +11,7 @@ import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
 public class DrawGrid implements DrawStrategy<ChartData> {
 
     @Override
-    public void draw(Environment environment, Painter painter, ChartData chartData) {
+    public void draw(Environment environment, ChartData chartData) {
 
         CanvasAdapter canvasAdapter = environment.getCanvasAdapter();
 
@@ -21,8 +21,8 @@ public class DrawGrid implements DrawStrategy<ChartData> {
         int top = environment.getPaddingTop();
         int height = environment.getChartHeight();
 
-        canvasAdapter.drawLine(left-buffer, top, left+width+buffer, top, painter.getPaint(Painter.AXIS_COLOR));
-        canvasAdapter.drawLine(left-buffer, top+height, left+width+buffer, top+height, painter.getPaint(Painter.AXIS_COLOR));
+        canvasAdapter.drawLine(left-buffer, top, left+width+buffer, top, chartData.getPainter().getPaint(Painter.AXIS_COLOR));
+        canvasAdapter.drawLine(left-buffer, top+height, left+width+buffer, top+height, chartData.getPainter().getPaint(Painter.AXIS_COLOR));
 
 
     }

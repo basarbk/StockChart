@@ -1,7 +1,6 @@
 package com.bafoly.lib.stockcharts.iki.draw;
 
 import com.bafoly.lib.stockcharts.iki.model.Environment;
-import com.bafoly.lib.stockcharts.iki.model.Painter;
 
 /**
  * Strategy Interface for drawing algorithm. <br>
@@ -10,6 +9,6 @@ import com.bafoly.lib.stockcharts.iki.model.Painter;
  */
 public interface DrawStrategy<T> {
 
-    void draw(Environment environment, Painter paint, T drawableContent);
+    void draw(Environment environment, T drawableContent);
 
 }

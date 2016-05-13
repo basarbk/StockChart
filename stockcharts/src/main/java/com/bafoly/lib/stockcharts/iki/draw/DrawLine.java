@@ -15,7 +15,7 @@ import java.util.List;
 public class DrawLine implements DrawStrategy<ChartData> {
 
     @Override
-    public void draw(Environment environment, Painter painter, ChartData chartData) {
+    public void draw(Environment environment, ChartData chartData) {
 
         Axis<? extends Number> axisY = chartData.getyAxis();
         Axis axisX = chartData.getxAxis();
@@ -45,7 +45,7 @@ public class DrawLine implements DrawStrategy<ChartData> {
         // draw y axis data
         //axisY.draw(canvasAdapter);
 
-        canvasAdapter.drawPath(painter.getPaint(Painter.LINE_COLOR));
+        canvasAdapter.drawPath(chartData.getPainter().getPaint(Painter.LINE_COLOR));
 
 
     }

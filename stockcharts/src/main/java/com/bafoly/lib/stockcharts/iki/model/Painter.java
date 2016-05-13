@@ -11,6 +11,7 @@ public interface Painter<T> {
     String LOW_COLOR = "lowColor";
     String FRAME_COLOR = "frameColor";
     String AXIS_COLOR = "axisColor";
+    String BAR_COLOR = "barColor";
 
     T getPaint(String color);
 

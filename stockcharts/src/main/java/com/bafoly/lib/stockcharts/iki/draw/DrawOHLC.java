@@ -15,7 +15,7 @@ import java.util.List;
 public class DrawOHLC implements DrawStrategy<ChartData> {
 
     @Override
-    public void draw(Environment environment, Painter painter, ChartData chartData) {
+    public void draw(Environment environment, ChartData chartData) {
 
         Axis<? extends Number> axis = chartData.getyAxis();
         List<QuadrupleData> sd = chartData.getData();
@@ -35,17 +35,17 @@ public class DrawOHLC implements DrawStrategy<ChartData> {
             float x = (float)(i+1)*environment.multiplierX;
 
             if(open>close){
-                canvasAdapter.drawLine(x, yHigh, x, yLow, painter.getPaint(Painter.LOW_COLOR));
-                canvasAdapter.drawLine(x-barWidth, yOpen, x, yOpen, painter.getPaint(Painter.LOW_COLOR));
-                canvasAdapter.drawLine(x, yClose, x+barWidth, yClose, painter.getPaint(Painter.LOW_COLOR));
+                canvasAdapter.drawLine(x, yHigh, x, yLow, chartData.getPainter().getPaint(Painter.LOW_COLOR));
+                canvasAdapter.drawLine(x-barWidth, yOpen, x, yOpen, chartData.getPainter().getPaint(Painter.LOW_COLOR));
+                canvasAdapter.drawLine(x, yClose, x+barWidth, yClose, chartData.getPainter().getPaint(Painter.LOW_COLOR));
             } else if (open<close){
-                canvasAdapter.drawLine(x, yHigh, x, yLow, painter.getPaint(Painter.HIGH_COLOR));
-                canvasAdapter.drawLine(x-barWidth, yOpen, x, yOpen, painter.getPaint(Painter.HIGH_COLOR));
-                canvasAdapter.drawLine(x, yClose, x+barWidth, yClose, painter.getPaint(Painter.HIGH_COLOR));
+                canvasAdapter.drawLine(x, yHigh, x, yLow, chartData.getPainter().getPaint(Painter.HIGH_COLOR));
+                canvasAdapter.drawLine(x-barWidth, yOpen, x, yOpen, chartData.getPainter().getPaint(Painter.HIGH_COLOR));
+                canvasAdapter.drawLine(x, yClose, x+barWidth, yClose, chartData.getPainter().getPaint(Painter.HIGH_COLOR));
             } else {
-                canvasAdapter.drawLine(x, yHigh, x, yLow, painter.getPaint(Painter.FRAME_COLOR));
-                canvasAdapter.drawLine(x-barWidth, yOpen, x, yOpen, painter.getPaint(Painter.FRAME_COLOR));
-                canvasAdapter.drawLine(x, yClose, x+barWidth, yClose, painter.getPaint(Painter.FRAME_COLOR));
+                canvasAdapter.drawLine(x, yHigh, x, yLow, chartData.getPainter().getPaint(Painter.FRAME_COLOR));
+                canvasAdapter.drawLine(x-barWidth, yOpen, x, yOpen, chartData.getPainter().getPaint(Painter.FRAME_COLOR));
+                canvasAdapter.drawLine(x, yClose, x+barWidth, yClose, chartData.getPainter().getPaint(Painter.FRAME_COLOR));
             }
 
 

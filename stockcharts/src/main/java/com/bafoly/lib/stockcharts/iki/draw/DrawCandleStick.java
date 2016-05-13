@@ -17,7 +17,7 @@ public class DrawCandleStick implements DrawStrategy<ChartData> {
     private static final String TAG = "StockChart-CandleStick";
 
     @Override
-    public void draw(Environment environment, Painter painter, ChartData chartData) {
+    public void draw(Environment environment, ChartData chartData) {
 
         Axis<? extends Number> axis = chartData.getyAxis();
 
@@ -36,19 +36,19 @@ public class DrawCandleStick implements DrawStrategy<ChartData> {
             double open = sd.get(i).getOne().doubleValue();
             double close = sd.get(i).getFour().doubleValue();
 
-            float yOpen = (float)(axis.getMax().doubleValue()-open)*(environment.multiplierY);
-            float yLow = (float)(axis.getMax().doubleValue()-sd.get(i).getTwo().doubleValue())*(environment.multiplierY);
-            float yHigh = (float)(axis.getMax().doubleValue()-sd.get(i).getThree().doubleValue())*(environment.multiplierY);
-            float yClose = (float)(axis.getMax().doubleValue()-close)*(environment.multiplierY);
-            float x = (float)(i+1)*environment.multiplierX;
+            float yOpen = environment.getY(sd.get(i).getOne().floatValue());
+            float yLow = environment.getY(sd.get(i).getTwo().floatValue());
+            float yHigh = environment.getY(sd.get(i).getThree().floatValue());
+            float yClose = environment.getY(sd.get(i).getFour().floatValue());
+            float x = environment.getX(i);
 
-            canvasAdapter.drawLine(x, yHigh, x, yLow, painter.getPaint(Painter.FRAME_COLOR));
+            canvasAdapter.drawLine(x, yHigh, x, yLow, chartData.getPainter().getPaint(Painter.FRAME_COLOR));
             if(open>close){
-                canvasAdapter.drawRectWithFrame(x-barWidth, yOpen, x+barWidth, yClose, painter.getPaint(Painter.LOW_COLOR), painter.getPaint(Painter.FRAME_COLOR));
+                canvasAdapter.drawRectWithFrame(x-barWidth, yOpen, x+barWidth, yClose, chartData.getPainter().getPaint(Painter.LOW_COLOR), chartData.getPainter().getPaint(Painter.FRAME_COLOR));
             } else if (open<close){
-                canvasAdapter.drawRectWithFrame(x-barWidth, yClose, x+barWidth, yOpen, painter.getPaint(Painter.HIGH_COLOR), painter.getPaint(Painter.FRAME_COLOR));
+                canvasAdapter.drawRectWithFrame(x-barWidth, yClose, x+barWidth, yOpen, chartData.getPainter().getPaint(Painter.HIGH_COLOR), chartData.getPainter().getPaint(Painter.FRAME_COLOR));
             } else {
-                canvasAdapter.drawLine(x-barWidth, yClose, x+barWidth, yOpen, painter.getPaint(Painter.FRAME_COLOR));
+                canvasAdapter.drawLine(x-barWidth, yClose, x+barWidth, yOpen, chartData.getPainter().getPaint(Painter.FRAME_COLOR));
             }
 
         }

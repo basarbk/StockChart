@@ -1,9 +1,12 @@
-package com.bafoly.lib.stockcharts.iki.model;
+package com.bafoly.lib.stockcharts.iki.android;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+
+import com.bafoly.lib.stockcharts.iki.model.Bounds;
+import com.bafoly.lib.stockcharts.iki.model.CanvasAdapter;
 
 /**
  * Created by basarb on 5/6/2016.

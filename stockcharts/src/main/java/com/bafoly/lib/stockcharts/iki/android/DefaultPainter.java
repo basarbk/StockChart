@@ -1,8 +1,10 @@
-package com.bafoly.lib.stockcharts.iki.model;
+package com.bafoly.lib.stockcharts.iki.android;
 
 import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
+
+import com.bafoly.lib.stockcharts.iki.model.Painter;
 
 import java.util.HashMap;
 import java.util.Map;

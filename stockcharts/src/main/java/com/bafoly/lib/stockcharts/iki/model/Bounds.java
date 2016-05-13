@@ -5,12 +5,12 @@ package com.bafoly.lib.stockcharts.iki.model;
  */
 public class Bounds {
 
-    int left;
+    public int left;
 
-    int top;
+    public int top;
 
-    int right;
+    public int right;
 
-    int bottom;
+    public int bottom;
 
 }

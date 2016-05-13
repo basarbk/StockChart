@@ -4,15 +4,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.bafoly.lib.stockcharts.iki.ChartView;
+import com.bafoly.lib.stockcharts.iki.android.ChartView;
+import com.bafoly.lib.stockcharts.iki.android.DefaultPainter;
 import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
 import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
-import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
-import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
-import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.axis.CategoryAxis;
 import com.bafoly.lib.stockcharts.iki.model.axis.NumberAxis;
+import com.bafoly.lib.stockcharts.iki.model.axis.StringDateAxis;
+import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
+import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
+import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
+import com.bafoly.lib.stockcharts.iki.model.drawable.Instrument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,7 @@ public class ActivityMain extends AppCompatActivity {
     ChartView chartView;
     boolean isCandle = false;
 
+    Instrument instrument;
     ChartData<String, Float> chartData;
 
     @Override
@@ -31,13 +35,21 @@ public class ActivityMain extends AppCompatActivity {
 
         chartView = (ChartView) findViewById(R.id.chart);
 
-        chartData = new ChartData<>(new CategoryAxis(null), new NumberAxis(null));
 
-        chartData.setData(getSingleData());
-        chartData.setDataDrawStrategy(new DrawLine());
-        chartData.setEnvironment(new Environment());
+        instrument = new Instrument();
 
-        chartView.draw(chartData);
+        chartData = new ChartData<>();
+        chartData.setxAxis(new CategoryAxis(null));
+        chartData.setyAxis(new NumberAxis(null));
+        chartData.setPainter(new DefaultPainter());
+
+        instrument.setChartData(chartData);
+        instrument.setEnvironment(new Environment());
+
+        chartData.setData(getData());
+        chartData.setDataDrawStrategy(new DrawCandleStick());
+
+        chartView.draw(instrument);
         chartView.invalidate();
 
 

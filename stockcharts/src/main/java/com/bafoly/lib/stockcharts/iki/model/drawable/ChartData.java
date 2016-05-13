@@ -13,6 +13,8 @@ public class ChartData<X, Y extends Number> extends XYData<X, Y> {
 
     private List<? extends SingleData<X, Y>> data = Collections.emptyList();
 
+
+
     public List<? extends SingleData> getData() {
         return data;
     }
@@ -23,17 +25,13 @@ public class ChartData<X, Y extends Number> extends XYData<X, Y> {
 
     @Override
     public void draw(Environment environment){
-        axisDrawStrategy.draw(environment, painter, this);
+        //axisDrawStrategy.draw(environment, this);
+
+        dataDrawStrategy.draw(environment, this);
 
 //        this.axisDrawStrategy.draw(environment, painter, this);
 //
 //        this.drawStrategy.draw(environment, painter, this);
-    }
-
-
-    public void calculatePositionReferences(Environment environment){
-        environment.calculateMaxMin(this);
-        environment.calculateXYgaps(environment.getCanvasAdapter(), getyAxis());
     }
 
 }

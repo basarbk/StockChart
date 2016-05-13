@@ -10,7 +10,7 @@ import com.bafoly.lib.stockcharts.iki.model.drawable.TechnicalAnalysis;
 public class DrawFibonacciRetracements implements DrawStrategy<TechnicalAnalysis> {
 
     @Override
-    public void draw(Environment environment, Painter painter, TechnicalAnalysis drawableContent) {
+    public void draw(Environment environment, TechnicalAnalysis drawableContent) {
 
     }
 }
