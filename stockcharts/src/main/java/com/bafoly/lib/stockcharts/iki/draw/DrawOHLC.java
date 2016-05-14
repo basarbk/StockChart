@@ -25,14 +25,16 @@ public class DrawOHLC implements DrawStrategy<ChartData> {
         float barWidth = environment.multiplierX/3;
 
         for(int i = 0;i<sd.size();i++){
-            double open = sd.get(i).getOne().doubleValue();
-            double close = sd.get(i).getFour().doubleValue();
+            float open = sd.get(i).getOne().floatValue();
+            float close = sd.get(i).getFour().floatValue();
+            float high = sd.get(i).getThree().floatValue();
+            float low = sd.get(i).getTwo().floatValue();
 
-            float yOpen = (float)(axis.getMax().doubleValue()-open)*(environment.multiplierY);
-            float yLow = (float)(axis.getMax().doubleValue()-sd.get(i).getTwo().doubleValue())*(environment.multiplierY);
-            float yHigh = (float)(axis.getMax().doubleValue()-sd.get(i).getThree().doubleValue())*(environment.multiplierY);
-            float yClose = (float)(axis.getMax().doubleValue()-close)*(environment.multiplierY);
-            float x = (float)(i+1)*environment.multiplierX;
+            float yOpen = environment.getY(open);
+            float yLow = environment.getY(low);
+            float yHigh = environment.getY(high);
+            float yClose = environment.getY(close);
+            float x = environment.getX(i);
 
             if(open>close){
                 canvasAdapter.drawLine(x, yHigh, x, yLow, chartData.getPainter().getPaint(Painter.LOW_COLOR));

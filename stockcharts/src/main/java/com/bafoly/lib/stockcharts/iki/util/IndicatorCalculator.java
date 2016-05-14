@@ -8,24 +8,24 @@ import java.util.List;
  */
 public class IndicatorCalculator {
 
-    public static List<Float> getEMA(List<Float> vals, int periyot){
-        List<Float> ema = new ArrayList<Float>();
-        float currentSum;
-        float carpan = (float)(2.0)/(float)(periyot+1);
+    public static <Z extends Number> List<Z> getEMA(List<Z> vals, int periyot){
+        List<Number> ema = new ArrayList<>();
+        Number currentSum;
+        Number carpan = (2.0f)/(periyot+1);
         for(int i = 0;i<vals.size();i++){
             if(i<periyot){
                 ema.add(vals.get(i));
             }else if(i==periyot){
                 currentSum = 0;
-                for(float t:vals.subList(i-periyot, i)){
-                    currentSum=currentSum+t;
+                for(Number t : vals.subList(i-periyot, i)){
+                    currentSum = currentSum.doubleValue() + t.doubleValue();
                 }
-                ema.add(currentSum/periyot);
+                ema.add((currentSum.doubleValue()/periyot));
             }else{
-                ema.add(((vals.get(i)-ema.get(ema.size()-1))*carpan)+ema.get(ema.size()-1));
+                ema.add(((vals.get(i).doubleValue()-ema.get(ema.size()-1).doubleValue())*carpan.doubleValue())+ema.get(ema.size()-1).doubleValue());
             }
         }
-        return ema;
+        return (List<Z>)ema;
     }
 
     private static float getAverage(List<Float> vals, int periyot, int idx){

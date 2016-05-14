@@ -26,6 +26,9 @@ public class ChartData<X, Y extends Number> extends XYData<X, Y> {
     @Override
     public void draw(Environment environment){
         //axisDrawStrategy.draw(environment, this);
+        if(axisDrawStrategy!=null){
+            axisDrawStrategy.draw(environment, this);
+        }
 
         dataDrawStrategy.draw(environment, this);
 

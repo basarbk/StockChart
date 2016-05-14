@@ -18,20 +18,6 @@ public class DateAxis extends Axis<Date> {
 
     }
 
-    @Override
-    public void setMax(Date max) {
-
-    }
-
-    @Override
-    public void setMin(Date min) {
-
-    }
-
-    @Override
-    public Date getDiff() {
-        return null;
-    }
 
     @Override
     public String getTextValue(Date value) {

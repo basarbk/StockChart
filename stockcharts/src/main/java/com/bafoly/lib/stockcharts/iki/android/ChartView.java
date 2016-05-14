@@ -70,6 +70,7 @@ public class ChartView extends View {
             main.getEnvironment().getCanvasAdapter().setCanvas(canvas);
             main.getEnvironment().calculateMaxMin(main.getChartData());
             main.getEnvironment().calculateXYgaps(main.getChartData().getyAxis());
+            main.getEnvironment().calculateAxisProperties(main.getChartData().getPainter());
             main.draw();
 
 

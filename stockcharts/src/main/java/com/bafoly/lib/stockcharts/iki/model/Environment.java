@@ -28,10 +28,10 @@ public class Environment {
 
     private int visibleXend;
 
-    int paddingTop = 30;
-    int paddingBottom = 50;
-    int paddingLeft = 40;
-    int paddingRight = 40;
+    int paddingTop = 60;
+    int paddingBottom = 150;
+    int paddingLeft = 20;
+    int paddingRight = 80;
 
     private int chartWidth;
     private int chartHeight;
@@ -46,13 +46,13 @@ public class Environment {
 
     public float multiplierY = 1f;
 
-    private int verticalGrid = 5;
+    public int verticalGrid = 5;
 
-    private int horizontalGrid = 5;
+    public int horizontalGrid = 5;
 
-    private float max = 0;
+    public double max = Double.NaN;
 
-    private float min = 0;
+    public double min = Double.NaN;
 
     // ==== ADAPTERS
     Painter painter;
@@ -67,6 +67,7 @@ public class Environment {
         this.canvasAdapter = canvasAdapter;
     }
 
+    // SETTERS n GETTERS
     public CanvasAdapter getCanvasAdapter() {
         return canvasAdapter;
     }
@@ -74,39 +75,6 @@ public class Environment {
     public void setCanvasAdapter(CanvasAdapter canvasAdapter) {
         this.canvasAdapter = canvasAdapter;
     }
-
-
-
-    public <T extends SingleData> void calculateMaxMin(ChartData chartData){
-        dataCount = chartData.getData().size();
-        for(int i = 0; i<dataCount; i++){
-            chartData.getyAxis().setMax(((T)chartData.getData().get(i)).getMax());
-            chartData.getyAxis().setMin(((T)chartData.getData().get(i)).getMin());
-            max = ((Number)chartData.getyAxis().getMax()).floatValue();
-            min = ((Number)chartData.getyAxis().getMin()).floatValue();
-            // TODO check x axis
-        }
-    }
-
-    public void calculateXYgaps(Axis<? extends Number> axis){
-        multiplierX = canvasAdapter.getWidth()/(float)(dataCount+1); // - padding left, right
-        multiplierY = (float)(canvasAdapter.getHeight()/(axis.getDiff().doubleValue())); // - pedding bottom top
-    }
-
-
-    public void calculateAxisProperties(CanvasAdapter canvasAdapter, Painter painter){
-
-        String s = "01 Jan 16";
-
-        Bounds bounds = canvasAdapter.getBounds(s, painter.getPaint(Painter.AXIS_COLOR));
-
-        paddingBottom = (bounds.bottom-bounds.top)*2;
-        chartWidth = canvasAdapter.getWidth() - paddingLeft - paddingRight;
-        chartHeight = canvasAdapter.getHeight() - paddingTop - paddingBottom;
-    }
-
-
-    //---------
 
 
     public int getPaddingTop() {
@@ -165,12 +133,51 @@ public class Environment {
         this.chartHeight = chartHeight;
     }
 
+    // <--- SETTERS n GETTERS END
+
+
+    // ---> POSITION METHODS
+
+    public void calculateMaxMin(ChartData chartData){
+        dataCount = chartData.getData().size();
+        for(int i = visibleXbegin; i<dataCount; i++){
+            double currentMax = ((SingleData)chartData.getData().get(i)).getMax();
+            double currentMin = ((SingleData)chartData.getData().get(i)).getMin();
+
+            if(Double.isNaN(max) || max<currentMax){
+                max = currentMax;
+            }
+
+            if(Double.isNaN(min) || min>currentMin){
+                min = currentMin;
+            }
+        }
+    }
+
+    public void calculateXYgaps(Axis<? extends Number> axis){
+        multiplierX = (canvasAdapter.getWidth() - paddingLeft - paddingRight)/(float)(dataCount+1); // - padding left, right
+        multiplierY = (float)((canvasAdapter.getHeight()-paddingTop - paddingBottom)/(max-min)); // - pedding bottom top
+    }
+
+
+    public void calculateAxisProperties(Painter painter){
+
+        String s = "01 Jan 16";
+
+        Bounds bounds = canvasAdapter.getBounds(s, painter.getPaint(Painter.AXIS_COLOR));
+
+        //paddingBottom = (bounds.bottom-bounds.top)*2;
+        chartWidth = canvasAdapter.getWidth() - paddingLeft - paddingRight;
+        chartHeight = canvasAdapter.getHeight() - paddingTop - paddingBottom;
+    }
+
+
     public float getX(int index){
-        return (float)(index+1)*multiplierX;
+        return ((index+1)*multiplierX)+paddingLeft;
     }
 
     public float getY(float y){
-        return (float)(max-y)*multiplierY;
+        return (float)((max-y)*multiplierY)+paddingTop;
     }
 
 }

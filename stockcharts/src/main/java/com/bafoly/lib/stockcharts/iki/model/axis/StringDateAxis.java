@@ -5,20 +5,6 @@ package com.bafoly.lib.stockcharts.iki.model.axis;
  */
 public class StringDateAxis extends Axis<String> {
 
-    @Override
-    public void setMax(String max) {
-
-    }
-
-    @Override
-    public void setMin(String min) {
-
-    }
-
-    @Override
-    public String getDiff() {
-        return null;
-    }
 
     @Override
     public String getTextValue(String value) {

@@ -21,6 +21,7 @@ public class DefaultPainter implements Painter<Paint> {
         setColor(HIGH_COLOR, Color.GREEN);
         setColor(LOW_COLOR, Color.RED);
         setColor(FRAME_COLOR, Color.GRAY);
+        setColor(AXIS_COLOR, Color.LTGRAY);
     }
 
     @Override
@@ -51,6 +52,9 @@ public class DefaultPainter implements Painter<Paint> {
                 p.setPathEffect(new CornerPathEffect(5) );
                 p.setShadowLayer(1, 1, 1, Color.BLACK);
             } else if(color.equalsIgnoreCase(FRAME_COLOR)){
+                p.setStrokeWidth(2);
+                p.setStyle(Paint.Style.STROKE);
+            } else if(color.equalsIgnoreCase(AXIS_COLOR)) {
                 p.setStrokeWidth(1);
                 p.setStyle(Paint.Style.STROKE);
             }

@@ -7,6 +7,7 @@ import android.view.View;
 import com.bafoly.lib.stockcharts.iki.android.ChartView;
 import com.bafoly.lib.stockcharts.iki.android.DefaultPainter;
 import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
+import com.bafoly.lib.stockcharts.iki.draw.DrawGrid;
 import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.axis.CategoryAxis;
@@ -48,6 +49,7 @@ public class ActivityMain extends AppCompatActivity {
 
         chartData.setData(getData());
         chartData.setDataDrawStrategy(new DrawCandleStick());
+        chartData.setAxisDrawStrategy(new DrawGrid());
 
         chartView.draw(instrument);
         chartView.invalidate();

@@ -28,9 +28,9 @@ public class DrawLine implements DrawStrategy<ChartData> {
 
         for(int i = 0;i<sd.size();i++){
 
-            float y = (float)(axisY.getMax().doubleValue()-sd.get(i).getLineData().doubleValue())*(environment.multiplierY);
+            float y = environment.getY(sd.get(i).getLineData().floatValue());
 
-            float x = (float)(i+1)*environment.multiplierX;
+            float x = environment.getX(i);
             if(i==0){
                 canvasAdapter.moveTo(x, y);
             }
