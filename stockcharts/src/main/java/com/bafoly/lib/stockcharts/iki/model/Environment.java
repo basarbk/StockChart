@@ -1,5 +1,7 @@
 package com.bafoly.lib.stockcharts.iki.model;
 
+import android.graphics.Canvas;
+
 import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
@@ -18,46 +20,72 @@ import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
  */
 public class Environment {
 
-    // this must be less or equal to the length of the available data set
+    /** Base Model data count */
+    private int dataCount;
+
+    /** this must be less or equal to the length of the available data set */
     private int visibleDataCount = 50;
 
-    // we shouldn't be displaying less than this much entity
+    /** we shouldn't be displaying less than this much entity */
     private int minimumVisibleData = 20;
 
+    /** index of begin */
     private int visibleXbegin;
 
+    /** index of end */
     private int visibleXend;
 
+    /** padding inside canvas */
     int paddingTop = 60;
+
+    /** padding inside canvas */
     int paddingBottom = 150;
+
+    /** padding inside canvas */
     int paddingLeft = 20;
+
+    /** padding inside canvas */
     int paddingRight = 80;
 
+    /** view width */
     private int chartWidth;
+
+    /** view height */
     private int chartHeight;
 
-    private int dataCount;
+    /** data positioning on X */
+    public float multiplierX = 1f;
+
+    /** data positioning on Y */
+    public float multiplierY = 1f;
+
+    /** max Y value in visible data count range */
+    public double max = Double.NaN;
+
+    /** min Y value in visible data count range */
+    public double min = Double.NaN;
+
+    /** axis Y grid price differences*/
+    public double gridValueSteps = Double.NaN;
+
+    /** background vertical grid count */
+    public int verticalGrid = 5;
+
+    /** background horizontal grid count */
+    public int horizontalGrid = 5;
+
+    /** screen density */
+    float density;
+
 
     private float[] referenceValues;
 
     private boolean drawX = false;
 
-    public float multiplierX = 1f;
-
-    public float multiplierY = 1f;
-
-    public int verticalGrid = 5;
-
-    public int horizontalGrid = 5;
-
-    public double max = Double.NaN;
-
-    public double min = Double.NaN;
-
-    // ==== ADAPTERS
+    /** Default Painter for the chart */
     Painter painter;
 
-    // ChartView will be generating the instance for this variable
+    /** Canvas of the framework */
     CanvasAdapter canvasAdapter;
 
     public Environment(){}
@@ -152,6 +180,11 @@ public class Environment {
                 min = currentMin;
             }
         }
+
+
+
+        gridValueSteps = (max - min)/horizontalGrid;
+
     }
 
     public void calculateXYgaps(Axis<? extends Number> axis){

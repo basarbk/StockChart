@@ -86,4 +86,9 @@ public class AndroidCanvas extends CanvasAdapter<Canvas, Paint> {
         canvas.drawRect(x1, y1, x2, y2, paintContent);
         canvas.drawRect(x1, y1, x2, y2, paintFrame);
     }
+
+    @Override
+    public void drawText(String text, float x1, float y1, Paint paint) {
+        canvas.drawText(text, x1, y1, paint);
+    }
 }

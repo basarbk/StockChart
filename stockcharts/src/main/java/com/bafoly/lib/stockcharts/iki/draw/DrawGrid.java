@@ -5,6 +5,7 @@ import android.util.Log;
 import com.bafoly.lib.stockcharts.iki.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
+import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
 
 /**
@@ -16,6 +17,9 @@ public class DrawGrid implements DrawStrategy<ChartData> {
     public void draw(Environment environment, ChartData chartData) {
 
         CanvasAdapter canvasAdapter = environment.getCanvasAdapter();
+
+        Axis x = chartData.getxAxis();
+        Axis y = chartData.getyAxis();
 
         int left = environment.getPaddingLeft();
         int buffer = left/2;
@@ -29,26 +33,18 @@ public class DrawGrid implements DrawStrategy<ChartData> {
         int part = environment.getDataCount()/environment.verticalGrid;
 
         for(int i = 0;i<=environment.verticalGrid;i++){
+            x.addIndex(i*part);
             float posX = environment.getX(i*part);
             canvasAdapter.drawLine(posX, top, posX, top+height, chartData.getPainter().getPaint(Painter.AXIS_COLOR));
         }
 
-        double diff = environment.max- environment.min;
-
-        double partY = diff/environment.horizontalGrid;
-
         for(int i = 1;i<=environment.horizontalGrid;i++){
-            float v = (float)(environment.max-i*partY);
+            float v = (float)(environment.max-i*environment.gridValueSteps);
+            y.addIndex(v);
             float posY = environment.getY(v);
             canvasAdapter.drawLine(left-buffer, posY, left+width+buffer, posY, chartData.getPainter().getPaint(Painter.AXIS_COLOR));
 
         }
-
-
-
-
-
-
 
     }
 }

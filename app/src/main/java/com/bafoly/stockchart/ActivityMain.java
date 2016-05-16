@@ -40,15 +40,15 @@ public class ActivityMain extends AppCompatActivity {
         instrument = new Instrument();
 
         chartData = new ChartData<>();
-        chartData.setxAxis(new CategoryAxis(null));
-        chartData.setyAxis(new NumberAxis(null));
+        chartData.setxAxis(new StringDateAxis("MMM dd, yyyy"));
+        chartData.setyAxis(new NumberAxis("#.##"));
         chartData.setPainter(new DefaultPainter());
 
         instrument.setChartData(chartData);
         instrument.setEnvironment(new Environment());
 
         chartData.setData(getData());
-        chartData.setDataDrawStrategy(new DrawCandleStick());
+        chartData.setDataDrawStrategy(new DrawLine());
         chartData.setAxisDrawStrategy(new DrawGrid());
 
         chartView.draw(instrument);

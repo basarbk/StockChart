@@ -18,7 +18,6 @@ public class DateAxis extends Axis<Date> {
 
     }
 
-
     @Override
     public String getTextValue(Date value) {
         if(value!=null && sdf!=null){

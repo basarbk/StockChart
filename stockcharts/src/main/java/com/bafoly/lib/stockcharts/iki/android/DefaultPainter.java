@@ -22,6 +22,7 @@ public class DefaultPainter implements Painter<Paint> {
         setColor(LOW_COLOR, Color.RED);
         setColor(FRAME_COLOR, Color.GRAY);
         setColor(AXIS_COLOR, Color.LTGRAY);
+        setColor(AXIS_TEXT_COLOR, Color.BLACK);
     }
 
     @Override
@@ -57,6 +58,8 @@ public class DefaultPainter implements Painter<Paint> {
             } else if(color.equalsIgnoreCase(AXIS_COLOR)) {
                 p.setStrokeWidth(1);
                 p.setStyle(Paint.Style.STROKE);
+            } else if (color.equalsIgnoreCase(AXIS_TEXT_COLOR)){
+                p.setTextSize(32);
             }
             map.put(color, p);
         }

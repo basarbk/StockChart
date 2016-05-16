@@ -1,5 +1,8 @@
 package com.bafoly.lib.stockcharts.iki.draw;
 
+import android.util.Log;
+
+import com.bafoly.lib.stockcharts.iki.model.Bounds;
 import com.bafoly.lib.stockcharts.iki.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
@@ -17,7 +20,8 @@ public class DrawOHLC implements DrawStrategy<ChartData> {
     @Override
     public void draw(Environment environment, ChartData chartData) {
 
-        Axis<? extends Number> axis = chartData.getyAxis();
+        Axis<Number> axisY = chartData.getyAxis();
+        Axis axisX = chartData.getxAxis();
         List<QuadrupleData> sd = chartData.getData();
 
         CanvasAdapter canvasAdapter = environment.getCanvasAdapter();
@@ -50,8 +54,24 @@ public class DrawOHLC implements DrawStrategy<ChartData> {
                 canvasAdapter.drawLine(x, yClose, x+barWidth, yClose, chartData.getPainter().getPaint(Painter.FRAME_COLOR));
             }
 
+            if(axisX.isPaintable(i)){
+                float yy = environment.getPaddingTop()+environment.getChartHeight();
+                String val = axisX.getTextValue(sd.get(i).getX());
+
+                Bounds b = canvasAdapter.getBounds(val, chartData.getPainter().getPaint(Painter.AXIS_TEXT_COLOR));
+                float d = Math.abs(b.top-b.bottom)*1.5f;
+                canvasAdapter.drawText(val, x, yy+d, chartData.getPainter().getPaint(Painter.AXIS_TEXT_COLOR));
+            }
 
 
+        }
+
+        for(Number n : axisY.getIndexes()){
+            float yyy = environment.getY(n.floatValue());
+            String val = axisY.getTextValue(n);
+            Bounds b = canvasAdapter.getBounds(val, chartData.getPainter().getPaint(Painter.AXIS_TEXT_COLOR));
+            int d = Math.abs(b.top-b.bottom);
+            canvasAdapter.drawText(val, environment.getPaddingLeft()+environment.getChartWidth()+5, yyy+(d/2), chartData.getPainter().getPaint(Painter.AXIS_TEXT_COLOR));
         }
     }
 }

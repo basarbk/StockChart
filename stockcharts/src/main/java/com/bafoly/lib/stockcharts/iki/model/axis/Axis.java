@@ -1,5 +1,10 @@
 package com.bafoly.lib.stockcharts.iki.model.axis;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Chart has axises
  * This class should be extended when customization is needed for axis styling
@@ -17,6 +22,8 @@ public abstract class Axis<T> {
 
     float minSpace = 50;
 
+    /** indexes of the axis elements to be displayed on screen */
+    List<Number> indexes = new ArrayList<>();
 
     public Axis() {
     }
@@ -27,4 +34,21 @@ public abstract class Axis<T> {
 
     public abstract String getTextValue(T value);
 
+    public List<Number> getIndexes() {
+        return indexes;
+    }
+
+    public void setIndexes(List<Number> indexes) {
+        this.indexes = indexes;
+    }
+
+    public void addIndex(Number index){
+        this.indexes.add(index);
+    }
+
+    public boolean isPaintable(Number idx){
+        if(indexes.contains(idx))
+            return true;
+        return false;
+    }
 }

@@ -13,4 +13,13 @@ public class Bounds {
 
     public int bottom;
 
+    @Override
+    public String toString() {
+        return "Bounds{" +
+                "left=" + left +
+                ", top=" + top +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                '}';
+    }
 }
