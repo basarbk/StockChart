@@ -16,7 +16,17 @@ public class DefaultPainter implements Painter<Paint> {
 
     Map<String, Paint> map = new HashMap<>();
 
-    public DefaultPainter(){
+    float density = 1.0f;
+
+    public DefaultPainter(){}
+
+    @Override
+    public void setDensity(float density) {
+        this.density = density;
+    }
+
+    @Override
+    public void init() {
         setColor(LINE_COLOR, Color.BLACK);
         setColor(HIGH_COLOR, Color.GREEN);
         setColor(LOW_COLOR, Color.RED);
@@ -59,7 +69,7 @@ public class DefaultPainter implements Painter<Paint> {
                 p.setStrokeWidth(1);
                 p.setStyle(Paint.Style.STROKE);
             } else if (color.equalsIgnoreCase(AXIS_TEXT_COLOR)){
-                p.setTextSize(32);
+                p.setTextSize(12*density);
             }
             map.put(color, p);
         }

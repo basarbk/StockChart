@@ -74,10 +74,6 @@ public class Environment {
     /** background horizontal grid count */
     public int horizontalGrid = 5;
 
-    /** screen density */
-    float density;
-
-
     private float[] referenceValues;
 
     private boolean drawX = false;
@@ -185,25 +181,12 @@ public class Environment {
 
         gridValueSteps = (max - min)/horizontalGrid;
 
-    }
-
-    public void calculateXYgaps(Axis<? extends Number> axis){
         multiplierX = (canvasAdapter.getWidth() - paddingLeft - paddingRight)/(float)(dataCount+1); // - padding left, right
         multiplierY = (float)((canvasAdapter.getHeight()-paddingTop - paddingBottom)/(max-min)); // - pedding bottom top
-    }
 
-
-    public void calculateAxisProperties(Painter painter){
-
-        String s = "01 Jan 16";
-
-        Bounds bounds = canvasAdapter.getBounds(s, painter.getPaint(Painter.AXIS_COLOR));
-
-        //paddingBottom = (bounds.bottom-bounds.top)*2;
         chartWidth = canvasAdapter.getWidth() - paddingLeft - paddingRight;
         chartHeight = canvasAdapter.getHeight() - paddingTop - paddingBottom;
     }
-
 
     public float getX(int index){
         return ((index+1)*multiplierX)+paddingLeft;

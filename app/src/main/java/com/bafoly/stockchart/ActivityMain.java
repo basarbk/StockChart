@@ -10,6 +10,7 @@ import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
 import com.bafoly.lib.stockcharts.iki.draw.DrawGrid;
 import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
+import com.bafoly.lib.stockcharts.iki.model.Painter;
 import com.bafoly.lib.stockcharts.iki.model.axis.CategoryAxis;
 import com.bafoly.lib.stockcharts.iki.model.axis.NumberAxis;
 import com.bafoly.lib.stockcharts.iki.model.axis.StringDateAxis;
@@ -36,13 +37,14 @@ public class ActivityMain extends AppCompatActivity {
 
         chartView = (ChartView) findViewById(R.id.chart);
 
-
         instrument = new Instrument();
 
         chartData = new ChartData<>();
         chartData.setxAxis(new StringDateAxis("MMM dd, yyyy"));
         chartData.setyAxis(new NumberAxis("#.##"));
+
         chartData.setPainter(new DefaultPainter());
+
 
         instrument.setChartData(chartData);
         instrument.setEnvironment(new Environment());

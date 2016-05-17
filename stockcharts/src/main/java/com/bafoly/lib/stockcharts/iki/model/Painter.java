@@ -14,9 +14,13 @@ public interface Painter<T> {
     String AXIS_TEXT_COLOR = "axisTextColor";
     String BAR_COLOR = "barColor";
 
+    void init();
+
     T getPaint(String color);
 
     void setPaint(String color, T t);
 
     void setColor(String color, int c);
+
+    void setDensity(float density);
 }
