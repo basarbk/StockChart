@@ -1,5 +1,6 @@
 package com.bafoly.lib.stockcharts.iki.model.drawable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,11 +12,12 @@ import java.util.List;
  */
 public class Instrument extends BaseModel{
 
-    private List<Indicator> indicators = Collections.emptyList();
+    private List<Indicator> indicators = new ArrayList<>();
 
-    private List<TechnicalAnalysis> technicalAnalyses = Collections.emptyList();
+    private List<TechnicalAnalysis> technicalAnalyses = new ArrayList<>();
 
     public void addIndicator(Indicator indicator){
+        indicator.setParent(this);
         indicators.add(indicator);
     }
 

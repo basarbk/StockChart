@@ -28,7 +28,9 @@ public class DrawOHLC implements DrawStrategy<ChartData> {
 
         float barWidth = environment.multiplierX/3;
 
-        for(int i = 0;i<sd.size();i++){
+        for(int i = environment.visibleXbegin;i<environment.visibleXend;i++){
+            if(i>=sd.size())
+                break;
             float open = sd.get(i).getOne().floatValue();
             float close = sd.get(i).getFour().floatValue();
             float high = sd.get(i).getThree().floatValue();
@@ -38,7 +40,7 @@ public class DrawOHLC implements DrawStrategy<ChartData> {
             float yLow = environment.getY(low);
             float yHigh = environment.getY(high);
             float yClose = environment.getY(close);
-            float x = environment.getX(i);
+            float x = environment.getX(i-environment.visibleXbegin);
 
             if(open>close){
                 canvasAdapter.drawLine(x, yHigh, x, yLow, chartData.getPainter().getPaint(Painter.LOW_COLOR));

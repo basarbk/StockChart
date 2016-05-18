@@ -24,16 +24,16 @@ public class Environment {
     private int dataCount;
 
     /** this must be less or equal to the length of the available data set */
-    private int visibleDataCount = 50;
+    public int visibleDataCount = 50;
 
     /** we shouldn't be displaying less than this much entity */
     private int minimumVisibleData = 20;
 
     /** index of begin */
-    private int visibleXbegin;
+    public int visibleXbegin;
 
     /** index of end */
-    private int visibleXend;
+    public int visibleXend;
 
     /** padding inside canvas */
     int paddingTop = 60;
@@ -77,6 +77,8 @@ public class Environment {
     private float[] referenceValues;
 
     private boolean drawX = false;
+
+    private boolean firstTime = true;
 
     /** Default Painter for the chart */
     Painter painter;
@@ -164,7 +166,14 @@ public class Environment {
 
     public void calculateMaxMin(ChartData chartData){
         dataCount = chartData.getData().size();
-        for(int i = visibleXbegin; i<dataCount; i++){
+        if(firstTime){
+            visibleXend = dataCount;
+            visibleDataCount = dataCount;
+            firstTime = false;
+        }
+        for(int i = visibleXbegin; i<visibleXend; i++){
+            if(i>=dataCount)
+                break;
             double currentMax = ((SingleData)chartData.getData().get(i)).getMax();
             double currentMin = ((SingleData)chartData.getData().get(i)).getMin();
 
@@ -186,6 +195,20 @@ public class Environment {
 
         chartWidth = canvasAdapter.getWidth() - paddingLeft - paddingRight;
         chartHeight = canvasAdapter.getHeight() - paddingTop - paddingBottom;
+    }
+
+    public boolean scroll(int count){
+
+        if(visibleXbegin+count<0)
+            return false;
+
+        if(visibleXend+count>dataCount+visibleDataCount-1)
+            return false;
+
+        visibleXend += count;
+        visibleXbegin += count;
+
+        return true;
     }
 
     public float getX(int index){

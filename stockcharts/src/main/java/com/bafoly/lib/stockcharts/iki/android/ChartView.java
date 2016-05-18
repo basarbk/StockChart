@@ -90,15 +90,21 @@ public class ChartView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+
+        mScaleGestureDetector.onTouchEvent(event);
+        mGestureDetector.onTouchEvent(event);
+
+        return true;
     }
 
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
+        float xfirst;
+
         @Override
         public boolean onDown(MotionEvent e) {
-            //TODO
-            return super.onDown(e);
+            xfirst = e.getX();
+            return true;
         }
 
         @Override
@@ -109,8 +115,12 @@ public class ChartView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            //TODO
-            return super.onScroll(e1, e2, distanceX, distanceY);
+            if(Math.abs(xfirst-e2.getX())>environment.multiplierX){
+                scrollMe((int)((xfirst-e2.getX())/environment.multiplierX));
+                xfirst = e2.getX();
+                return true;
+            }
+            return false;
         }
 
         @Override
@@ -119,6 +129,12 @@ public class ChartView extends View {
             return super.onFling(e1, e2, velocityX, velocityY);
         }
     };
+
+    private void scrollMe(int count){
+        if(environment.scroll(count)) {
+            postInvalidate();
+        }
+    }
 
     private final ScaleGestureDetector.OnScaleGestureListener mScaleGestureListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
 

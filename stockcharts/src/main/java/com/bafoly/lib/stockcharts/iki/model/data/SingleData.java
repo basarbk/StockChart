@@ -45,4 +45,8 @@ public class SingleData<X, Y extends Number> {
     public double getMax(){
         return one == null ? Double.NaN : one.doubleValue();
     }
+
+    public SingleData copy(){
+        return new SingleData(x, one);
+    }
 }

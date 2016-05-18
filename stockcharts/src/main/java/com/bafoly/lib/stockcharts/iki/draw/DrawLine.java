@@ -27,14 +27,17 @@ public class DrawLine implements DrawStrategy<ChartData> {
 
         List<SingleData> sd = chartData.getData();
 
-        canvasAdapter.createPath();
+        for(int i = environment.visibleXbegin;i<environment.visibleXend;i++){
+            if(i>=sd.size())
+                break;
 
-        for(int i = 0;i<sd.size();i++){
+            if(i==environment.visibleXbegin)
+                canvasAdapter.createPath();
 
             float y = environment.getY(sd.get(i).getLineData().floatValue());
 
-            float x = environment.getX(i);
-            if(i==0){
+            float x = environment.getX(i-environment.visibleXbegin);
+            if(i==environment.visibleXbegin){
                 canvasAdapter.moveTo(x, y);
             }
             else{

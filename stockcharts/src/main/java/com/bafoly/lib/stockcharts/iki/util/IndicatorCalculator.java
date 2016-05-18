@@ -1,5 +1,7 @@
 package com.bafoly.lib.stockcharts.iki.util;
 
+import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,25 @@ public class IndicatorCalculator {
             }
         }
         return (List<Z>)ema;
+    }
+
+    public static <Z extends SingleData> List<Z> getEMA2(List<Z> vals, int periyot){
+        List<Z> emaData = new ArrayList<>(vals.size());
+
+        if(vals.get(0) instanceof SingleData){
+            for(int i = 0;i<vals.size();i++){
+                emaData.add((Z)((SingleData)vals.get(i)).copy());
+                if(i>=periyot){
+                    double sum = 0;
+                    for(SingleData sd : ((List<SingleData>) vals).subList(i-periyot,i)){
+                        sum += sd.getLineData().doubleValue();
+                    }
+                    ((SingleData)emaData.get(i)).setOne(sum/periyot);
+                }
+            }
+        }
+
+        return emaData;
     }
 
     private static float getAverage(List<Float> vals, int periyot, int idx){

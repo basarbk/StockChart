@@ -1,5 +1,6 @@
 package com.bafoly.stockchart;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,13 +12,14 @@ import com.bafoly.lib.stockcharts.iki.draw.DrawGrid;
 import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
-import com.bafoly.lib.stockcharts.iki.model.axis.CategoryAxis;
 import com.bafoly.lib.stockcharts.iki.model.axis.NumberAxis;
 import com.bafoly.lib.stockcharts.iki.model.axis.StringDateAxis;
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
+import com.bafoly.lib.stockcharts.iki.model.drawable.Indicator;
 import com.bafoly.lib.stockcharts.iki.model.drawable.Instrument;
+import com.bafoly.lib.stockcharts.iki.util.IndicatorCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,22 @@ public class ActivityMain extends AppCompatActivity {
         chartData.setDataDrawStrategy(new DrawLine());
         chartData.setAxisDrawStrategy(new DrawGrid());
 
+
+        Indicator indicator = new Indicator();
+        ChartData<String, Float> chartDataIndicator = new ChartData<>();
+        chartDataIndicator.setxAxis(new StringDateAxis("MMM dd, yyyy"));
+        chartDataIndicator.setyAxis(new NumberAxis("#.##"));
+        List<SingleData<String, Float>> singleData = (List<SingleData<String, Float>>)IndicatorCalculator.getEMA2(chartData.getData(),15);
+        chartDataIndicator.setData(singleData);
+        chartDataIndicator.setPainter(new DefaultPainter());
+        chartDataIndicator.getPainter().setColor(Painter.LINE_COLOR, Color.RED);
+        chartDataIndicator.setDataDrawStrategy(new DrawLine());
+        indicator.setChartData(chartDataIndicator);
+        indicator.setOverlay(true);
+
+        instrument.addIndicator(indicator);
+
+
         chartView.draw(instrument);
         chartView.invalidate();
 
@@ -79,29 +97,38 @@ public class ActivityMain extends AppCompatActivity {
     private List<? extends SingleData<String, Float>> getSingleData() {
         List<SingleData<String, Float>> data = new ArrayList<>();
 
-        data.add(new SingleData("Apr 05, 2016", 8.03));
-        data.add(new SingleData("Apr 06, 2016", 8.02));
-        data.add(new SingleData("Apr 07, 2016", 7.90));
-        data.add(new SingleData("Apr 08, 2016", 7.87));
-        data.add(new SingleData("Apr 11, 2016", 7.97));
-        data.add(new SingleData("Apr 12, 2016", 8.13));
-        data.add(new SingleData("Apr 13, 2016", 8.18));
-        data.add(new SingleData("Apr 14, 2016", 8.47));
-        data.add(new SingleData("Apr 15, 2016", 8.48));
-        data.add(new SingleData("Apr 18, 2016", 8.43));
-        data.add(new SingleData("Apr 19, 2016", 8.73));
-        data.add(new SingleData("Apr 20, 2016", 8.65));
-        data.add(new SingleData("Apr 21, 2016", 8.56));
-        data.add(new SingleData("Apr 22, 2016", 8.56));
-        data.add(new SingleData("Apr 25, 2016", 8.49));
-        data.add(new SingleData("Apr 26, 2016", 8.38));
-        data.add(new SingleData("Apr 27, 2016", 8.55));
-        data.add(new SingleData("Apr 28, 2016", 8.56));
-        data.add(new SingleData("Apr 29, 2016", 8.65));
-        data.add(new SingleData("May 02, 2016", 8.59));
-        data.add(new SingleData("May 03, 2016", 8.43));
-        data.add(new SingleData("May 04, 2016", 8.05));
-        data.add(new SingleData("May 05, 2016", 7.59));
+        data.add(new SingleData("Apr 05, 2016", 7.98));
+        data.add(new SingleData("Apr 06, 2016", 7.84));
+        data.add(new SingleData("Apr 07, 2016", 7.85));
+        data.add(new SingleData("Apr 08, 2016", 7.96));
+        data.add(new SingleData("Apr 11, 2016", 8.12));
+        data.add(new SingleData("Apr 12, 2016", 8.12));
+        data.add(new SingleData("Apr 13, 2016", 8.43));
+        data.add(new SingleData("Apr 14, 2016", 8.46));
+        data.add(new SingleData("Apr 15, 2016", 8.49));
+        data.add(new SingleData("Apr 18, 2016", 8.71));
+        data.add(new SingleData("Apr 19, 2016", 8.69));
+        data.add(new SingleData("Apr 20, 2016", 8.51));
+        data.add(new SingleData("Apr 21, 2016", 8.54));
+        data.add(new SingleData("Apr 22, 2016", 8.49));
+        data.add(new SingleData("Apr 25, 2016", 8.35));
+        data.add(new SingleData("Apr 26, 2016", 8.57));
+        data.add(new SingleData("Apr 27, 2016", 8.56));
+        data.add(new SingleData("Apr 28, 2016", 8.62));
+        data.add(new SingleData("Apr 29, 2016", 8.60));
+        data.add(new SingleData("May 02, 2016", 8.40));
+        data.add(new SingleData("May 03, 2016", 8.06));
+        data.add(new SingleData("May 04, 2016", 7.78));
+        data.add(new SingleData("May 05, 2016", 7.64));
+        data.add(new SingleData("May 06, 2016", 7.63));
+        data.add(new SingleData("May 09, 2016", 7.75));
+        data.add(new SingleData("May 10, 2016", 7.66));
+        data.add(new SingleData("May 11, 2016", 7.73));
+        data.add(new SingleData("May 12, 2016", 7.70));
+        data.add(new SingleData("May 13, 2016", 7.69));
+        data.add(new SingleData("May 16, 2016", 7.50));
+        data.add(new SingleData("May 17, 2016", 7.61));
+        data.add(new SingleData("May 18, 2016", 7.53));
         return data;
     }
 
@@ -130,7 +157,17 @@ public class ActivityMain extends AppCompatActivity {
         data.add(new QuadrupleData("May 02, 2016", 8.59, 8.38, 8.59, 8.40));
         data.add(new QuadrupleData("May 03, 2016", 8.43, 8.02, 8.46, 8.06));
         data.add(new QuadrupleData("May 04, 2016", 8.05, 7.77, 8.17, 7.78));
-        data.add(new QuadrupleData("May 05, 2016", 7.59, 7.52, 7.62, 7.53));
+        data.add(new QuadrupleData("May 05, 2016", 7.59, 7.51, 7.85, 7.64));
+        data.add(new QuadrupleData("May 06, 2016", 7.65, 7.43, 7.71, 7.63));
+        data.add(new QuadrupleData("May 09, 2016", 7.73, 7.69, 7.83, 7.75));
+        data.add(new QuadrupleData("May 10, 2016", 7.74, 7.66, 7.84, 7.66));
+        data.add(new QuadrupleData("May 11, 2016", 7.68, 7.52, 7.76, 7.73));
+        data.add(new QuadrupleData("May 12, 2016", 7.72, 7.69, 7.86, 7.7));
+        data.add(new QuadrupleData("May 13, 2016", 7.65, 7.63, 7.8, 7.69));
+        data.add(new QuadrupleData("May 16, 2016", 7.74, 7.48, 7.76, 7.5));
+        data.add(new QuadrupleData("May 17, 2016", 7.55, 7.47, 7.64, 7.61));
+        data.add(new QuadrupleData("May 18, 2016", 7.57, 7.52, 7.57, 7.53));
+
 
         return data;
     }
