@@ -54,7 +54,7 @@ public class IndikatorMACD extends MainIndicatorData {
 		if(chartData==null){
 			chartData = new ChartData();
 		}
-//		chartData.setLineData(IndicatorCalculator.getMACD(referenceData.getKapanis()));
+//		chartModel.setLineData(IndicatorCalculator.getMACD(referenceData.getKapanis()));
 		chartData.setLineData(dummyList);
 
 		setIndicators(null);

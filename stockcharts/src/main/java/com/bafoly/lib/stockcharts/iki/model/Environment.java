@@ -1,10 +1,7 @@
 package com.bafoly.lib.stockcharts.iki.model;
 
-import android.graphics.Canvas;
-
-import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
-import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
+import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
 
 /**
  * Chart Environment is containing the canvas, paint adapters and measurement related variables.<br>
@@ -164,8 +161,8 @@ public class Environment {
 
     // ---> POSITION METHODS
 
-    public void calculateMaxMin(ChartData chartData){
-        dataCount = chartData.getData().size();
+    public void calculateMaxMin(ChartModel chartModel){
+        dataCount = chartModel.getData().size();
         if(firstTime){
             visibleXend = dataCount;
             visibleDataCount = dataCount;
@@ -177,8 +174,8 @@ public class Environment {
         for(int i = visibleXbegin; i<visibleXend; i++){
             if(i>=dataCount)
                 break;
-            double currentMax = ((SingleData)chartData.getData().get(i)).getMax();
-            double currentMin = ((SingleData)chartData.getData().get(i)).getMin();
+            double currentMax = ((SingleData) chartModel.getData().get(i)).getMax();
+            double currentMin = ((SingleData) chartModel.getData().get(i)).getMin();
 
             if(Double.isNaN(max) || max<currentMax){
                 max = currentMax;

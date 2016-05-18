@@ -50,7 +50,7 @@ public abstract class MainData {
     private int graphType = Chart.GRAPH_TYPE_LINE; // her grafigin bir cizgi tipi var.. candle, ohlc, line, bar
 
     /**
-     * ChartData is storing the values to be drawn onto screen
+     * ChartModel is storing the values to be drawn onto screen
      */
     protected ChartData chartData;
 
@@ -75,12 +75,12 @@ public abstract class MainData {
 
 
     /**
-     * ChartData's maximum high value in range
+     * ChartModel's maximum high value in range
      */
     private float max;
 
     /**
-     * ChartData's minimum low value in range
+     * ChartModel's minimum low value in range
      */
     private float min;
 
@@ -92,12 +92,12 @@ public abstract class MainData {
 
 
     /**
-     * This is used in chartPosition to calculate the position of each chartData element in X axis
+     * This is used in chartPosition to calculate the position of each chartModel element in X axis
      */
     float multiplierX;
 
     /**
-     * This is used in chartPosition to calculate the position of each chartData element in Y axis
+     * This is used in chartPosition to calculate the position of each chartModel element in Y axis
      */
     float multiplierY;
 

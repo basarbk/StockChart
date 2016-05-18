@@ -8,15 +8,12 @@ import android.view.View;
 import com.bafoly.lib.stockcharts.iki.android.ChartView;
 import com.bafoly.lib.stockcharts.iki.android.DefaultPainter;
 import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
-import com.bafoly.lib.stockcharts.iki.draw.DrawGrid;
 import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
-import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
 import com.bafoly.lib.stockcharts.iki.model.axis.NumberAxis;
 import com.bafoly.lib.stockcharts.iki.model.axis.StringDateAxis;
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
-import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.Indicator;
 import com.bafoly.lib.stockcharts.iki.model.drawable.Instrument;
 import com.bafoly.lib.stockcharts.iki.util.IndicatorCalculator;
@@ -29,8 +26,7 @@ public class ActivityMain extends AppCompatActivity {
     ChartView chartView;
     boolean isCandle = false;
 
-    Instrument instrument;
-    ChartData<String, Float> chartData;
+    Instrument<String, Float> instrument;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,34 +35,19 @@ public class ActivityMain extends AppCompatActivity {
 
         chartView = (ChartView) findViewById(R.id.chart);
 
-        instrument = new Instrument();
-
-        chartData = new ChartData<>();
-        chartData.setxAxis(new StringDateAxis("MMM dd, yyyy"));
-        chartData.setyAxis(new NumberAxis("#.##"));
-
-        chartData.setPainter(new DefaultPainter());
+        instrument = new Instrument(new StringDateAxis("MMM dd, yyyy"), new NumberAxis("#.##"));
+        instrument.setPainter(new DefaultPainter());
+        instrument.setData(getData());
+        instrument.setDataDrawStrategy(new DrawLine());
 
 
-        instrument.setChartData(chartData);
-        instrument.setEnvironment(new Environment());
+        Indicator<String, Float> indicator = new Indicator(new StringDateAxis("MMM dd, yyyy"), new NumberAxis("#.##"));
 
-        chartData.setData(getData());
-        chartData.setDataDrawStrategy(new DrawLine());
-        chartData.setAxisDrawStrategy(new DrawGrid());
-
-
-        Indicator indicator = new Indicator();
-        ChartData<String, Float> chartDataIndicator = new ChartData<>();
-        chartDataIndicator.setxAxis(new StringDateAxis("MMM dd, yyyy"));
-        chartDataIndicator.setyAxis(new NumberAxis("#.##"));
-        List<SingleData<String, Float>> singleData = (List<SingleData<String, Float>>)IndicatorCalculator.getEMA2(chartData.getData(),15);
-        chartDataIndicator.setData(singleData);
-        chartDataIndicator.setPainter(new DefaultPainter());
-        chartDataIndicator.getPainter().setColor(Painter.LINE_COLOR, Color.RED);
-        chartDataIndicator.setDataDrawStrategy(new DrawLine());
-        indicator.setChartData(chartDataIndicator);
-        indicator.setOverlay(true);
+        List<SingleData<String, Float>> singleData = (List<SingleData<String, Float>>)IndicatorCalculator.getEMA2(instrument.getData(),15);
+        indicator.setData(singleData);
+        indicator.setPainter(new DefaultPainter());
+        indicator.getPainter().setColor(Painter.LINE_COLOR, Color.RED);
+        indicator.setDataDrawStrategy(new DrawLine());
 
         instrument.addIndicator(indicator);
 
@@ -79,15 +60,12 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(isCandle){
-                    chartData.setDataDrawStrategy(new DrawLine());
+                    instrument.setDataDrawStrategy(new DrawLine());
                     isCandle = false;
                 } else {
-
-                    chartData.setData(getData());
-                    chartData.setDataDrawStrategy(new DrawCandleStick());
+                    instrument.setDataDrawStrategy(new DrawCandleStick());
                     isCandle = true;
                 }
-
                 chartView.invalidate();
             }
         });

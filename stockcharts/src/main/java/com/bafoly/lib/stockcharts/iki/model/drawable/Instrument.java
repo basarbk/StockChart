@@ -1,7 +1,10 @@
 package com.bafoly.lib.stockcharts.iki.model.drawable;
 
+import com.bafoly.lib.stockcharts.iki.draw.DrawGrid;
+import com.bafoly.lib.stockcharts.iki.model.Environment;
+import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,11 +13,22 @@ import java.util.List;
  * When the draw method is called from the framework, this instance will be responsible for<br>
  * drawing the sub instances.
  */
-public class Instrument extends BaseModel{
+public class Instrument<X, Y extends Number> extends ChartModel<X, Y>{
 
     private List<Indicator> indicators = new ArrayList<>();
 
     private List<TechnicalAnalysis> technicalAnalyses = new ArrayList<>();
+
+    public Instrument() {
+        super(null, null);
+        setEnvironment(new Environment());
+    }
+
+    public Instrument(Axis xAxis, Axis yAxis) {
+        super(xAxis, yAxis);
+        setEnvironment(new Environment());
+        setAxisDrawStrategy(new DrawGrid());
+    }
 
     public void addIndicator(Indicator indicator){
         indicator.setParent(this);
@@ -35,7 +49,7 @@ public class Instrument extends BaseModel{
 
     @Override
     public void draw() {
-        chartData.draw(getEnvironment());
+        draw(getEnvironment());
 
         for(Indicator indicator:indicators){
             if(indicator.isOverlay())

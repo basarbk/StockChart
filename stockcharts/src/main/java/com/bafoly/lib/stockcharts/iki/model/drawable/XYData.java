@@ -26,6 +26,13 @@ public abstract class XYData<X, Y extends Number> {
 
     Painter painter;
 
+    public XYData(Axis xAxis, Axis yAxis) {
+        this.xAxis = xAxis;
+        this.yAxis = yAxis;
+    }
+
+
+
     /**
      * This method will be implemented to call the draw strategy
      */

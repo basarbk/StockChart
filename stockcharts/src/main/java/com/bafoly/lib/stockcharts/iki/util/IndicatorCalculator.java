@@ -75,10 +75,10 @@ public class IndicatorCalculator {
     }
 
 //    public static List<Float> calculateMFI(IndikatorMFI indMFI, int periyot){
-//        List<Float> close = indMFI.getParentInstrumentData().getChartData().getKapanis();
-//        List<Float> highs = indMFI.getParentInstrumentData().getChartData().getYuksek();
-//        List<Float> lows = indMFI.getParentInstrumentData().getChartData().getDusuk();
-//        List<Float> volume = indMFI.getParentInstrumentData().getChartData().getIslem();
+//        List<Float> close = indMFI.getParentInstrumentData().getChartModel().getKapanis();
+//        List<Float> highs = indMFI.getParentInstrumentData().getChartModel().getYuksek();
+//        List<Float> lows = indMFI.getParentInstrumentData().getChartModel().getDusuk();
+//        List<Float> volume = indMFI.getParentInstrumentData().getChartModel().getIslem();
 //
 //        List<Float> mfi = new ArrayList<Float>();
 //        List<Float> tp = new ArrayList<Float>();
@@ -174,15 +174,15 @@ public class IndicatorCalculator {
 //    public static List<Float> calculateWilliamsR(IndikatorWilliamsR indW, int periyot){
 //        List<Float> williamR = new ArrayList<Float>();
 //        float curMin, curMax;
-//        for(int i = 0;i<indW.getParentInstrumentData().getChartData().getKapanis().size();i++){
+//        for(int i = 0;i<indW.getParentInstrumentData().getChartModel().getKapanis().size();i++){
 //            if(i<periyot-1){
-//                williamR.add(indW.getParentInstrumentData().getChartData().getKapanis().get(i));
+//                williamR.add(indW.getParentInstrumentData().getChartModel().getKapanis().get(i));
 //            }else if(i>=periyot-1){
-//                curMin = getMin(indW.getParentInstrumentData().getChartData().getDusuk(),periyot,i);
-//                curMax = getMax(indW.getParentInstrumentData().getChartData().getYuksek(),periyot,i);
+//                curMin = getMin(indW.getParentInstrumentData().getChartModel().getDusuk(),periyot,i);
+//                curMax = getMax(indW.getParentInstrumentData().getChartModel().getYuksek(),periyot,i);
 //                indW.setLastMax(curMax);
 //                indW.setLastMin(curMin);
-//                williamR.add((-100*(curMax-indW.getParentInstrumentData().getChartData().getKapanis().get(i))/(curMax-curMin)));
+//                williamR.add((-100*(curMax-indW.getParentInstrumentData().getChartModel().getKapanis().get(i))/(curMax-curMin)));
 //            }
 //        }
 //        return williamR;

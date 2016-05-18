@@ -1,14 +1,16 @@
 package com.bafoly.lib.stockcharts.iki.model.drawable;
 
+import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
+
 /**
  * Created by basarb on 5/3/2016.
  */
-public class Indicator extends BaseModel {
+public class Indicator<X, Y extends Number>  extends ChartModel<X,Y> {
 
     /**
      * Indicators must be assigned to Instruments. This is the reference for it.
      */
-    BaseModel parent;
+    ChartModel parent;
 
     /**
      * Indicators have their calculation algorithm which is based on a period of data.
@@ -19,13 +21,21 @@ public class Indicator extends BaseModel {
      * Indicators can be drawn as standalone charts or Overlay charts to existing Instrument chart.
      * When it's drawn as overlay, the environment values will be taken from parent
      */
-    boolean overlay = false;
+    boolean overlay = true;
 
-    public BaseModel getParent() {
+    public Indicator() {
+        super(null, null);
+    }
+
+    public Indicator(Axis xAxis, Axis yAxis) {
+        super(xAxis, yAxis);
+    }
+
+    public ChartModel getParent() {
         return parent;
     }
 
-    public void setParent(BaseModel parent) {
+    public void setParent(ChartModel parent) {
         this.parent = parent;
     }
 
@@ -48,10 +58,9 @@ public class Indicator extends BaseModel {
     @Override
     public void draw() {
         if(overlay){
-            chartData.draw(parent.getEnvironment());
+            draw(parent.getEnvironment());
         } else {
-            chartData.draw(getEnvironment());
+            draw(getEnvironment());
         }
-
     }
 }

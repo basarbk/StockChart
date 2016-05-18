@@ -2,8 +2,6 @@ package com.bafoly.lib.stockcharts.iki.android;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -11,11 +9,8 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import com.bafoly.lib.stockcharts.iki.model.CanvasAdapter;
-import com.bafoly.lib.stockcharts.iki.model.drawable.BaseModel;
-import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
-import com.bafoly.lib.stockcharts.iki.model.Painter;
-import com.bafoly.lib.stockcharts.iki.model.axis.DateAxis;
+import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
 
 /**
  * Created by basarb on 4/28/2016.
@@ -24,9 +19,7 @@ public class ChartView extends View {
 
     Context context;
 
-    BaseModel main;
-
-    ChartData chartData;
+    ChartModel chartModel;
 
     Environment environment;
 
@@ -56,13 +49,12 @@ public class ChartView extends View {
         mGestureDetector = new GestureDetector(context, mGestureListener);
     }
 
-    public void draw(BaseModel main){
-        this.main = main;
+    public void draw(ChartModel main){
 
-        chartData = main.getChartData();
-        chartData.getPainter().setDensity(context.getResources().getDisplayMetrics().density);
+        chartModel = main;
+        chartModel.getPainter().setDensity(context.getResources().getDisplayMetrics().density);
 
-        chartData.getPainter().init();
+        chartModel.getPainter().init();
 
         environment = main.getEnvironment();
 
@@ -77,10 +69,10 @@ public class ChartView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if(main!=null){
+        if(chartModel!=null){
             canvasAdapter.setCanvas(canvas);
-            environment.calculateMaxMin(chartData);
-            main.draw();
+            environment.calculateMaxMin(chartModel);
+            chartModel.draw();
 
         } else {
             // empty
