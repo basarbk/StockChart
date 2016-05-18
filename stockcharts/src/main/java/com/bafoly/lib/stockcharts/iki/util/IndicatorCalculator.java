@@ -44,6 +44,10 @@ public class IndicatorCalculator {
                     ((SingleData)emaData.get(i)).setOne(sum/periyot);
                 }
             }
+
+            for(int i = 0;i<periyot;i++){
+                emaData.set(i, null);
+            }
         }
 
         return emaData;

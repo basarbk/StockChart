@@ -8,6 +8,9 @@ import com.bafoly.lib.stockcharts.iki.model.Painter;
 import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by basarb on 5/8/2016.
  */
@@ -32,19 +35,25 @@ public class DrawGrid implements DrawStrategy<ChartData> {
 
         int part = environment.getDataCount()/environment.verticalGrid;
 
+        List<Number> xs = new ArrayList<>();
+        List<Number> ys = new ArrayList<>();
+
         for(int i = 0;i<=environment.verticalGrid;i++){
-            x.addIndex(i*part);
+            xs.add(i*part);
             float posX = environment.getX(i*part);
             canvasAdapter.drawLine(posX, top, posX, top+height, chartData.getPainter().getPaint(Painter.AXIS_COLOR));
         }
 
         for(int i = 1;i<=environment.horizontalGrid;i++){
             float v = (float)(environment.max-i*environment.gridValueSteps);
-            y.addIndex(v);
+            ys.add(v);
             float posY = environment.getY(v);
             canvasAdapter.drawLine(left-buffer, posY, left+width+buffer, posY, chartData.getPainter().getPaint(Painter.AXIS_COLOR));
 
         }
+
+        x.setIndexes(xs);
+        y.setIndexes(ys);
 
     }
 }

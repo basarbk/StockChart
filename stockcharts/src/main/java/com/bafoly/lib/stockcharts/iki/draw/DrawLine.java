@@ -26,19 +26,23 @@ public class DrawLine implements DrawStrategy<ChartData> {
         CanvasAdapter canvasAdapter = environment.getCanvasAdapter();
 
         List<SingleData> sd = chartData.getData();
+        boolean pathStarted = false;
 
         for(int i = environment.visibleXbegin;i<environment.visibleXend;i++){
             if(i>=sd.size())
                 break;
 
-            if(i==environment.visibleXbegin)
-                canvasAdapter.createPath();
+            if(sd.get(i) == null)
+                continue;
+
 
             float y = environment.getY(sd.get(i).getLineData().floatValue());
-
             float x = environment.getX(i-environment.visibleXbegin);
-            if(i==environment.visibleXbegin){
+
+            if(!pathStarted){
+                canvasAdapter.createPath();
                 canvasAdapter.moveTo(x, y);
+                pathStarted = true;
             }
             else{
                 canvasAdapter.lineTo(x,y);
@@ -52,13 +56,7 @@ public class DrawLine implements DrawStrategy<ChartData> {
                 float d = Math.abs(b.top-b.bottom)*1.5f;
                 canvasAdapter.drawText(val, x, yy+d, chartData.getPainter().getPaint(Painter.AXIS_TEXT_COLOR));
             }
-            // draw x axis data
-            //axisX.draw(canvasAdapter, sd.get(i).getX());
-
         }
-
-        // draw y axis data
-        //axisY.draw(canvasAdapter);
 
         for(Number n : axisY.getIndexes()){
             float yyy = environment.getY(n.floatValue());

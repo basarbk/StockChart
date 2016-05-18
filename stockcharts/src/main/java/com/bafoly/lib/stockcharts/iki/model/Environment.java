@@ -171,6 +171,9 @@ public class Environment {
             visibleDataCount = dataCount;
             firstTime = false;
         }
+        max = Double.NaN;
+        min = Double.NaN;
+
         for(int i = visibleXbegin; i<visibleXend; i++){
             if(i>=dataCount)
                 break;
