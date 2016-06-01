@@ -1,5 +1,7 @@
 package com.bafoly.lib.stockcharts.iki.util;
 
+import android.util.Log;
+
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 
 import java.util.ArrayList;
@@ -10,68 +12,204 @@ import java.util.List;
  */
 public class IndicatorCalculator {
 
-    public static <Z extends Number> List<Z> getEMA(List<Z> vals, int periyot){
-        List<Number> ema = new ArrayList<>();
-        Number currentSum;
-        Number carpan = (2.0f)/(periyot+1);
-        for(int i = 0;i<vals.size();i++){
-            if(i<periyot){
-                ema.add(vals.get(i));
-            }else if(i==periyot){
-                currentSum = 0;
-                for(Number t : vals.subList(i-periyot, i)){
-                    currentSum = currentSum.doubleValue() + t.doubleValue();
-                }
-                ema.add((currentSum.doubleValue()/periyot));
-            }else{
-                ema.add(((vals.get(i).doubleValue()-ema.get(ema.size()-1).doubleValue())*carpan.doubleValue())+ema.get(ema.size()-1).doubleValue());
-            }
+    // common methods
+    private static double getAverage(List<Double> data, int period, int index){
+        index++;
+        double currentSum = 0;
+        for(double singleData : data.subList(index-period, index)){
+            currentSum=currentSum+singleData;
         }
-        return (List<Z>)ema;
+        return currentSum/period;
     }
 
-    public static <Z extends SingleData> List<Z> getEMA2(List<Z> vals, int periyot){
-        List<Z> emaData = new ArrayList<>(vals.size());
+    private static double getMin(List<Double> data, int period, int index){
+        index++;
+        double min = data.get(index-period);
+        for(double singleData : data.subList(index-period, index)){
+            if(min > singleData)
+                min = singleData;
+        }
+        return min;
+    }
 
-        if(vals.get(0) instanceof SingleData){
-            for(int i = 0;i<vals.size();i++){
-                emaData.add((Z)((SingleData)vals.get(i)).copy());
-                if(i>=periyot){
-                    double sum = 0;
-                    for(SingleData sd : ((List<SingleData>) vals).subList(i-periyot,i)){
-                        sum += sd.getLineData().doubleValue();
-                    }
-                    ((SingleData)emaData.get(i)).setOne(sum/periyot);
+    private static double getMax(List<Double> data, int period, int index){
+        index++;
+        double max = data.get(index-period);
+        for(double singleData : data.subList(index-period, index)){
+            if(max < singleData)
+                max = singleData;
+        }
+        return max;
+    }
+
+    private static double getMeanDeviation(List<Double> tp, double tpma, int period, int index){
+        index++;
+        double meanDeviation = 0;
+        for(int k = index-period;k<index;k++){
+            meanDeviation = meanDeviation+Math.abs(tpma-tp.get(k));
+        }
+        return meanDeviation/period;
+    }
+
+    private static List<Double> getStdDev(List<Double> data, int period){
+        List<Double> average = new ArrayList<>();
+        List<Double> deviationSquare = new ArrayList<>();
+        List<Double> standardDeviation = new ArrayList<>();
+
+        for(int i=0;i<data.size();i++){
+            if(i<period-1){
+                average.add(data.get(i));
+                deviationSquare.add(0d);
+                standardDeviation.add(0d);
+            } else if(i>=period-1){
+                average.add(getAverage(data, period, i));
+
+                double currentDeviation = data.get(i) - average.get(i);
+
+                deviationSquare.add(currentDeviation*currentDeviation);
+                for(int j = i - period + 1; j<i; j++){
+                    currentDeviation = data.get(j)-average.get(i);
+                    deviationSquare.set(j, currentDeviation * currentDeviation);
                 }
-            }
 
-            for(int i = 0;i<periyot;i++){
-                emaData.set(i, null);
+                standardDeviation.add(Math.sqrt(getAverage(deviationSquare, period, i)));
+            }
+        }
+        return standardDeviation;
+    }
+
+    // indicator calculation methods
+    public static <Z extends SingleData> List<Z> getEMA(List<? extends SingleData> data, int period){
+        List<Z> emaData = new ArrayList<>(data.size());
+
+        double multiplier = 2 / ((double)period + 1);
+
+        List<Double> values = new ArrayList<>();
+
+        for(int i = 0;i<data.size();i++){
+            values.add(data.get(i).getOne().doubleValue());
+            emaData.add((Z)(data.get(i)).copy());
+            if(i==period-1){
+                emaData.get(i).setOne(getAverage(values, period, i));
+            } else if(i>=period-1){
+                double previousEma = emaData.get(i-1).getOne().doubleValue();
+                double value = ((data.get(i).getOne().doubleValue() - previousEma)*multiplier)+previousEma;
+                emaData.get(i).setOne(value);
             }
         }
 
+        for(int i = 0;i<period-1;i++){
+            emaData.set(i, null);
+        }
         return emaData;
     }
 
-    private static float getAverage(List<Float> vals, int periyot, int idx){
-        idx++;
-        float currentSum = 0;
-        for(float t:vals.subList(idx-periyot, idx)){
-            currentSum=currentSum+t;
-        }
-        return currentSum/periyot;
-    }
 
-    public static List<Float> getSMA(List<Float> vals, int periyot){
-        List<Float> sma = new ArrayList<Float>();
-        for(int i = 0;i<vals.size();i++){
-            if(i<periyot-1){
-                sma.add(vals.get(i));
-            }else if(i>=periyot-1){
-                sma.add(getAverage(vals,periyot,i));
+
+    public static <Z extends SingleData> List<Z> getSMA(List<? extends SingleData> data, int period){
+        List<Z> smaData = new ArrayList<>(data.size());
+        List<Double> values = new ArrayList<>();
+        for(int i = 0;i<data.size();i++){
+            smaData.add((Z)(data.get(i)).copy());
+            values.add(data.get(i).getOne().doubleValue());
+            if(i>=period-1){
+                smaData.get(i).setOne(getAverage(values, period, i));
             }
         }
-        return sma;
+
+        for(int i = 0;i<period-1;i++){
+            smaData.set(i, null);
+        }
+
+        return smaData;
+    }
+
+    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:relative_strength_index_rsi
+    public static <Z extends SingleData> List<Z> getRSI(List<? extends SingleData> data, int period){
+        List<Z> rsiData = new ArrayList<>(data.size());
+
+        List<Double> gain = new ArrayList<>();
+        List<Double> loss = new ArrayList<>();
+        List<Double> rsi = new ArrayList<>();
+        List<Double> rsiAverageGain = new ArrayList<>();
+        List<Double> rsiAverageLoss = new ArrayList<>();
+        gain.add(0d);
+        loss.add(0d);
+        rsi.add(0d);
+        rsiAverageGain.add(0d);
+        rsiAverageLoss.add(0d);
+
+        rsiData.add((Z)data.get(0).copy());
+
+        double curVal, prevVal;
+        for(int i = 1;i<data.size();i++){
+
+            rsiData.add((Z)data.get(i).copy());
+
+            curVal = data.get(i).getOne().doubleValue();
+            prevVal = data.get(i-1).getOne().doubleValue();
+            if(curVal>prevVal){
+                gain.add(curVal-prevVal);
+                loss.add(0d);
+            } else if(prevVal>curVal){
+                gain.add(0d);
+                loss.add(prevVal-curVal);
+            } else {
+                gain.add(0d);
+                loss.add(0d);
+            }
+            if(i<period-1){
+                rsi.add(0d);
+                rsiAverageGain.add(0d);
+                rsiAverageLoss.add(0d);
+            } else if(i==period-1){
+                rsiAverageGain.add(getAverage(gain, period, i));
+                rsiAverageLoss.add(getAverage(loss, period, i));
+                rsi.add(100-(100/(1+(rsiAverageGain.get(i)/rsiAverageLoss.get(i)))));
+            } else {
+                rsiAverageGain.add(((rsiAverageGain.get(i-1)*(period-1))+gain.get(i))/period);
+                rsiAverageLoss.add(((rsiAverageLoss.get(i-1)*(period-1))+loss.get(i))/period);
+                rsi.add(100-(100/(1+(rsiAverageGain.get(i)/rsiAverageLoss.get(i)))));
+            }
+
+            rsiData.get(i).setOne(rsi.get(i));
+        }
+
+        for(int i = 0;i<period;i++){
+            rsiData.set(i, null);
+        }
+        return rsiData;
+    }
+
+
+    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:stochrsi
+    public static <Z extends SingleData> List<Z> getStochasticRSI(List<? extends SingleData> data, int period){
+        List<Z> rsiData = getRSI(data, period);
+        List<Z> stochasticRSIData = new ArrayList<>();
+
+        List<Double> rsiDouble = new ArrayList<>();
+        double curMin, curMax;
+        for(int i = 0;i<data.size();i++){
+            double val = rsiData.get(i) == null ? 0d : rsiData.get(i).getOne().doubleValue();
+            rsiDouble.add(val);
+            stochasticRSIData.add((Z)data.get(i).copy());
+            if(i>=period-1){
+                curMin = getMin(rsiDouble,period,i);
+                curMax = getMax(rsiDouble,period,i);
+                if(curMax-curMin>0){
+                    double valHere = (rsiData.get(i).getOne().doubleValue()-curMin)/(curMax-curMin);
+                    stochasticRSIData.get(i).setOne(valHere);
+                } else {
+                    stochasticRSIData.get(i).setOne(0d);
+                }
+            }
+        }
+
+        for(int i = 0;i<period;i++){
+            stochasticRSIData.set(i, null);
+        }
+
+        return stochasticRSIData;
     }
 
 //    public static List<Float> calculateMFI(IndikatorMFI indMFI, int periyot){
@@ -116,306 +254,193 @@ public class IndicatorCalculator {
 //
 //    }
 
-    public static List<Float> getMFI(List<Float> close, List<Float> highs, List<Float> lows, List<Float> volume, int periyot){
-        List<Float> mfi = new ArrayList<Float>();
-        List<Float> tp = new ArrayList<Float>();
-        List<Float> positiveFlow = new ArrayList<Float>();
-        List<Float> negativeFlow = new ArrayList<Float>();
-        float flowRatio = 0f;
-        mfi.add(0f);
-        tp.add((close.get(0)+highs.get(0)+lows.get(0))/3);
-        positiveFlow.add(0f);
-        negativeFlow.add(0f);
-        for(int i = 1;i<close.size();i++){
-            tp.add((close.get(i)+highs.get(i)+lows.get(i))/3);
-            if(tp.get(i)>tp.get(i-1)){
-                positiveFlow.add(tp.get(i)*volume.get(i));
-                negativeFlow.add(0f);
-            } else if (tp.get(i)<tp.get(i-1)){
-                positiveFlow.add(0f);
-                negativeFlow.add(tp.get(i)*volume.get(i));
-            } else {
-                positiveFlow.add(0f);
-                negativeFlow.add(0f);
-            }
-
-            if(i<periyot-1){
-                mfi.add(0f);
-            } else {
-                flowRatio = getAverage(positiveFlow, periyot, i)/getAverage(negativeFlow, periyot, i);
-                mfi.add(100-(100/(1+flowRatio)));
-            }
-        }
-        return mfi;
-    }
-
-    private static float getMin(List<Float> vals, int periyot, int idx){
-        idx++;
-        float min = vals.get(idx-periyot);
-        for(float v:vals.subList(idx-periyot, idx)){
-            if(v<min){
-                min = v;
-            }
-        }
-        return min;
-    }
-
-    private static float getMax(List<Float> vals, int periyot, int idx){
-        idx++;
-        float max = vals.get(idx-periyot);
-        for(float v:vals.subList(idx-periyot, idx)){
-            if(v>max){
-                max = v;
-            }
-        }
-        return max;
-    }
-
-//    public static List<Float> calculateWilliamsR(IndikatorWilliamsR indW, int periyot){
+//    public static List<Float> getMFI(List<Float> close, List<Float> highs, List<Float> lows, List<Float> volume, int periyot){
+//        List<Float> mfi = new ArrayList<Float>();
+//        List<Float> tp = new ArrayList<Float>();
+//        List<Float> positiveFlow = new ArrayList<Float>();
+//        List<Float> negativeFlow = new ArrayList<Float>();
+//        float flowRatio = 0f;
+//        mfi.add(0f);
+//        tp.add((close.get(0)+highs.get(0)+lows.get(0))/3);
+//        positiveFlow.add(0f);
+//        negativeFlow.add(0f);
+//        for(int i = 1;i<close.size();i++){
+//            tp.add((close.get(i)+highs.get(i)+lows.get(i))/3);
+//            if(tp.get(i)>tp.get(i-1)){
+//                positiveFlow.add(tp.get(i)*volume.get(i));
+//                negativeFlow.add(0f);
+//            } else if (tp.get(i)<tp.get(i-1)){
+//                positiveFlow.add(0f);
+//                negativeFlow.add(tp.get(i)*volume.get(i));
+//            } else {
+//                positiveFlow.add(0f);
+//                negativeFlow.add(0f);
+//            }
+//
+//            if(i<periyot-1){
+//                mfi.add(0f);
+//            } else {
+//                flowRatio = getAverage(positiveFlow, periyot, i)/getAverage(negativeFlow, periyot, i);
+//                mfi.add(100-(100/(1+flowRatio)));
+//            }
+//        }
+//        return mfi;
+//    }
+//
+//
+//
+////    public static List<Float> calculateWilliamsR(IndikatorWilliamsR indW, int periyot){
+////        List<Float> williamR = new ArrayList<Float>();
+////        float curMin, curMax;
+////        for(int i = 0;i<indW.getParentInstrumentData().getChartModel().getKapanis().size();i++){
+////            if(i<periyot-1){
+////                williamR.add(indW.getParentInstrumentData().getChartModel().getKapanis().get(i));
+////            }else if(i>=periyot-1){
+////                curMin = getMin(indW.getParentInstrumentData().getChartModel().getDusuk(),periyot,i);
+////                curMax = getMax(indW.getParentInstrumentData().getChartModel().getYuksek(),periyot,i);
+////                indW.setLastMax(curMax);
+////                indW.setLastMin(curMin);
+////                williamR.add((-100*(curMax-indW.getParentInstrumentData().getChartModel().getKapanis().get(i))/(curMax-curMin)));
+////            }
+////        }
+////        return williamR;
+////    }
+//
+//    public static List<Float> getWilliamsR(List<Float> close, List<Float> highs, List<Float> lows, int periyot){
 //        List<Float> williamR = new ArrayList<Float>();
 //        float curMin, curMax;
-//        for(int i = 0;i<indW.getParentInstrumentData().getChartModel().getKapanis().size();i++){
+//        for(int i = 0;i<close.size();i++){
 //            if(i<periyot-1){
-//                williamR.add(indW.getParentInstrumentData().getChartModel().getKapanis().get(i));
+//                williamR.add(close.get(i));
 //            }else if(i>=periyot-1){
-//                curMin = getMin(indW.getParentInstrumentData().getChartModel().getDusuk(),periyot,i);
-//                curMax = getMax(indW.getParentInstrumentData().getChartModel().getYuksek(),periyot,i);
-//                indW.setLastMax(curMax);
-//                indW.setLastMin(curMin);
-//                williamR.add((-100*(curMax-indW.getParentInstrumentData().getChartModel().getKapanis().get(i))/(curMax-curMin)));
+//                curMin = getMin(lows,periyot,i);
+//                curMax = getMax(highs,periyot,i);
+//                williamR.add((-100*(curMax-close.get(i))/(curMax-curMin)));
 //            }
 //        }
 //        return williamR;
 //    }
-
-    public static List<Float> getWilliamsR(List<Float> close, List<Float> highs, List<Float> lows, int periyot){
-        List<Float> williamR = new ArrayList<Float>();
-        float curMin, curMax;
-        for(int i = 0;i<close.size();i++){
-            if(i<periyot-1){
-                williamR.add(close.get(i));
-            }else if(i>=periyot-1){
-                curMin = getMin(lows,periyot,i);
-                curMax = getMax(highs,periyot,i);
-                williamR.add((-100*(curMax-close.get(i))/(curMax-curMin)));
-            }
-        }
-        return williamR;
-    }
-
-    public static List<Float> rsiavaragegain;
-    public static List<Float> rsiavarageloss;
-
-    public static List<Float> getRSI(List<Float> vals, int periyot){
-        List<Float> gain = new ArrayList<Float>();
-        List<Float> loss = new ArrayList<Float>();
-        List<Float> rsi = new ArrayList<Float>();
-        rsiavaragegain = new ArrayList<Float>();
-        rsiavarageloss = new ArrayList<Float>();
-        gain.add(0f);
-        loss.add(0f);
-        rsi.add(0f);
-        rsiavaragegain.add(0f);
-        rsiavarageloss.add(0f);
-        float curVal, prevVal;
-        for(int i = 1;i<vals.size();i++){
-            curVal = vals.get(i);
-            prevVal = vals.get(i-1);
-            if(curVal>prevVal){
-                gain.add(curVal-prevVal);
-                loss.add(0f);
-            } else if(prevVal>curVal){
-                gain.add(0f);
-                loss.add(prevVal-curVal);
-            } else {
-                gain.add(0f);
-                loss.add(0f);
-            }
-            if(i<periyot-1){
-                rsi.add(0f);
-                rsiavaragegain.add(0f);
-                rsiavarageloss.add(0f);
-            } else if(i==periyot-1){
-                rsiavaragegain.add(getAverage(gain, periyot, i));
-                rsiavarageloss.add(getAverage(loss, periyot, i));
-                rsi.add(100-(100/(1+(rsiavaragegain.get(i)/rsiavarageloss.get(i)))));
-            } else {
-                rsiavaragegain.add(((rsiavaragegain.get(i-1)*(periyot-1))+gain.get(i))/periyot);
-                rsiavarageloss.add(((rsiavarageloss.get(i-1)*(periyot-1))+loss.get(i))/periyot);
-                rsi.add(100-(100/(1+(rsiavaragegain.get(i)/rsiavarageloss.get(i)))));
-            }
-        }
-        return rsi;
-    }
-
-    private static float getMeanDeviation(List<Float> tp, float tpma, int periyot, int i){
-        i++;
-        float meandev = 0f;
-        for(int k = i-periyot;k<i;k++){
-            meandev = meandev+Math.abs(tpma-tp.get(k));
-        }
-        return meandev/periyot;
-    }
-
-    public static List<Float> getCCI(List<Float> close, List<Float> highs, List<Float> lows, int periyot){
-        float constant = 0.015f;
-        List<Float> tp = new ArrayList<Float>();
-        List<Float> tpma = new ArrayList<Float>();
-        List<Float> meandev = new ArrayList<Float>();
-        List<Float> cci = new ArrayList<Float>();
-        for(int i = 0;i<close.size();i++){
-            tp.add((close.get(i)+highs.get(i)+lows.get(i))/3);
-            if(i<periyot-1){
-                tpma.add(tp.get(i));
-                meandev.add(0f);
-                cci.add(0f);
-            } else {
-                tpma.add(getAverage(tp, periyot, i));
-                meandev.add(getMeanDeviation(tp, tpma.get(i), periyot, i));
-                cci.add((tp.get(i)-tpma.get(i))/(constant*meandev.get(i)));
-            }
-        }
-        return cci;
-    }
-
-    public static List<Float> getMACDLine(List<Float> vals){
-        List<Float> ema12 = getEMA(vals,12);
-        List<Float> ema26 = getEMA(vals,26);
-        List<Float> macd = new ArrayList<Float>();
-        for(int i=0;i<ema12.size();i++){
-            macd.add(ema12.get(i)-ema26.get(i));
-        }
-        return macd;
-    }
-    public static List<Float> getMACD(List<Float> vals){
-        List<Float> ema12 = getEMA(vals,12);
-        List<Float> ema26 = getEMA(vals,26);
-        List<Float> macd = new ArrayList<Float>();
-        for(int i=0;i<ema12.size();i++){
-            macd.add(ema12.get(i)-ema26.get(i));
-        }
-        return getEMA(macd, 9);
-    }
-
-    public static List<Float> getStochasticRSI(List<Float> vals, int periyot){
-        List<Float> rsi = getRSI(vals, periyot);
-        List<Float> stochRSI = new ArrayList<Float>();
-        float curMin, curMax;
-        for(int i = 0;i<rsi.size();i++){
-            if(i<periyot-1){
-                stochRSI.add(0f);
-            }else if(i>=periyot-1){
-                curMin = getMin(rsi,periyot,i);
-                curMax = getMax(rsi,periyot,i);
-                stochRSI.add((rsi.get(i)-curMin)/(curMax-curMin));
-            }
-        }
-        return stochRSI;
-    }
-
-    private static List<Float> getStdDev(List<Float> vals, int periyot){
-        List<Float> avarage = new ArrayList<Float>();
-        List<Float> deviationsquare = new ArrayList<Float>();
-        List<Float> stddeviation = new ArrayList<Float>();
-        for(int i=0;i<vals.size();i++){
-            if(i<periyot-1){
-                avarage.add(vals.get(i));
-                deviationsquare.add(0f);
-                stddeviation.add(0f);
-            }else if(i>=periyot-1){
-                avarage.add(getAverage(vals, periyot, i));
-            }
-        }
-
-        float curDev;
-        for(int k=periyot-1;k<vals.size();k++){
-            curDev =vals.get(k)-avarage.get(k);
-            deviationsquare.add(curDev*curDev);
-            for(int u=k-periyot+1;u<k;u++){
-                curDev = vals.get(u)-avarage.get(k);
-                deviationsquare.set(u,curDev*curDev);
-            }
-            stddeviation.add((float) Math.sqrt(getAverage(deviationsquare, periyot, k)));
-        }
-
-        return stddeviation;
-
-    }
-
-    public static List<List<Float>> getBollingerBands(List<Float> vals, int periyot){
-
-        List<Float> bollingerUpperBand = new ArrayList<Float>();
-        List<Float> bollingerLowerBand = new ArrayList<Float>();
-        List<Float> bollingerBandWidth = new ArrayList<Float>();
-
-        List<Float> stdDev = getStdDev(vals, periyot);
-        List<Float> sma = getSMA(vals, periyot);
-
-        for(int i = 0;i<vals.size();i++){
-            bollingerUpperBand.add(sma.get(i)+(stdDev.get(i)*2));
-            bollingerLowerBand.add(sma.get(i)-(stdDev.get(i)*2));
-            bollingerBandWidth.add(stdDev.get(i)*4);
-
-        }
-
-        List<List<Float>> bollinger = new ArrayList<List<Float>>();
-        bollinger.add(bollingerUpperBand);
-        bollinger.add(bollingerLowerBand);
-        bollinger.add(bollingerBandWidth);
-
-        return bollinger;
-    }
-
-    public static float getSum(Float[] vals){
-        float val = 0f;
-        for(Float f:vals){
-            val = val + f;
-        }
-        return val;
-    }
-
-    public static List<Float> getCorrelation(List<Float> valsA, List<Float> valsB, int periyot){
-        List<Float> correlation = new ArrayList<Float>();
-        float meanA=0f;
-        float meanB=0f;
-        float curA = 0f;
-        float curB = 0;
-        Float[] sqrA = new Float[periyot];
-        Float[] sqrB = new Float[periyot];
-        Float[] AtimesB = new Float[periyot];
-
-
-        for(int i=0;i<valsA.size();i++){
-            if(i<periyot-1){
-                correlation.add(0f);
-            }else if(i>=periyot-1){
-                meanA = getAverage(valsA, periyot, i);
-                meanB = getAverage(valsB, periyot, i);
-                for(int k = 0;k<periyot;k++){
-                    curA = meanA - valsA.get(i-k);
-                    curB = meanB - valsB.get(i-k);
-                    sqrA[k] = curA*curA;
-                    sqrB[k] = curB*curB;
-                    AtimesB[k] = curA*curB;
-                }
-                correlation.add((float) (getSum(AtimesB)/Math.sqrt(getSum(sqrA)*getSum(sqrB))));
-            }
-        }
-        return correlation;
-    }
-
-    public static List<Float> getStochasticK(List<Float> close,List<Float> highs,List<Float> mins, int periyot){
-        List<Float> stochK = new ArrayList<Float>();
-        float curMin, curMax;
-        for(int i = 0;i<close.size();i++){
-            if(i<periyot-1){
-                stochK.add(0f);
-            } else {
-                curMin = getMin(mins,periyot,i);
-                curMax = getMax(highs,periyot,i);
-                stochK.add(((close.get(i)-curMin)/(curMax-curMin)) * 100);
-            }
-        }
-        return stochK;
-    }
+//
+//
+//
+//
+//    public static List<Float> getCCI(List<Float> close, List<Float> highs, List<Float> lows, int periyot){
+//        float constant = 0.015f;
+//        List<Float> tp = new ArrayList<Float>();
+//        List<Float> tpma = new ArrayList<Float>();
+//        List<Float> meandev = new ArrayList<Float>();
+//        List<Float> cci = new ArrayList<Float>();
+//        for(int i = 0;i<close.size();i++){
+//            tp.add((close.get(i)+highs.get(i)+lows.get(i))/3);
+//            if(i<periyot-1){
+//                tpma.add(tp.get(i));
+//                meandev.add(0f);
+//                cci.add(0f);
+//            } else {
+//                tpma.add(getAverage(tp, periyot, i));
+//                meandev.add(getMeanDeviation(tp, tpma.get(i), periyot, i));
+//                cci.add((tp.get(i)-tpma.get(i))/(constant*meandev.get(i)));
+//            }
+//        }
+//        return cci;
+//    }
+//
+//    public static List<Float> getMACDLine(List<Float> vals){
+//        List<Float> ema12 = getEMA(vals,12);
+//        List<Float> ema26 = getEMA(vals,26);
+//        List<Float> macd = new ArrayList<Float>();
+//        for(int i=0;i<ema12.size();i++){
+//            macd.add(ema12.get(i)-ema26.get(i));
+//        }
+//        return macd;
+//    }
+//    public static List<Float> getMACD(List<Float> vals){
+//        List<Float> ema12 = getEMA(vals,12);
+//        List<Float> ema26 = getEMA(vals,26);
+//        List<Float> macd = new ArrayList<Float>();
+//        for(int i=0;i<ema12.size();i++){
+//            macd.add(ema12.get(i)-ema26.get(i));
+//        }
+//        return getEMA(macd, 9);
+//    }
+//
+//
+//
+//
+//    public static List<List<Float>> getBollingerBands(List<Float> vals, int periyot){
+//
+//        List<Float> bollingerUpperBand = new ArrayList<Float>();
+//        List<Float> bollingerLowerBand = new ArrayList<Float>();
+//        List<Float> bollingerBandWidth = new ArrayList<Float>();
+//
+//        List<Float> stdDev = getStdDev(vals, periyot);
+//        List<Float> sma = getSMA(vals, periyot);
+//
+//        for(int i = 0;i<vals.size();i++){
+//            bollingerUpperBand.add(sma.get(i)+(stdDev.get(i)*2));
+//            bollingerLowerBand.add(sma.get(i)-(stdDev.get(i)*2));
+//            bollingerBandWidth.add(stdDev.get(i)*4);
+//
+//        }
+//
+//        List<List<Float>> bollinger = new ArrayList<List<Float>>();
+//        bollinger.add(bollingerUpperBand);
+//        bollinger.add(bollingerLowerBand);
+//        bollinger.add(bollingerBandWidth);
+//
+//        return bollinger;
+//    }
+//
+//    public static float getSum(Float[] vals){
+//        float val = 0f;
+//        for(Float f:vals){
+//            val = val + f;
+//        }
+//        return val;
+//    }
+//
+//    public static List<Float> getCorrelation(List<Float> valsA, List<Float> valsB, int periyot){
+//        List<Float> correlation = new ArrayList<Float>();
+//        float meanA=0f;
+//        float meanB=0f;
+//        float curA = 0f;
+//        float curB = 0;
+//        Float[] sqrA = new Float[periyot];
+//        Float[] sqrB = new Float[periyot];
+//        Float[] AtimesB = new Float[periyot];
+//
+//
+//        for(int i=0;i<valsA.size();i++){
+//            if(i<periyot-1){
+//                correlation.add(0f);
+//            }else if(i>=periyot-1){
+//                meanA = getAverage(valsA, periyot, i);
+//                meanB = getAverage(valsB, periyot, i);
+//                for(int k = 0;k<periyot;k++){
+//                    curA = meanA - valsA.get(i-k);
+//                    curB = meanB - valsB.get(i-k);
+//                    sqrA[k] = curA*curA;
+//                    sqrB[k] = curB*curB;
+//                    AtimesB[k] = curA*curB;
+//                }
+//                correlation.add((float) (getSum(AtimesB)/Math.sqrt(getSum(sqrA)*getSum(sqrB))));
+//            }
+//        }
+//        return correlation;
+//    }
+//
+//    public static List<Float> getStochasticK(List<Float> close,List<Float> highs,List<Float> mins, int periyot){
+//        List<Float> stochK = new ArrayList<Float>();
+//        float curMin, curMax;
+//        for(int i = 0;i<close.size();i++){
+//            if(i<periyot-1){
+//                stochK.add(0f);
+//            } else {
+//                curMin = getMin(mins,periyot,i);
+//                curMax = getMax(highs,periyot,i);
+//                stochK.add(((close.get(i)-curMin)/(curMax-curMin)) * 100);
+//            }
+//        }
+//        return stochK;
+//    }
 }

@@ -7,6 +7,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Scroller;
 
 import com.bafoly.lib.stockcharts.iki.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
@@ -28,6 +29,8 @@ public class ChartView extends View {
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector mGestureDetector;
 
+    private Scroller mScroller;
+
 
     public ChartView(Context context) {
         this(context, null);
@@ -45,6 +48,9 @@ public class ChartView extends View {
 
     public void init(Context context){
         setFocusable(true);
+
+        mScroller = new Scroller(context, null, true);
+
         mScaleGestureDetector = new ScaleGestureDetector(context, mScaleGestureListener);
         mGestureDetector = new GestureDetector(context, mGestureListener);
     }
