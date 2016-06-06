@@ -2,6 +2,7 @@ package com.bafoly.lib.stockcharts;
 
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
+import com.bafoly.lib.stockcharts.iki.model.drawable.Indicator;
 import com.bafoly.lib.stockcharts.iki.util.IndicatorCalculator;
 
 import org.junit.Test;
@@ -22,17 +23,20 @@ public class ExampleUnitTest {
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> sma = IndicatorCalculator.getSMA(ref, 9);
 
-//        assertTrue(sma.get(0)==null);
-//        assertEquals(7.75222222222222d, sma.get(sma.size()-1).getOne().doubleValue(), 0.0001d);
+        log(ref, sma);
 
-        for(int i = 0;i<ref.size();i++){
-            String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
-            if(sma.get(i)!=null){
-                line+="\t"+sma.get(i).getX()+"\t"+sma.get(i).getOne();
-            }
-            System.out.println(line);
-        }
     }
+
+    @Test
+    public void calculateSsmaFloat() throws Exception {
+
+        List<SingleData<String, Float>> ref = getSingleFloatData();
+        List<SingleData> sma = IndicatorCalculator.getSSMA(ref, 9);
+
+        log(ref, sma);
+
+    }
+
 
     @Test
     public void calculateSmaInteger() throws Exception {
@@ -40,16 +44,8 @@ public class ExampleUnitTest {
         List<SingleData<String, Integer>> ref = getSingleIntegerData();
         List<SingleData> sma = IndicatorCalculator.getSMA(ref, 9);
 
-        assertTrue(sma.get(0)==null);
-        assertEquals(7.1111111111d, sma.get(sma.size()-1).getOne().doubleValue(), 0.0001d);
-//
-//        for(int i = 0;i<ref.size();i++){
-//            String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
-//            if(sma.get(i)!=null){
-//                line+="\t"+sma.get(i).getX()+"\t"+sma.get(i).getOne();
-//            }
-//            System.out.println(line);
-//        }
+        log(ref, sma);
+
     }
 
     @Test
@@ -57,15 +53,7 @@ public class ExampleUnitTest {
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> sma = IndicatorCalculator.getEMA(ref, 9);
 
-
-        for(int i = 0;i<ref.size();i++){
-            String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
-            if(sma.get(i)!=null){
-                line+="\t"+sma.get(i).getX()+"\t"+sma.get(i).getOne();
-            }
-            System.out.println(line);
-        }
-
+        log(ref, sma);
     }
 
     @Test
@@ -73,15 +61,7 @@ public class ExampleUnitTest {
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> rsi = IndicatorCalculator.getRSI(ref, 14);
 
-
-        for(int i = 0;i<ref.size();i++){
-            String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
-            if(rsi.get(i)!=null){
-                line+="\t"+rsi.get(i).getX()+"\t"+rsi.get(i).getOne();
-            }
-            System.out.println(line);
-        }
-
+        log(ref, rsi);
     }
 
     @Test
@@ -89,14 +69,7 @@ public class ExampleUnitTest {
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> rsi = IndicatorCalculator.getStochasticRSI(ref, 14);
 
-
-        for(int i = 0;i<ref.size();i++){
-            String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
-            if(rsi.get(i)!=null){
-                line+="\t"+rsi.get(i).getX()+"\t"+rsi.get(i).getOne();
-            }
-            System.out.println(line);
-        }
+        log(ref, rsi);
 
     }
 
@@ -293,5 +266,15 @@ public class ExampleUnitTest {
         return data;
     }
 
+
+    private static <T extends Number> void log(List<SingleData<String, T>> ref, List<SingleData> target){
+        for(int i = 0;i<ref.size();i++){
+            String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
+            if(target.get(i)!=null){
+                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getOne();
+            }
+            System.out.println(line);
+        }
+    }
 
 }

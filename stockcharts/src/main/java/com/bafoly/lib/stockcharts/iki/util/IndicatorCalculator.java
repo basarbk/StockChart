@@ -2,9 +2,12 @@ package com.bafoly.lib.stockcharts.iki.util;
 
 import android.util.Log;
 
+import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
+import com.bafoly.lib.stockcharts.iki.model.data.TripleData;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,26 +23,6 @@ public class IndicatorCalculator {
             currentSum=currentSum+singleData;
         }
         return currentSum/period;
-    }
-
-    private static double getMin(List<Double> data, int period, int index){
-        index++;
-        double min = data.get(index-period);
-        for(double singleData : data.subList(index-period, index)){
-            if(min > singleData)
-                min = singleData;
-        }
-        return min;
-    }
-
-    private static double getMax(List<Double> data, int period, int index){
-        index++;
-        double max = data.get(index-period);
-        for(double singleData : data.subList(index-period, index)){
-            if(max < singleData)
-                max = singleData;
-        }
-        return max;
     }
 
     private static double getMeanDeviation(List<Double> tp, double tpma, int period, int index){
@@ -124,7 +107,31 @@ public class IndicatorCalculator {
         return smaData;
     }
 
+    // Smoothed / Modified / Running Moving Average
+    // https://en.wikipedia.org/wiki/Moving_average#Modified_moving_average
+    public static <Z extends SingleData> List<Z> getSSMA(List<? extends SingleData> data, int period){
+        List<Z> ssmaData = new ArrayList<>(data.size());
+        List<Double> values = new ArrayList<>();
+        for(int i = 0;i<data.size();i++){
+            ssmaData.add((Z)(data.get(i)).copy());
+            values.add(data.get(i).getOne().doubleValue());
+            if(i==period-1){
+                ssmaData.get(i).setOne(getAverage(values, period, i));
+            } else if (i > period -1 ){
+                double result = (((period - 1) * ssmaData.get(i-1).getOne().doubleValue()) + data.get(i).getOne().doubleValue())/period;
+                ssmaData.get(i).setOne(result);
+            }
+        }
+
+        for(int i = 0;i<period-1;i++){
+            ssmaData.set(i, null);
+        }
+
+        return ssmaData;
+    }
+
     // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:relative_strength_index_rsi
+    // https://en.wikipedia.org/wiki/Relative_strength_index#Calculation
     public static <Z extends SingleData> List<Z> getRSI(List<? extends SingleData> data, int period){
         List<Z> rsiData = new ArrayList<>(data.size());
 
@@ -158,11 +165,11 @@ public class IndicatorCalculator {
                 gain.add(0d);
                 loss.add(0d);
             }
-            if(i<period-1){
+            if(i<period){
                 rsi.add(0d);
                 rsiAverageGain.add(0d);
                 rsiAverageLoss.add(0d);
-            } else if(i==period-1){
+            } else if(i==period){
                 rsiAverageGain.add(getAverage(gain, period, i));
                 rsiAverageLoss.add(getAverage(loss, period, i));
                 rsi.add(100-(100/(1+(rsiAverageGain.get(i)/rsiAverageLoss.get(i)))));
@@ -174,6 +181,7 @@ public class IndicatorCalculator {
 
             rsiData.get(i).setOne(rsi.get(i));
         }
+
 
         for(int i = 0;i<period;i++){
             rsiData.set(i, null);
@@ -194,8 +202,9 @@ public class IndicatorCalculator {
             rsiDouble.add(val);
             stochasticRSIData.add((Z)data.get(i).copy());
             if(i>=period-1){
-                curMin = getMin(rsiDouble,period,i);
-                curMax = getMax(rsiDouble,period,i);
+                curMin = Collections.min(rsiDouble.subList(i+1-period,i+1));
+                curMax = Collections.max(rsiDouble.subList(i+1-period,i+1));
+
                 if(curMax-curMin>0){
                     double valHere = (rsiData.get(i).getOne().doubleValue()-curMin)/(curMax-curMin);
                     stochasticRSIData.get(i).setOne(valHere);
@@ -210,6 +219,18 @@ public class IndicatorCalculator {
         }
 
         return stochasticRSIData;
+    }
+
+    public static <Z extends SingleData> List<Z> getBollinger(List<? extends SingleData> data, int period) throws IllegalArgumentException{
+
+        if(data != null && data.size()>0){
+            if(!(data.get(0) instanceof TripleData) || !(data.get(0) instanceof QuadrupleData))
+                throw new IllegalArgumentException("You must supply Triple or QuadrupleData");
+        }
+
+
+
+        return null;
     }
 
 //    public static List<Float> calculateMFI(IndikatorMFI indMFI, int periyot){

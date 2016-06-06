@@ -49,6 +49,8 @@ public class ActivityMain extends AppCompatActivity {
         indicator.getPainter().setColor(Painter.LINE_COLOR, Color.RED);
         indicator.setDataDrawStrategy(new DrawLine());
 
+
+
         instrument.addIndicator(indicator);
 
 
