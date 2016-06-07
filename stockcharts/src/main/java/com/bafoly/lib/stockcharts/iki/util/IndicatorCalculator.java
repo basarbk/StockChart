@@ -2,6 +2,7 @@ package com.bafoly.lib.stockcharts.iki.util;
 
 import android.util.Log;
 
+import com.bafoly.lib.stockcharts.iki.model.data.OHLCVolumeData;
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.data.TripleData;
@@ -23,6 +24,15 @@ public class IndicatorCalculator {
             currentSum=currentSum+singleData;
         }
         return currentSum/period;
+    }
+
+    public static double getSum(List<Double> data, int period, int index){
+        index++;
+        double currentSum = 0;
+        for(double singleData : data.subList(index-period, index)){
+            currentSum=currentSum+singleData;
+        }
+        return currentSum;
     }
 
     private static double getMeanDeviation(List<Double> tp, double tpma, int period, int index){
@@ -237,7 +247,7 @@ public class IndicatorCalculator {
         return stochasticRSIData;
     }
 
-    //http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:commodity_channel_index_cci
+    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:commodity_channel_index_cci
     public static <X, Y extends Number> List<SingleData<X, Y>> getCCI(List<? extends SingleData<X, Y>> data, int period) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
@@ -274,7 +284,7 @@ public class IndicatorCalculator {
 
     }
 
-    //http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:williams_r
+    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:williams_r
     public static <X, Y extends Number> List<SingleData<X, Y>> getWilliamsR(List<? extends SingleData<X, Y>> data, int period) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
@@ -313,7 +323,7 @@ public class IndicatorCalculator {
         return williamsRData;
     }
 
-
+    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
     public static <X, Y extends Number> List<TripleData<X, Y>> getBollinger(List<? extends SingleData> data, int period) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
@@ -350,81 +360,63 @@ public class IndicatorCalculator {
         return bollingerData;
     }
 
-//    public static List<Float> calculateMFI(IndikatorMFI indMFI, int periyot){
-//        List<Float> close = indMFI.getParentInstrumentData().getChartModel().getKapanis();
-//        List<Float> highs = indMFI.getParentInstrumentData().getChartModel().getYuksek();
-//        List<Float> lows = indMFI.getParentInstrumentData().getChartModel().getDusuk();
-//        List<Float> volume = indMFI.getParentInstrumentData().getChartModel().getIslem();
-//
-//        List<Float> mfi = new ArrayList<Float>();
-//        List<Float> tp = new ArrayList<Float>();
-//        List<Float> positiveFlow = new ArrayList<Float>();
-//        List<Float> negativeFlow = new ArrayList<Float>();
-////		float flowRatio = 0f;
-//        mfi.add(0f);
-//        tp.add((close.get(0)+highs.get(0)+lows.get(0))/3);
-//        positiveFlow.add(0f);
-//        negativeFlow.add(0f);
-//        for(int i = 1;i<close.size();i++){
-//            tp.add((close.get(i)+highs.get(i)+lows.get(i))/3);
-//            if(tp.get(i)>tp.get(i-1)){
-//                positiveFlow.add(tp.get(i)*volume.get(i));
-//                negativeFlow.add(0f);
-//            } else if (tp.get(i)<tp.get(i-1)){
-//                positiveFlow.add(0f);
-//                negativeFlow.add(tp.get(i)*volume.get(i));
-//            } else {
-//                positiveFlow.add(0f);
-//                negativeFlow.add(0f);
-//            }
-//
-//            if(i<periyot-1){
-//                mfi.add(0f);
-//            } else {
-//                indMFI.setLastPositiveFlow(getAverage(positiveFlow, periyot, i));
-//                indMFI.setLastNegativeFlow(getAverage(negativeFlow, periyot, i));
-//                indMFI.setLastTP(tp.get(i));
-//                mfi.add(100-(100/(1+(indMFI.getLastPositiveFlow()/indMFI.getLastNegativeFlow()))));
-//            }
-//        }
-//
-//        return mfi;
-//
-//    }
 
-//    public static List<Float> getMFI(List<Float> close, List<Float> highs, List<Float> lows, List<Float> volume, int periyot){
-//        List<Float> mfi = new ArrayList<Float>();
-//        List<Float> tp = new ArrayList<Float>();
-//        List<Float> positiveFlow = new ArrayList<Float>();
-//        List<Float> negativeFlow = new ArrayList<Float>();
-//        float flowRatio = 0f;
-//        mfi.add(0f);
-//        tp.add((close.get(0)+highs.get(0)+lows.get(0))/3);
-//        positiveFlow.add(0f);
-//        negativeFlow.add(0f);
-//        for(int i = 1;i<close.size();i++){
-//            tp.add((close.get(i)+highs.get(i)+lows.get(i))/3);
-//            if(tp.get(i)>tp.get(i-1)){
-//                positiveFlow.add(tp.get(i)*volume.get(i));
-//                negativeFlow.add(0f);
-//            } else if (tp.get(i)<tp.get(i-1)){
-//                positiveFlow.add(0f);
-//                negativeFlow.add(tp.get(i)*volume.get(i));
-//            } else {
-//                positiveFlow.add(0f);
-//                negativeFlow.add(0f);
-//            }
-//
-//            if(i<periyot-1){
-//                mfi.add(0f);
-//            } else {
-//                flowRatio = getAverage(positiveFlow, periyot, i)/getAverage(negativeFlow, periyot, i);
-//                mfi.add(100-(100/(1+flowRatio)));
-//            }
-//        }
-//        return mfi;
-//    }
-//
+    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:money_flow_index_mfi
+    public static <X, Y extends Number> List<SingleData<X, Y>> getMFI(List<? extends SingleData<X, Y>> data, int period) throws IllegalArgumentException{
+
+        if(data != null && data.size()>0){
+            if(!(data.get(0) instanceof OHLCVolumeData))
+                throw new IllegalArgumentException("You must supply OHLCVolumeData");
+        }
+
+        List<SingleData<X, Y>> mfiData = new ArrayList<>();
+
+        List<Double> typicalPrice = new ArrayList<>();
+        List<Double> positiveMoneyFlow = new ArrayList<>();
+        List<Double> negativeMoneyFlow = new ArrayList<>();
+
+        mfiData.add(((SingleData)data.get(0)).copy());
+        OHLCVolumeData td = (OHLCVolumeData) data.get(0);
+        double tp = (td.getHighData().doubleValue() + td.getLowData().doubleValue()+ td.getCloseData().doubleValue())/3;
+        typicalPrice.add(tp);
+
+        positiveMoneyFlow.add(0d);
+        negativeMoneyFlow.add(0d);
+
+        for(int i = 1;i<data.size();i++){
+            mfiData.add(((SingleData)data.get(i)).copy());
+            td = (OHLCVolumeData) data.get(i);
+            tp = (td.getHighData().doubleValue() + td.getLowData().doubleValue()+ td.getCloseData().doubleValue())/3;
+            typicalPrice.add(tp);
+
+            double previousTp = typicalPrice.get(i-1);
+            if(tp>previousTp){
+                positiveMoneyFlow.add(tp*td.getVolumeData().doubleValue());
+                negativeMoneyFlow.add(0d);
+            } else {
+                positiveMoneyFlow.add(0d);
+                negativeMoneyFlow.add(tp*td.getVolumeData().doubleValue());
+            }
+            if(i>=period-1) {
+                double posFlow = getSum(positiveMoneyFlow, period, i);
+                double negFlow = getSum(negativeMoneyFlow, period, i);
+
+                double ratio = posFlow/negFlow;
+
+                Double mfiValue = 100 - (100 / (ratio + 1));
+
+                mfiData.get(i).setCloseData((Y)mfiValue);
+
+            }
+
+        }
+        for(int i = 0;i<period;i++){
+            mfiData.set(i, null);
+        }
+
+        return mfiData;
+    }
+
 
 
 //
@@ -448,13 +440,7 @@ public class IndicatorCalculator {
 //    }
 //
 //
-//    public static float getSum(Float[] vals){
-//        float val = 0f;
-//        for(Float f:vals){
-//            val = val + f;
-//        }
-//        return val;
-//    }
+
 //
 //    public static List<Float> getCorrelation(List<Float> valsA, List<Float> valsB, int periyot){
 //        List<Float> correlation = new ArrayList<Float>();

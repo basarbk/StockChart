@@ -2,7 +2,7 @@ package com.bafoly.lib.stockcharts.iki.model.data;
 
 /**
  * Stock has four values for each Xth time
- * OHLC - (O)pen, (L)ow, (H)igh, (C)lose
+ * OHLC - (O)pen, (H)igh, (L)ow, (C)lose
  */
 public class QuadrupleData<X, Y extends Number> extends TripleData<X, Y> {
 
@@ -10,7 +10,7 @@ public class QuadrupleData<X, Y extends Number> extends TripleData<X, Y> {
 
     public QuadrupleData() {}
 
-    public QuadrupleData(X x, Y open, Y low, Y high, Y close) {
+    public QuadrupleData(X x, Y open, Y high, Y low, Y close) {
         super(x, close, low, high);
         this.four = open;
     }
