@@ -10,9 +10,9 @@ public class TripleData<X, Y extends Number> extends DoubleData<X, Y> {
 
     public TripleData() {}
 
-    public TripleData(X x, Y one, Y two, Y three) {
-        super(x, one, two);
-        this.three = three;
+    public TripleData(X x, Y close, Y low, Y high) {
+        super(x, close, low);
+        this.three = high;
     }
 
     public Y getThree() {
@@ -21,6 +21,14 @@ public class TripleData<X, Y extends Number> extends DoubleData<X, Y> {
 
     public void setThree(Y three) {
         this.three = three;
+    }
+
+    public void setHighData(Y val){
+        this.three = val;
+    }
+
+    public Y getHighData(){
+        return three;
     }
 
     @Override
@@ -49,5 +57,10 @@ public class TripleData<X, Y extends Number> extends DoubleData<X, Y> {
             return one.doubleValue();
 
         return three.doubleValue() > one.doubleValue() ? three.doubleValue() : one.doubleValue();
+    }
+
+    @Override
+    public TripleData copy() {
+        return new TripleData(getX(), getCloseData(), getLowData(), getHighData());
     }
 }

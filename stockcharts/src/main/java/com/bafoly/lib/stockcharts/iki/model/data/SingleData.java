@@ -38,6 +38,21 @@ public class SingleData<X, Y extends Number> {
         return one;
     }
 
+    public void setLineData(Y one) {
+        this.one = one;
+    }
+
+    public Y getCloseData(){
+        return one;
+    }
+
+    public void setCloseData(Y one) {
+        this.one = one;
+    }
+
+
+
+
     public double getMin(){
         return one == null ? Double.NaN : one.doubleValue();
     }

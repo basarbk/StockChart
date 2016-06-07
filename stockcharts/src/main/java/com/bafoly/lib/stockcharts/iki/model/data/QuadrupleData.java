@@ -10,9 +10,9 @@ public class QuadrupleData<X, Y extends Number> extends TripleData<X, Y> {
 
     public QuadrupleData() {}
 
-    public QuadrupleData(X x, Y one, Y two, Y three, Y four) {
-        super(x, one, two, three);
-        this.four = four;
+    public QuadrupleData(X x, Y open, Y low, Y high, Y close) {
+        super(x, close, low, high);
+        this.four = open;
     }
 
     public Y getFour() {
@@ -22,6 +22,15 @@ public class QuadrupleData<X, Y extends Number> extends TripleData<X, Y> {
     public void setFour(Y four) {
         this.four = four;
     }
+
+    public Y getOpenData() {
+        return four;
+    }
+
+    public void setOpenData(Y open) {
+        this.four = open;
+    }
+
 
     @Override
     public double getMin() {

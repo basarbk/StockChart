@@ -2,6 +2,7 @@ package com.bafoly.lib.stockcharts;
 
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
+import com.bafoly.lib.stockcharts.iki.model.data.TripleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.Indicator;
 import com.bafoly.lib.stockcharts.iki.util.IndicatorCalculator;
 
@@ -19,40 +20,30 @@ public class ExampleUnitTest {
 
     @Test
     public void calculateSmaFloat() throws Exception {
-
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> sma = IndicatorCalculator.getSMA(ref, 9);
-
         log(ref, sma);
-
     }
 
     @Test
     public void calculateSsmaFloat() throws Exception {
-
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> sma = IndicatorCalculator.getSSMA(ref, 9);
-
         log(ref, sma);
-
     }
 
 
     @Test
     public void calculateSmaInteger() throws Exception {
-
         List<SingleData<String, Integer>> ref = getSingleIntegerData();
         List<SingleData> sma = IndicatorCalculator.getSMA(ref, 9);
-
         log(ref, sma);
-
     }
 
     @Test
     public void calculateEmaFloat() throws Exception{
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> sma = IndicatorCalculator.getEMA(ref, 9);
-
         log(ref, sma);
     }
 
@@ -60,7 +51,6 @@ public class ExampleUnitTest {
     public void calculateRSIFloat() throws Exception{
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> rsi = IndicatorCalculator.getRSI(ref, 14);
-
         log(ref, rsi);
     }
 
@@ -68,9 +58,28 @@ public class ExampleUnitTest {
     public void calculateStochRSIFloat() throws Exception{
         List<SingleData<String, Float>> ref = getSingleFloatData();
         List<SingleData> rsi = IndicatorCalculator.getStochasticRSI(ref, 14);
-
         log(ref, rsi);
+    }
 
+    @Test
+    public void calculateCCIFloat() throws Exception{
+        List<QuadrupleData<String, Float>> ref = getFloatData();
+        List<SingleData<String, Float>> cci = IndicatorCalculator.getCCI(ref, 20);
+        logQuad(ref, cci);
+    }
+
+    @Test
+    public void calculateWilliamRFloat() throws Exception{
+        List<QuadrupleData<String, Float>> ref = getFloatData();
+        List<SingleData<String, Float>> williamsR = IndicatorCalculator.getWilliamsR(ref, 14);
+        logQuad(ref, williamsR);
+    }
+
+    @Test
+    public void calculateBollingerFloat() throws Exception{
+        List<QuadrupleData<String, Float>> ref = getFloatData();
+        List<TripleData<String, Float>> bollingerData = IndicatorCalculator.getBollinger(ref, 20);
+        logTriple(ref, bollingerData);
     }
 
     private static List<SingleData<String, Float>> getSingleFloatData(){
@@ -272,6 +281,26 @@ public class ExampleUnitTest {
             String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
             if(target.get(i)!=null){
                 line+="\t"+target.get(i).getX()+"\t"+target.get(i).getOne();
+            }
+            System.out.println(line);
+        }
+    }
+
+    private static <T extends Number> void logQuad(List<QuadrupleData<String, T>> ref, List<SingleData<String, T>> target){
+        for(int i = 0;i<ref.size();i++){
+            String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
+            if(target.get(i)!=null){
+                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getOne();
+            }
+            System.out.println(line);
+        }
+    }
+
+    private static <T extends Number> void logTriple(List<QuadrupleData<String, T>> ref, List<TripleData<String, T>> target){
+        for(int i = 0;i<ref.size();i++){
+            String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
+            if(target.get(i)!=null){
+                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getCloseData()+"\t"+target.get(i).getHighData()+"\t"+target.get(i).getLowData();
             }
             System.out.println(line);
         }

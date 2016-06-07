@@ -9,9 +9,9 @@ public class DoubleData<X, Y extends Number> extends SingleData<X, Y> {
 
     public DoubleData() {}
 
-    public DoubleData(X x, Y one, Y two) {
-        super(x, one);
-        this.two = two;
+    public DoubleData(X x, Y close, Y low) {
+        super(x, close);
+        this.two = low;
     }
 
     public Y getTwo() {
@@ -20,6 +20,12 @@ public class DoubleData<X, Y extends Number> extends SingleData<X, Y> {
 
     public void setTwo(Y two) {
         this.two = two;
+    }
+
+    public Y getLowData(){ return two;}
+
+    public void setLowData(Y low){
+        this.two = low;
     }
 
     @Override
@@ -48,5 +54,10 @@ public class DoubleData<X, Y extends Number> extends SingleData<X, Y> {
             return one.doubleValue();
 
         return two.doubleValue() > one.doubleValue() ? two.doubleValue() : one.doubleValue();
+    }
+
+    @Override
+    public DoubleData copy() {
+        return new DoubleData(getX(), getOne(), getTwo());
     }
 }

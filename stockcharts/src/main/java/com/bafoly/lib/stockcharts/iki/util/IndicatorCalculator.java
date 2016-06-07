@@ -34,6 +34,22 @@ public class IndicatorCalculator {
         return meanDeviation/period;
     }
 
+    private static double getStandardDeviation(List<Double> data){
+        double average = 0d;
+        double sum = 0d;
+        for(double d : data){
+            sum += d;
+        }
+        average = sum / data.size();
+
+        double squareSum = 0d;
+        for(double d: data){
+            squareSum += Math.pow(d-average,2);
+        }
+
+        return Math.sqrt(squareSum/data.size());
+    }
+
     private static List<Double> getStdDev(List<Double> data, int period){
         List<Double> average = new ArrayList<>();
         List<Double> deviationSquare = new ArrayList<>();
@@ -221,16 +237,117 @@ public class IndicatorCalculator {
         return stochasticRSIData;
     }
 
-    public static <Z extends SingleData> List<Z> getBollinger(List<? extends SingleData> data, int period) throws IllegalArgumentException{
+    //http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:commodity_channel_index_cci
+    public static <X, Y extends Number> List<SingleData<X, Y>> getCCI(List<? extends SingleData<X, Y>> data, int period) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
             if(!(data.get(0) instanceof TripleData) || !(data.get(0) instanceof QuadrupleData))
                 throw new IllegalArgumentException("You must supply Triple or QuadrupleData");
         }
 
+        List<SingleData<X, Y>> cciData = new ArrayList<>();
+
+        double constant = 0.015d;
+        List<Double> typicalPrice = new ArrayList<>();
+
+        for(int i = 0;i<data.size();i++){
+            cciData.add(((SingleData)data.get(i)).copy());
+
+            TripleData td = (TripleData) data.get(i);
+
+            double typicalVal = (td.getHighData().doubleValue() + td.getLowData().doubleValue() + td.getCloseData().doubleValue())/3;
+            typicalPrice.add(typicalVal);
+
+            if(i>=period - 1){
+                double typicalPriceSMA = getAverage(typicalPrice, period, i);
+                double meanDeviation = getMeanDeviation(typicalPrice, typicalPriceSMA, period, i);
+                Double cciResult = (typicalVal - typicalPriceSMA)/(constant*meanDeviation);
+                cciData.get(i).setCloseData((Y)cciResult);
+            }
+        }
+
+        for(int i = 0;i<period;i++){
+            cciData.set(i, null);
+        }
+
+        return cciData;
+
+    }
+
+    //http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:williams_r
+    public static <X, Y extends Number> List<SingleData<X, Y>> getWilliamsR(List<? extends SingleData<X, Y>> data, int period) throws IllegalArgumentException{
+
+        if(data != null && data.size()>0){
+            if(!(data.get(0) instanceof TripleData) || !(data.get(0) instanceof QuadrupleData))
+                throw new IllegalArgumentException("You must supply Triple or QuadrupleData");
+        }
+
+        List<SingleData<X, Y>> williamsRData = new ArrayList<>();
+
+        List<Double> highs = new ArrayList<>();
+        List<Double> lows = new ArrayList<>();
+
+        for(int i = 0;i<data.size();i++){
+            williamsRData.add(((SingleData)data.get(i)).copy());
+
+            TripleData td = (TripleData) data.get(i);
+
+            highs.add(td.getHighData().doubleValue());
+            lows.add(td.getLowData().doubleValue());
+            if(i>=period-1){
+                double close = td.getCloseData().doubleValue();
+
+                double highestHigh = Collections.max(highs.subList(i+1-period,i+1));
+                double lowestLow = Collections.min(lows.subList(i+1-period,i+1));
+
+                Double result = (highestHigh - close)/(highestHigh - lowestLow)*-100;
+
+                williamsRData.get(i).setCloseData((Y) result);
+
+            }
+        }
+        for(int i = 0;i<period;i++){
+            williamsRData.set(i, null);
+        }
+
+        return williamsRData;
+    }
 
 
-        return null;
+    public static <X, Y extends Number> List<TripleData<X, Y>> getBollinger(List<? extends SingleData> data, int period) throws IllegalArgumentException{
+
+        if(data != null && data.size()>0){
+            if(!(data.get(0) instanceof TripleData) || !(data.get(0) instanceof QuadrupleData))
+                throw new IllegalArgumentException("You must supply Triple or QuadrupleData");
+        }
+
+        List<TripleData<X, Y>> bollingerData = new ArrayList<>();
+
+        List<Double> close = new ArrayList<>();
+
+        for(int i = 0 ; i<data.size();i++){
+            TripleData td = (TripleData) data.get(i);
+            bollingerData.add(td.copy());
+            close.add(td.getCloseData().doubleValue());
+
+            if(i>=period-1){
+                Double sma = getAverage(close, period, i);
+                double sdev = getStandardDeviation(close.subList(i+1-period, i+1));
+
+                Double up = sma + (sdev*2);
+                Double low = sma - (sdev*2);
+
+                bollingerData.get(i).setHighData((Y)up);
+                bollingerData.get(i).setLowData((Y)low);
+                bollingerData.get(i).setCloseData((Y)sma);
+            }
+        }
+
+        for(int i = 0;i<period;i++){
+            bollingerData.set(i, null);
+        }
+
+        return bollingerData;
     }
 
 //    public static List<Float> calculateMFI(IndikatorMFI indMFI, int periyot){
@@ -308,63 +425,8 @@ public class IndicatorCalculator {
 //        return mfi;
 //    }
 //
-//
-//
-////    public static List<Float> calculateWilliamsR(IndikatorWilliamsR indW, int periyot){
-////        List<Float> williamR = new ArrayList<Float>();
-////        float curMin, curMax;
-////        for(int i = 0;i<indW.getParentInstrumentData().getChartModel().getKapanis().size();i++){
-////            if(i<periyot-1){
-////                williamR.add(indW.getParentInstrumentData().getChartModel().getKapanis().get(i));
-////            }else if(i>=periyot-1){
-////                curMin = getMin(indW.getParentInstrumentData().getChartModel().getDusuk(),periyot,i);
-////                curMax = getMax(indW.getParentInstrumentData().getChartModel().getYuksek(),periyot,i);
-////                indW.setLastMax(curMax);
-////                indW.setLastMin(curMin);
-////                williamR.add((-100*(curMax-indW.getParentInstrumentData().getChartModel().getKapanis().get(i))/(curMax-curMin)));
-////            }
-////        }
-////        return williamR;
-////    }
-//
-//    public static List<Float> getWilliamsR(List<Float> close, List<Float> highs, List<Float> lows, int periyot){
-//        List<Float> williamR = new ArrayList<Float>();
-//        float curMin, curMax;
-//        for(int i = 0;i<close.size();i++){
-//            if(i<periyot-1){
-//                williamR.add(close.get(i));
-//            }else if(i>=periyot-1){
-//                curMin = getMin(lows,periyot,i);
-//                curMax = getMax(highs,periyot,i);
-//                williamR.add((-100*(curMax-close.get(i))/(curMax-curMin)));
-//            }
-//        }
-//        return williamR;
-//    }
-//
-//
-//
-//
-//    public static List<Float> getCCI(List<Float> close, List<Float> highs, List<Float> lows, int periyot){
-//        float constant = 0.015f;
-//        List<Float> tp = new ArrayList<Float>();
-//        List<Float> tpma = new ArrayList<Float>();
-//        List<Float> meandev = new ArrayList<Float>();
-//        List<Float> cci = new ArrayList<Float>();
-//        for(int i = 0;i<close.size();i++){
-//            tp.add((close.get(i)+highs.get(i)+lows.get(i))/3);
-//            if(i<periyot-1){
-//                tpma.add(tp.get(i));
-//                meandev.add(0f);
-//                cci.add(0f);
-//            } else {
-//                tpma.add(getAverage(tp, periyot, i));
-//                meandev.add(getMeanDeviation(tp, tpma.get(i), periyot, i));
-//                cci.add((tp.get(i)-tpma.get(i))/(constant*meandev.get(i)));
-//            }
-//        }
-//        return cci;
-//    }
+
+
 //
 //    public static List<Float> getMACDLine(List<Float> vals){
 //        List<Float> ema12 = getEMA(vals,12);
@@ -385,32 +447,6 @@ public class IndicatorCalculator {
 //        return getEMA(macd, 9);
 //    }
 //
-//
-//
-//
-//    public static List<List<Float>> getBollingerBands(List<Float> vals, int periyot){
-//
-//        List<Float> bollingerUpperBand = new ArrayList<Float>();
-//        List<Float> bollingerLowerBand = new ArrayList<Float>();
-//        List<Float> bollingerBandWidth = new ArrayList<Float>();
-//
-//        List<Float> stdDev = getStdDev(vals, periyot);
-//        List<Float> sma = getSMA(vals, periyot);
-//
-//        for(int i = 0;i<vals.size();i++){
-//            bollingerUpperBand.add(sma.get(i)+(stdDev.get(i)*2));
-//            bollingerLowerBand.add(sma.get(i)-(stdDev.get(i)*2));
-//            bollingerBandWidth.add(stdDev.get(i)*4);
-//
-//        }
-//
-//        List<List<Float>> bollinger = new ArrayList<List<Float>>();
-//        bollinger.add(bollingerUpperBand);
-//        bollinger.add(bollingerLowerBand);
-//        bollinger.add(bollingerBandWidth);
-//
-//        return bollinger;
-//    }
 //
 //    public static float getSum(Float[] vals){
 //        float val = 0f;
