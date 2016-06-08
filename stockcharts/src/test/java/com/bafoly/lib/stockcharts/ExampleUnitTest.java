@@ -1,5 +1,6 @@
 package com.bafoly.lib.stockcharts;
 
+import com.bafoly.lib.stockcharts.iki.model.data.DoubleData;
 import com.bafoly.lib.stockcharts.iki.model.data.OHLCVolumeData;
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
@@ -95,6 +96,13 @@ public class ExampleUnitTest {
         List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
         List<TripleData<String, Float>> mfiData = IndicatorCalculator.getMACD(ref, 12, 26, 9);
         logTriple(ref, mfiData);
+    }
+
+    @Test
+    public void calculateStochasticFloat() throws Exception{
+        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
+        List<DoubleData<String, Float>> stochasticOscillatorData = IndicatorCalculator.getStochasticOscillator(ref, 14, 3);
+        logDouble(ref, stochasticOscillatorData);
     }
 
     private static List<OHLCVolumeData<String, Float>> getOHLCVolumeFloatData(){
@@ -353,11 +361,11 @@ public class ExampleUnitTest {
         }
     }
 
-    private static <T extends Number> void logQuad(List<QuadrupleData<String, T>> ref, List<SingleData<String, T>> target){
+    private static <T extends Number> void logDouble(List<? extends QuadrupleData<String, T>> ref, List<DoubleData<String, T>> target){
         for(int i = 0;i<ref.size();i++){
             String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
             if(target.get(i)!=null){
-                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getOne();
+                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getCloseData()+"\t"+target.get(i).getLowData();
             }
             System.out.println(line);
         }

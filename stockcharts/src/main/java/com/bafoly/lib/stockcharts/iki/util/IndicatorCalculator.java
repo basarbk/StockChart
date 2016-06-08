@@ -1,5 +1,6 @@
 package com.bafoly.lib.stockcharts.iki.util;
 
+import com.bafoly.lib.stockcharts.iki.model.data.DoubleData;
 import com.bafoly.lib.stockcharts.iki.model.data.OHLCVolumeData;
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
@@ -116,8 +117,6 @@ public class IndicatorCalculator {
 
         return emaData;
     }
-
-
 
     public static <Z extends SingleData> List<Z> getSMA(List<? extends SingleData> data, int period){
         List<Z> smaData = new ArrayList<>(data.size());
@@ -460,50 +459,49 @@ public class IndicatorCalculator {
         return macdData;
     }
 
+    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:stochastic_oscillator_fast_slow_and_full
+    public static <X, Y extends Number> List<DoubleData<X, Y>> getStochasticOscillator(List<? extends SingleData<X, Y>> data, int periodK, int periodS) throws IllegalArgumentException{
 
-//
-//    public static List<Float> getCorrelation(List<Float> valsA, List<Float> valsB, int periyot){
-//        List<Float> correlation = new ArrayList<Float>();
-//        float meanA=0f;
-//        float meanB=0f;
-//        float curA = 0f;
-//        float curB = 0;
-//        Float[] sqrA = new Float[periyot];
-//        Float[] sqrB = new Float[periyot];
-//        Float[] AtimesB = new Float[periyot];
-//
-//
-//        for(int i=0;i<valsA.size();i++){
-//            if(i<periyot-1){
-//                correlation.add(0f);
-//            }else if(i>=periyot-1){
-//                meanA = getAverage(valsA, periyot, i);
-//                meanB = getAverage(valsB, periyot, i);
-//                for(int k = 0;k<periyot;k++){
-//                    curA = meanA - valsA.get(i-k);
-//                    curB = meanB - valsB.get(i-k);
-//                    sqrA[k] = curA*curA;
-//                    sqrB[k] = curB*curB;
-//                    AtimesB[k] = curA*curB;
-//                }
-//                correlation.add((float) (getSum(AtimesB)/Math.sqrt(getSum(sqrA)*getSum(sqrB))));
-//            }
-//        }
-//        return correlation;
-//    }
-//
-//    public static List<Float> getStochasticK(List<Float> close,List<Float> highs,List<Float> mins, int periyot){
-//        List<Float> stochK = new ArrayList<Float>();
-//        float curMin, curMax;
-//        for(int i = 0;i<close.size();i++){
-//            if(i<periyot-1){
-//                stochK.add(0f);
-//            } else {
-//                curMin = getMin(mins,periyot,i);
-//                curMax = getMax(highs,periyot,i);
-//                stochK.add(((close.get(i)-curMin)/(curMax-curMin)) * 100);
-//            }
-//        }
-//        return stochK;
-//    }
+        if(data != null && data.size()>0){
+            if(!(data.get(0) instanceof TripleData) || !(data.get(0) instanceof QuadrupleData || !(data.get(0) instanceof OHLCVolumeData)))
+                throw new IllegalArgumentException("You must supply Triple or QuadrupleData");
+        }
+
+        List<DoubleData<X, Y>> stochasticOscillator = new ArrayList<>();
+
+        List<Double> highs = new ArrayList<>();
+        List<Double> lows = new ArrayList<>();
+        List<Double> ks = new ArrayList<>();
+
+        double high, low;
+
+        for(int i = 0;i<data.size(); i++){
+            stochasticOscillator.add((DoubleData) data.get(i).copy());
+            TripleData td = (TripleData) data.get(i);
+
+            highs.add(td.getHighData().doubleValue());
+            lows.add(td.getLowData().doubleValue());
+
+            if(i>=periodK-1){
+                high = Collections.max(highs.subList(i+1-periodK, i+1));
+                low = Collections.min(lows.subList(i+1-periodK, i+1));
+
+                Double valueK = 100 * ((td.getCloseData().doubleValue() - low)/(high-low));
+                ks.add(valueK.doubleValue());
+                stochasticOscillator.get(i).setCloseData((Y)valueK);
+                Double valueS = 0d;
+                if(ks.size()>=periodS){
+                    valueS = getAverage(ks, periodS , ks.size()-1);
+                }
+                stochasticOscillator.get(i).setLowData((Y)valueS);
+            }
+        }
+
+        for(int i = 0;i<periodK+periodS;i++){
+            stochasticOscillator.set(i, null);
+        }
+
+        return stochasticOscillator;
+    }
+
 }
