@@ -34,7 +34,7 @@ public class DrawLine implements DrawStrategy<ChartModel> {
                 continue;
 
 
-            float y = environment.getY(sd.get(i).getLineData().floatValue());
+            float y = environment.getY(sd.get(i).getOne().floatValue());
             float x = environment.getX(i-environment.visibleXbegin);
 
             if(!pathStarted){

@@ -1,9 +1,10 @@
 package com.bafoly.lib.stockcharts.iki.model.data;
 
 /**
- * single XY data pair
- * X is generally the timeline. It could be set as Date, String or Integer
- * Y is the value at X
+ * single XY data pair<br>
+ * X is generally the timeline. It could be set as Date, String or Integer<br>
+ * Y (one) is the value at the moment of X <br>
+ *
  */
 public class SingleData<X, Y extends Number> {
 
@@ -33,25 +34,6 @@ public class SingleData<X, Y extends Number> {
     public void setOne(Y one) {
         this.one = one;
     }
-
-    public Y getLineData(){
-        return one;
-    }
-
-    public void setLineData(Y one) {
-        this.one = one;
-    }
-
-    public Y getCloseData(){
-        return one;
-    }
-
-    public void setCloseData(Y one) {
-        this.one = one;
-    }
-
-
-
 
     public double getMin(){
         return one == null ? Double.NaN : one.doubleValue();

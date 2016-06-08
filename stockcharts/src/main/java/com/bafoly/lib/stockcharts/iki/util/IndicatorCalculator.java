@@ -8,86 +8,74 @@ import com.bafoly.lib.stockcharts.iki.model.data.TripleData;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by basarb on 5/11/2016.
+ * Utility class for Indicator Calculation<br>
+ * Algorithm reference is at http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators
  */
 public class IndicatorCalculator {
 
-    // common methods
-    private static double getAverage(List<Double> data, int period, int index){
-        index++;
-        double currentSum = 0;
-        for(double singleData : data.subList(index-period, index)){
-            currentSum=currentSum+singleData;
+    /**
+     * Returns the sum of array
+     * @param data Double List
+     * @return
+     */
+    private static double getSum(List<Double> data){
+        double sum = 0;
+        for(double current : data){
+            sum += current;
         }
-        return currentSum/period;
+        return sum;
     }
 
-    public static double getSum(List<Double> data, int period, int index){
-        index++;
-        double currentSum = 0;
-        for(double singleData : data.subList(index-period, index)){
-            currentSum=currentSum+singleData;
-        }
-        return currentSum;
+    /**
+     * Calculates the average of array
+     * @param data Double List
+     * @return
+     */
+    private static double getAverage(List<Double> data){
+        return getSum(data) / data.size();
     }
 
-    private static double getMeanDeviation(List<Double> tp, double tpma, int period, int index){
-        index++;
+
+    /**
+     * Calculates the mean deviation of list
+     * @param typicalPrice
+     * @param typicalPriceMovingAverage
+     * @return
+     */
+    private static double getMeanDeviation(List<Double> typicalPrice, double typicalPriceMovingAverage){
         double meanDeviation = 0;
-        for(int k = index-period;k<index;k++){
-            meanDeviation = meanDeviation+Math.abs(tpma-tp.get(k));
+        for(double current : typicalPrice){
+            meanDeviation = meanDeviation+Math.abs(typicalPriceMovingAverage-current);
         }
-        return meanDeviation/period;
+        return meanDeviation/typicalPrice.size();
     }
 
+    /**
+     * Returns standard deviation of array
+     * @param data
+     * @return
+     */
     private static double getStandardDeviation(List<Double> data){
-        double average = 0d;
-        double sum = 0d;
-        for(double d : data){
-            sum += d;
-        }
-        average = sum / data.size();
+        double average = getAverage(data);
 
         double squareSum = 0d;
         for(double d: data){
             squareSum += Math.pow(d-average,2);
         }
-
         return Math.sqrt(squareSum/data.size());
     }
 
-    private static List<Double> getStdDev(List<Double> data, int period){
-        List<Double> average = new ArrayList<>();
-        List<Double> deviationSquare = new ArrayList<>();
-        List<Double> standardDeviation = new ArrayList<>();
-
-        for(int i=0;i<data.size();i++){
-            if(i<period-1){
-                average.add(data.get(i));
-                deviationSquare.add(0d);
-                standardDeviation.add(0d);
-            } else if(i>=period-1){
-                average.add(getAverage(data, period, i));
-
-                double currentDeviation = data.get(i) - average.get(i);
-
-                deviationSquare.add(currentDeviation*currentDeviation);
-                for(int j = i - period + 1; j<i; j++){
-                    currentDeviation = data.get(j)-average.get(i);
-                    deviationSquare.set(j, currentDeviation * currentDeviation);
-                }
-
-                standardDeviation.add(Math.sqrt(getAverage(deviationSquare, period, i)));
-            }
-        }
-        return standardDeviation;
-    }
-
-    // indicator calculation methods
-    public static List<Double> getEMA(List<? extends SingleData> data, int period){
+    /**
+     * Exponential Moving Average is calculated for the Data
+     * @param data
+     * @param period
+     * @return Result is stored in a Double List
+     */
+    private static List<Double> getEMA(List<? extends SingleData> data, int period){
         List<Double> emaData = new ArrayList<>(data.size());
 
         double multiplier = 2 / ((double)period + 1);
@@ -103,7 +91,7 @@ public class IndicatorCalculator {
             if(i<period-1){
                 emaData.add(null);
             } else if(i==period-1){
-                emaData.add(getAverage(values, period, i));
+                emaData.add(getAverage(values.subList(i+1-period, i+1)));
             } else if(i>=period-1){
                 double previousEma = emaData.get(i-1);
                 if(data.get(i)!=null){
@@ -118,6 +106,12 @@ public class IndicatorCalculator {
         return emaData;
     }
 
+    /**
+     * Simple Moving Average
+     * @param data
+     * @param period
+     * @return
+     */
     public static <Z extends SingleData> List<Z> getSMA(List<? extends SingleData> data, int period){
         List<Z> smaData = new ArrayList<>(data.size());
         List<Double> values = new ArrayList<>();
@@ -125,7 +119,7 @@ public class IndicatorCalculator {
             smaData.add((Z)(data.get(i)).copy());
             values.add(data.get(i).getOne().doubleValue());
             if(i>=period-1){
-                smaData.get(i).setOne(getAverage(values, period, i));
+                smaData.get(i).setOne(getAverage(values.subList(i+1-period, i+1)));
             }
         }
 
@@ -138,6 +132,12 @@ public class IndicatorCalculator {
 
     // Smoothed / Modified / Running Moving Average
     // https://en.wikipedia.org/wiki/Moving_average#Modified_moving_average
+    /**
+     * Smoother / Modified / Running Moving Average
+     * @param data
+     * @param period
+     * @return
+     */
     public static <Z extends SingleData> List<Z> getSSMA(List<? extends SingleData> data, int period){
         List<Z> ssmaData = new ArrayList<>(data.size());
         List<Double> values = new ArrayList<>();
@@ -145,7 +145,7 @@ public class IndicatorCalculator {
             ssmaData.add((Z)(data.get(i)).copy());
             values.add(data.get(i).getOne().doubleValue());
             if(i==period-1){
-                ssmaData.get(i).setOne(getAverage(values, period, i));
+                ssmaData.get(i).setOne(getAverage(values.subList(i+1-period, i+1)));
             } else if (i > period -1 ){
                 double result = (((period - 1) * ssmaData.get(i-1).getOne().doubleValue()) + data.get(i).getOne().doubleValue())/period;
                 ssmaData.get(i).setOne(result);
@@ -199,8 +199,8 @@ public class IndicatorCalculator {
                 rsiAverageGain.add(0d);
                 rsiAverageLoss.add(0d);
             } else if(i==period){
-                rsiAverageGain.add(getAverage(gain, period, i));
-                rsiAverageLoss.add(getAverage(loss, period, i));
+                rsiAverageGain.add(getAverage(gain.subList(i+1-period, i+1)));
+                rsiAverageLoss.add(getAverage(loss.subList(i+1-period, i+1)));
                 rsi.add(100-(100/(1+(rsiAverageGain.get(i)/rsiAverageLoss.get(i)))));
             } else {
                 rsiAverageGain.add(((rsiAverageGain.get(i-1)*(period-1))+gain.get(i))/period);
@@ -231,8 +231,9 @@ public class IndicatorCalculator {
             rsiDouble.add(val);
             stochasticRSIData.add((Z)data.get(i).copy());
             if(i>=period-1){
-                curMin = Collections.min(rsiDouble.subList(i+1-period,i+1));
-                curMax = Collections.max(rsiDouble.subList(i+1-period,i+1));
+                List<Double> temp = rsiDouble.subList(i+1-period,i+1);
+                curMin = Collections.min(temp);
+                curMax = Collections.max(temp);
 
                 if(curMax-curMin>0){
                     double valHere = (rsiData.get(i).getOne().doubleValue()-curMin)/(curMax-curMin);
@@ -268,14 +269,15 @@ public class IndicatorCalculator {
 
             TripleData td = (TripleData) data.get(i);
 
-            double typicalVal = (td.getHighData().doubleValue() + td.getLowData().doubleValue() + td.getCloseData().doubleValue())/3;
+            double typicalVal = (td.getThree().doubleValue() + td.getTwo().doubleValue() + td.getOne().doubleValue())/3;
             typicalPrice.add(typicalVal);
 
             if(i>=period - 1){
-                double typicalPriceSMA = getAverage(typicalPrice, period, i);
-                double meanDeviation = getMeanDeviation(typicalPrice, typicalPriceSMA, period, i);
+                List<Double> temp = typicalPrice.subList(i+1-period, i+1);
+                double typicalPriceSMA = getAverage(temp);
+                double meanDeviation = getMeanDeviation(temp, typicalPriceSMA);
                 Double cciResult = (typicalVal - typicalPriceSMA)/(constant*meanDeviation);
-                cciData.get(i).setCloseData((Y)cciResult);
+                cciData.get(i).setOne((Y)cciResult);
             }
         }
 
@@ -305,17 +307,17 @@ public class IndicatorCalculator {
 
             TripleData td = (TripleData) data.get(i);
 
-            highs.add(td.getHighData().doubleValue());
-            lows.add(td.getLowData().doubleValue());
+            highs.add(td.getThree().doubleValue());
+            lows.add(td.getTwo().doubleValue());
             if(i>=period-1){
-                double close = td.getCloseData().doubleValue();
+                double close = td.getOne().doubleValue();
 
                 double highestHigh = Collections.max(highs.subList(i+1-period,i+1));
                 double lowestLow = Collections.min(lows.subList(i+1-period,i+1));
 
                 Double result = (highestHigh - close)/(highestHigh - lowestLow)*-100;
 
-                williamsRData.get(i).setCloseData((Y) result);
+                williamsRData.get(i).setOne((Y) result);
 
             }
         }
@@ -341,18 +343,19 @@ public class IndicatorCalculator {
         for(int i = 0 ; i<data.size();i++){
             TripleData td = (TripleData) data.get(i);
             bollingerData.add(td.copy());
-            close.add(td.getCloseData().doubleValue());
+            close.add(td.getOne().doubleValue());
 
             if(i>=period-1){
-                Double sma = getAverage(close, period, i);
-                double sdev = getStandardDeviation(close.subList(i+1-period, i+1));
+                List<Double> temp = close.subList(i+1-period, i+1);
+                Double sma = getAverage(temp);
+                double sdev = getStandardDeviation(temp);
 
                 Double up = sma + (sdev*2);
                 Double low = sma - (sdev*2);
 
-                bollingerData.get(i).setHighData((Y)up);
-                bollingerData.get(i).setLowData((Y)low);
-                bollingerData.get(i).setCloseData((Y)sma);
+                bollingerData.get(i).setThree((Y)up);
+                bollingerData.get(i).setTwo((Y)low);
+                bollingerData.get(i).setOne((Y)sma);
             }
         }
 
@@ -380,7 +383,7 @@ public class IndicatorCalculator {
 
         mfiData.add(((SingleData)data.get(0)).copy());
         OHLCVolumeData td = (OHLCVolumeData) data.get(0);
-        double tp = (td.getHighData().doubleValue() + td.getLowData().doubleValue()+ td.getCloseData().doubleValue())/3;
+        double tp = (td.getThree().doubleValue() + td.getTwo().doubleValue()+ td.getOne().doubleValue())/3;
         typicalPrice.add(tp);
 
         positiveMoneyFlow.add(0d);
@@ -389,26 +392,26 @@ public class IndicatorCalculator {
         for(int i = 1;i<data.size();i++){
             mfiData.add(((SingleData)data.get(i)).copy());
             td = (OHLCVolumeData) data.get(i);
-            tp = (td.getHighData().doubleValue() + td.getLowData().doubleValue()+ td.getCloseData().doubleValue())/3;
+            tp = (td.getThree().doubleValue() + td.getTwo().doubleValue()+ td.getOne().doubleValue())/3;
             typicalPrice.add(tp);
 
             double previousTp = typicalPrice.get(i-1);
             if(tp>previousTp){
-                positiveMoneyFlow.add(tp*td.getVolumeData().doubleValue());
+                positiveMoneyFlow.add(tp*td.getFive().doubleValue());
                 negativeMoneyFlow.add(0d);
             } else {
                 positiveMoneyFlow.add(0d);
-                negativeMoneyFlow.add(tp*td.getVolumeData().doubleValue());
+                negativeMoneyFlow.add(tp*td.getFive().doubleValue());
             }
             if(i>=period-1) {
-                double posFlow = getSum(positiveMoneyFlow, period, i);
-                double negFlow = getSum(negativeMoneyFlow, period, i);
+                double posFlow = getSum(positiveMoneyFlow.subList(i+1-period, i+1));
+                double negFlow = getSum(negativeMoneyFlow.subList(i+1-period, i+1));
 
                 double ratio = posFlow/negFlow;
 
                 Double mfiValue = 100 - (100 / (ratio + 1));
 
-                mfiData.get(i).setCloseData((Y)mfiValue);
+                mfiData.get(i).setOne((Y)mfiValue);
 
             }
 
@@ -438,7 +441,7 @@ public class IndicatorCalculator {
             if(firstEma.get(i)!=null && secondEma.get(i)!=null){
                 Double val = firstEma.get(i)-secondEma.get(i);
                 macdLine.add(new SingleData(data.get(i).getX(), val));
-                macdData.get(i).setHighData((Y)val);
+                macdData.get(i).setThree((Y)val);
             } else {
                 macdLine.add(null);
             }
@@ -448,9 +451,9 @@ public class IndicatorCalculator {
 
         for(int i = 0 ; i<data.size();i++){
             if(macdLine.get(i)!=null){
-                Double val = macdLine.get(i).getCloseData().doubleValue() - signalEma.get(i);
-                macdData.get(i).setLowData((Y)signalEma.get(i));
-                macdData.get(i).setCloseData((Y)val);
+                Double val = macdLine.get(i).getOne().doubleValue() - signalEma.get(i);
+                macdData.get(i).setTwo((Y)signalEma.get(i));
+                macdData.get(i).setOne((Y)val);
             } else {
                 macdData.set(i, null);
             }
@@ -479,21 +482,21 @@ public class IndicatorCalculator {
             stochasticOscillator.add((DoubleData) data.get(i).copy());
             TripleData td = (TripleData) data.get(i);
 
-            highs.add(td.getHighData().doubleValue());
-            lows.add(td.getLowData().doubleValue());
+            highs.add(td.getThree().doubleValue());
+            lows.add(td.getTwo().doubleValue());
 
             if(i>=periodK-1){
                 high = Collections.max(highs.subList(i+1-periodK, i+1));
                 low = Collections.min(lows.subList(i+1-periodK, i+1));
 
-                Double valueK = 100 * ((td.getCloseData().doubleValue() - low)/(high-low));
+                Double valueK = 100 * ((td.getOne().doubleValue() - low)/(high-low));
                 ks.add(valueK.doubleValue());
-                stochasticOscillator.get(i).setCloseData((Y)valueK);
+                stochasticOscillator.get(i).setOne((Y)valueK);
                 Double valueS = 0d;
                 if(ks.size()>=periodS){
-                    valueS = getAverage(ks, periodS , ks.size()-1);
+                    valueS = getAverage(ks.subList(ks.size()-periodS, ks.size()));
                 }
-                stochasticOscillator.get(i).setLowData((Y)valueS);
+                stochasticOscillator.get(i).setTwo((Y)valueS);
             }
         }
 

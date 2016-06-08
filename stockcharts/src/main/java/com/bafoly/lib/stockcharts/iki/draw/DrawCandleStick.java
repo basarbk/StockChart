@@ -28,7 +28,7 @@ public class DrawCandleStick implements DrawStrategy<ChartModel> {
 
         // This must be quadruple data to draw candle stick
         List<QuadrupleData> sd = chartModel.getData();
-        if(!(sd.get(0) instanceof QuadrupleData)){
+        if(!(sd.get(sd.size()-1) instanceof QuadrupleData)){
             return;
         }
 

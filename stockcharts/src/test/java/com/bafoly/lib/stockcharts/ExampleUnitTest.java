@@ -51,62 +51,113 @@ public class ExampleUnitTest {
 
     @Test
     public void calculateRSIFloat() throws Exception{
-        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
-        List<SingleData> rsi = IndicatorCalculator.getRSI(ref, 14);
-        log(ref, rsi);
+        List<OHLCVolumeData<String, Double>> ref = getOHLCVolumeFloatData();
+        List<SingleData> result = IndicatorCalculator.getRSI(ref, 14);
+
+        int size = result.size();
+        double t1 = result.get(size - 1).getOne().doubleValue();
+        double t2 = result.get(size - 2).getOne().doubleValue();
+        double t3 = result.get(size - 3).getOne().doubleValue();
+
+        assertEquals(49.60d, t1, 0.01d);
+        assertEquals(55.63d, t2, 0.01d);
+        assertEquals(53.59d, t3, 0.01d);
+
+        log(ref, result);
     }
 
     @Test
     public void calculateStochRSIFloat() throws Exception{
-        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
-        List<SingleData> rsi = IndicatorCalculator.getStochasticRSI(ref, 14);
-        log(ref, rsi);
+        List<OHLCVolumeData<String, Double>> ref = getOHLCVolumeFloatData();
+        List<SingleData> result = IndicatorCalculator.getStochasticRSI(ref, 14);
+
+        int size = result.size();
+        double t1 = result.get(size - 1).getOne().doubleValue();
+        double t2 = result.get(size - 2).getOne().doubleValue();
+        double t3 = result.get(size - 3).getOne().doubleValue();
+
+        assertEquals(0.66d, t1, 0.01d);
+        assertEquals(1.00d, t2, 0.01d);
+        assertEquals(0.92d, t3, 0.01d);
+
+        log(ref, result);
     }
 
     @Test
     public void calculateCCIFloat() throws Exception{
-        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
-        List<SingleData<String, Float>> cci = IndicatorCalculator.getCCI(ref, 20);
-        log(ref, cci);
+        List<OHLCVolumeData<String, Double>> ref = getOHLCVolumeFloatData();
+        List<SingleData<String, Double>> result = IndicatorCalculator.getCCI(ref, 20);
+
+        int size = result.size();
+        double t1 = result.get(size - 1).getOne().doubleValue();
+        double t2 = result.get(size - 2).getOne().doubleValue();
+        double t3 = result.get(size - 3).getOne().doubleValue();
+
+        assertEquals(66.88d, t1, 0.01d);
+        assertEquals(113.13d, t2, 0.01d);
+        assertEquals(78.91d, t3, 0.01d);
+
+        log(ref, result);
     }
 
     @Test
     public void calculateWilliamRFloat() throws Exception{
-        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
-        List<SingleData<String, Float>> williamsR = IndicatorCalculator.getWilliamsR(ref, 14);
-        log(ref, williamsR);
+        List<OHLCVolumeData<String, Double>> ref = getOHLCVolumeFloatData();
+        List<SingleData<String, Double>> result = IndicatorCalculator.getWilliamsR(ref, 14);
+
+
+        int size = result.size();
+        double t1 = result.get(size - 1).getOne().doubleValue();
+        double t2 = result.get(size - 2).getOne().doubleValue();
+        double t3 = result.get(size - 3).getOne().doubleValue();
+
+        assertEquals(-39.062d, t1, 0.001d);
+        assertEquals(-10.447d, t2, 0.001d);
+        assertEquals(-20.895d, t3, 0.001d);
+
+        log(ref, result);
     }
 
     @Test
     public void calculateBollingerFloat() throws Exception{
-        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
-        List<TripleData<String, Float>> bollingerData = IndicatorCalculator.getBollinger(ref, 20);
+        List<OHLCVolumeData<String, Double>> ref = getOHLCVolumeFloatData();
+        List<TripleData<String, Double>> bollingerData = IndicatorCalculator.getBollinger(ref, 20);
         logTriple(ref, bollingerData);
     }
 
     @Test
     public void calculateMFIFloat() throws Exception{
-        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
-        List<SingleData<String, Float>> mfiData = IndicatorCalculator.getMFI(ref, 14);
-        log(ref, mfiData);
+        List<OHLCVolumeData<String, Double>> ref = getOHLCVolumeFloatData();
+        List<SingleData<String, Double>> result = IndicatorCalculator.getMFI(ref, 14);
+
+        int size = result.size();
+        double t1 = result.get(size - 1).getOne().doubleValue();
+        double t2 = result.get(size - 2).getOne().doubleValue();
+        double t3 = result.get(size - 3).getOne().doubleValue();
+
+        assertEquals(62.403d, t1, 0.001d);
+        assertEquals(63.445d, t2, 0.001d);
+        assertEquals(57.438d, t3, 0.001d);
+
+        log(ref, result);
     }
 
     @Test
     public void calculateMACDFloat() throws Exception{
-        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
-        List<TripleData<String, Float>> mfiData = IndicatorCalculator.getMACD(ref, 12, 26, 9);
+        List<OHLCVolumeData<String, Double>> ref = getOHLCVolumeFloatData();
+        List<TripleData<String, Double>> mfiData = IndicatorCalculator.getMACD(ref, 12, 26, 9);
         logTriple(ref, mfiData);
     }
 
     @Test
     public void calculateStochasticFloat() throws Exception{
-        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
-        List<DoubleData<String, Float>> stochasticOscillatorData = IndicatorCalculator.getStochasticOscillator(ref, 14, 3);
+        List<OHLCVolumeData<String, Double>> ref = getOHLCVolumeFloatData();
+        List<DoubleData<String, Double>> stochasticOscillatorData = IndicatorCalculator.getStochasticOscillator(ref, 14, 3);
         logDouble(ref, stochasticOscillatorData);
     }
 
-    private static List<OHLCVolumeData<String, Float>> getOHLCVolumeFloatData(){
-        List<OHLCVolumeData<String, Float>> data = new ArrayList<>();
+    private static List<OHLCVolumeData<String, Double>> getOHLCVolumeFloatData(){
+        List<OHLCVolumeData<String, Double>> data = new ArrayList<>();
         data.add(new OHLCVolumeData("Apr 05, 2016", 8.03, 8.04, 7.89, 7.98, 19940000));
         data.add(new OHLCVolumeData("Apr 06, 2016", 8.02, 8.02, 7.84, 7.84, 21400000));
         data.add(new OHLCVolumeData("Apr 07, 2016", 7.90, 7.94, 7.81, 7.85, 16460000));
@@ -365,7 +416,7 @@ public class ExampleUnitTest {
         for(int i = 0;i<ref.size();i++){
             String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
             if(target.get(i)!=null){
-                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getCloseData()+"\t"+target.get(i).getLowData();
+                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getOne()+"\t"+target.get(i).getTwo();
             }
             System.out.println(line);
         }
@@ -375,7 +426,7 @@ public class ExampleUnitTest {
         for(int i = 0;i<ref.size();i++){
             String line = ref.get(i).getX()+"\t"+ref.get(i).getOne();
             if(target.get(i)!=null){
-                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getCloseData()+"\t"+target.get(i).getHighData()+"\t"+target.get(i).getLowData();
+                line+="\t"+target.get(i).getX()+"\t"+target.get(i).getOne()+"\t"+target.get(i).getThree()+"\t"+target.get(i).getOne();
             }
             System.out.println(line);
         }

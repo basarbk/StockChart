@@ -22,12 +22,6 @@ public class DoubleData<X, Y extends Number> extends SingleData<X, Y> {
         this.two = two;
     }
 
-    public Y getLowData(){ return two;}
-
-    public void setLowData(Y low){
-        this.two = low;
-    }
-
     @Override
     public double getMin() {
         if(two == null && one == null)

@@ -9,9 +9,9 @@ public class OHLCVolumeData<X, Y extends Number> extends QuadrupleData<X, Y> {
 
     public OHLCVolumeData() {}
 
-    public OHLCVolumeData(X x, Y open, Y high, Y low, Y close, Y volume) {
-        super(x, open, high, low, close);
-        this.five = volume;
+    public OHLCVolumeData(X x, Y four, Y three, Y two, Y one, Y five) {
+        super(x, four, three, two, one);
+        this.five = five;
     }
 
     public Y getFive() {
@@ -22,11 +22,4 @@ public class OHLCVolumeData<X, Y extends Number> extends QuadrupleData<X, Y> {
         this.five = five;
     }
 
-    public Y getVolumeData(){
-        return five;
-    }
-
-    public void setVolumeData(Y volume){
-        this.five = volume;
-    }
 }
