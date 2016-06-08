@@ -43,7 +43,7 @@ public class ActivityMain extends AppCompatActivity {
 
         Indicator<String, Float> indicator = new Indicator(new StringDateAxis("MMM dd, yyyy"), new NumberAxis("#.##"));
 
-        List<SingleData<String, Float>> singleData = IndicatorCalculator.getEMA(instrument.getData(),15);
+        List<SingleData<String, Float>> singleData = IndicatorCalculator.getRSI(instrument.getData(),14);
         indicator.setData(singleData);
         indicator.setPainter(new DefaultPainter());
         indicator.getPainter().setColor(Painter.LINE_COLOR, Color.RED);

@@ -43,9 +43,9 @@ public class ExampleUnitTest {
 
     @Test
     public void calculateEmaFloat() throws Exception{
-        List<SingleData<String, Float>> ref = getSingleFloatData();
-        List<SingleData> sma = IndicatorCalculator.getEMA(ref, 9);
-        log(ref, sma);
+//        List<SingleData<String, Float>> ref = getSingleFloatData();
+//        List<SingleData> sma = IndicatorCalculator.getEMA(ref, 9);
+//        log(ref, sma);
     }
 
     @Test
@@ -88,6 +88,13 @@ public class ExampleUnitTest {
         List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
         List<SingleData<String, Float>> mfiData = IndicatorCalculator.getMFI(ref, 14);
         log(ref, mfiData);
+    }
+
+    @Test
+    public void calculateMACDFloat() throws Exception{
+        List<OHLCVolumeData<String, Float>> ref = getOHLCVolumeFloatData();
+        List<TripleData<String, Float>> mfiData = IndicatorCalculator.getMACD(ref, 12, 26, 9);
+        logTriple(ref, mfiData);
     }
 
     private static List<OHLCVolumeData<String, Float>> getOHLCVolumeFloatData(){

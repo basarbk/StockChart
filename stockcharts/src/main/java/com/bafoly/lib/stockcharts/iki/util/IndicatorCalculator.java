@@ -1,7 +1,5 @@
 package com.bafoly.lib.stockcharts.iki.util;
 
-import android.util.Log;
-
 import com.bafoly.lib.stockcharts.iki.model.data.OHLCVolumeData;
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
@@ -88,28 +86,34 @@ public class IndicatorCalculator {
     }
 
     // indicator calculation methods
-    public static <Z extends SingleData> List<Z> getEMA(List<? extends SingleData> data, int period){
-        List<Z> emaData = new ArrayList<>(data.size());
+    public static List<Double> getEMA(List<? extends SingleData> data, int period){
+        List<Double> emaData = new ArrayList<>(data.size());
 
         double multiplier = 2 / ((double)period + 1);
 
         List<Double> values = new ArrayList<>();
 
         for(int i = 0;i<data.size();i++){
-            values.add(data.get(i).getOne().doubleValue());
-            emaData.add((Z)(data.get(i)).copy());
-            if(i==period-1){
-                emaData.get(i).setOne(getAverage(values, period, i));
+            if(data.get(i)!=null){
+                values.add(data.get(i).getOne().doubleValue());
+            } else {
+                values.add(0d);
+            }
+            if(i<period-1){
+                emaData.add(null);
+            } else if(i==period-1){
+                emaData.add(getAverage(values, period, i));
             } else if(i>=period-1){
-                double previousEma = emaData.get(i-1).getOne().doubleValue();
-                double value = ((data.get(i).getOne().doubleValue() - previousEma)*multiplier)+previousEma;
-                emaData.get(i).setOne(value);
+                double previousEma = emaData.get(i-1);
+                if(data.get(i)!=null){
+                    double value = ((data.get(i).getOne().doubleValue() - previousEma)*multiplier)+previousEma;
+                    emaData.add(value);
+                } else {
+                    emaData.add(0d);
+                }
             }
         }
 
-        for(int i = 0;i<period-1;i++){
-            emaData.set(i, null);
-        }
         return emaData;
     }
 
@@ -418,28 +422,44 @@ public class IndicatorCalculator {
     }
 
 
+    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:moving_average_convergence_divergence_macd
+    public static <X, Y extends Number> List<TripleData<X, Y>> getMACD(List<? extends SingleData> data, int periodEmaFirst, int periodEmaSecond, int periodSignal){
 
-//
-//    public static List<Float> getMACDLine(List<Float> vals){
-//        List<Float> ema12 = getEMA(vals,12);
-//        List<Float> ema26 = getEMA(vals,26);
-//        List<Float> macd = new ArrayList<Float>();
-//        for(int i=0;i<ema12.size();i++){
-//            macd.add(ema12.get(i)-ema26.get(i));
-//        }
-//        return macd;
-//    }
-//    public static List<Float> getMACD(List<Float> vals){
-//        List<Float> ema12 = getEMA(vals,12);
-//        List<Float> ema26 = getEMA(vals,26);
-//        List<Float> macd = new ArrayList<Float>();
-//        for(int i=0;i<ema12.size();i++){
-//            macd.add(ema12.get(i)-ema26.get(i));
-//        }
-//        return getEMA(macd, 9);
-//    }
-//
-//
+        List<TripleData<X, Y>> macdData = new ArrayList<>();
+
+        List<Double> firstEma = getEMA(data, periodEmaFirst);
+
+        List<Double> secondEma = getEMA(data, periodEmaSecond);
+
+        List<SingleData> macdLine = new ArrayList<>();
+
+        for(int i = 0;i<data.size();i++){
+            Double d = 0d;
+            macdData.add(new TripleData<X, Y>((X)data.get(i).getX(),(Y)d, (Y)d, (Y)d));
+            if(firstEma.get(i)!=null && secondEma.get(i)!=null){
+                Double val = firstEma.get(i)-secondEma.get(i);
+                macdLine.add(new SingleData(data.get(i).getX(), val));
+                macdData.get(i).setHighData((Y)val);
+            } else {
+                macdLine.add(null);
+            }
+        }
+
+        List<Double> signalEma = getEMA(macdLine, periodSignal);
+
+        for(int i = 0 ; i<data.size();i++){
+            if(macdLine.get(i)!=null){
+                Double val = macdLine.get(i).getCloseData().doubleValue() - signalEma.get(i);
+                macdData.get(i).setLowData((Y)signalEma.get(i));
+                macdData.get(i).setCloseData((Y)val);
+            } else {
+                macdData.set(i, null);
+            }
+        }
+
+        return macdData;
+    }
+
 
 //
 //    public static List<Float> getCorrelation(List<Float> valsA, List<Float> valsB, int periyot){
