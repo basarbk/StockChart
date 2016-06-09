@@ -22,4 +22,13 @@ public class OHLCVolumeData<X, Y extends Number> extends QuadrupleData<X, Y> {
         this.five = five;
     }
 
+    @Override
+    public double getMin() {
+        return super.getMin();
+    }
+
+    @Override
+    public double getMax() {
+        return super.getMax();
+    }
 }

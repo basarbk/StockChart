@@ -9,9 +9,9 @@ public class DoubleData<X, Y extends Number> extends SingleData<X, Y> {
 
     public DoubleData() {}
 
-    public DoubleData(X x, Y close, Y low) {
-        super(x, close);
-        this.two = low;
+    public DoubleData(X x, Y one, Y two) {
+        super(x, one);
+        this.two = two;
     }
 
     public Y getTwo() {
@@ -24,30 +24,47 @@ public class DoubleData<X, Y extends Number> extends SingleData<X, Y> {
 
     @Override
     public double getMin() {
-        if(two == null && one == null)
+
+        Double superValue = super.getMin();
+
+        if(two == null && superValue == null)
             return Double.NaN;
 
-        if(two != null && one == null)
+        if(two != null && superValue == null)
             return two.doubleValue();
 
-        if(one!=null && two == null)
-            return one.doubleValue();
+        if(superValue!=null && two == null)
+            return superValue.doubleValue();
 
-        return two.doubleValue() < one.doubleValue() ? two.doubleValue() : one.doubleValue();
+        if(!Double.isNaN(two.doubleValue()) && Double.isNaN(superValue.doubleValue()))
+            return two.doubleValue();
+
+        if(Double.isNaN(two.doubleValue()) && !Double.isNaN(superValue.doubleValue()))
+            return superValue.doubleValue();
+
+        return two.doubleValue() < superValue.doubleValue() ? two.doubleValue() : superValue.doubleValue();
     }
 
     @Override
     public double getMax() {
-        if(two == null && one == null)
+        Double superValue = super.getMax();
+
+        if(two == null && superValue == null)
             return Double.NaN;
 
-        if(two != null && one == null)
+        if(two != null && superValue == null)
             return two.doubleValue();
 
-        if(one!=null && two == null)
-            return one.doubleValue();
+        if(superValue!=null && two == null)
+            return superValue.doubleValue();
 
-        return two.doubleValue() > one.doubleValue() ? two.doubleValue() : one.doubleValue();
+        if(!Double.isNaN(two.doubleValue()) && Double.isNaN(superValue.doubleValue()))
+            return two.doubleValue();
+
+        if(Double.isNaN(two.doubleValue()) && !Double.isNaN(superValue.doubleValue()))
+            return superValue.doubleValue();
+
+        return two.doubleValue() > superValue.doubleValue() ? two.doubleValue() : superValue.doubleValue();
     }
 
     @Override

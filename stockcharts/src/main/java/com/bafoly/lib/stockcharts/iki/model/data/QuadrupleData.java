@@ -25,11 +25,45 @@ public class QuadrupleData<X, Y extends Number> extends TripleData<X, Y> {
 
     @Override
     public double getMin() {
-        return two == null ? Double.NaN : two.doubleValue();
+        Double superValue = super.getMin();
+
+        if(four == null && superValue == null)
+            return Double.NaN;
+
+        if(four != null && superValue == null)
+            return four.doubleValue();
+
+        if(superValue!=null && four == null)
+            return superValue.doubleValue();
+
+        if(!Double.isNaN(four.doubleValue()) && Double.isNaN(superValue.doubleValue()))
+            return four.doubleValue();
+
+        if(Double.isNaN(four.doubleValue()) && !Double.isNaN(superValue.doubleValue()))
+            return superValue.doubleValue();
+
+        return four.doubleValue() < superValue.doubleValue() ? four.doubleValue() : superValue.doubleValue();
     }
 
     @Override
     public double getMax() {
-        return three == null ? Double.NaN : three.doubleValue();
+        Double superValue = super.getMax();
+
+        if(four == null && superValue == null)
+            return Double.NaN;
+
+        if(four != null && superValue == null)
+            return four.doubleValue();
+
+        if(superValue!=null && four == null)
+            return superValue.doubleValue();
+
+        if(!Double.isNaN(four.doubleValue()) && Double.isNaN(superValue.doubleValue()))
+            return four.doubleValue();
+
+        if(Double.isNaN(four.doubleValue()) && !Double.isNaN(superValue.doubleValue()))
+            return superValue.doubleValue();
+
+        return four.doubleValue() > superValue.doubleValue() ? four.doubleValue() : superValue.doubleValue();
     }
 }

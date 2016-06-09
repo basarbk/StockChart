@@ -25,30 +25,48 @@ public class TripleData<X, Y extends Number> extends DoubleData<X, Y> {
 
     @Override
     public double getMin() {
-        if(three == null && one == null)
+
+        Double superValue = super.getMin();
+
+        if(three == null && superValue == null)
             return Double.NaN;
 
-        if(three != null && one == null)
+        if(three != null && superValue == null)
             return three.doubleValue();
 
-        if(one!=null && three == null)
-            return one.doubleValue();
+        if(superValue!=null && three == null)
+            return superValue.doubleValue();
 
-        return three.doubleValue() < one.doubleValue() ? three.doubleValue() : one.doubleValue();
+        if(!Double.isNaN(three.doubleValue()) && Double.isNaN(superValue.doubleValue()))
+            return three.doubleValue();
+
+        if(Double.isNaN(three.doubleValue()) && !Double.isNaN(superValue.doubleValue()))
+            return superValue.doubleValue();
+
+        return three.doubleValue() < superValue.doubleValue() ? three.doubleValue() : superValue.doubleValue();
+
     }
 
     @Override
     public double getMax() {
-        if(three == null && one == null)
+        Double superValue = super.getMax();
+
+        if(three == null && superValue == null)
             return Double.NaN;
 
-        if(three != null && one == null)
+        if(three != null && superValue == null)
             return three.doubleValue();
 
-        if(one!=null && three == null)
-            return one.doubleValue();
+        if(superValue!=null && three == null)
+            return superValue.doubleValue();
 
-        return three.doubleValue() > one.doubleValue() ? three.doubleValue() : one.doubleValue();
+        if(!Double.isNaN(three.doubleValue()) && Double.isNaN(superValue.doubleValue()))
+            return three.doubleValue();
+
+        if(Double.isNaN(three.doubleValue()) && !Double.isNaN(superValue.doubleValue()))
+            return superValue.doubleValue();
+
+        return three.doubleValue() > superValue.doubleValue() ? three.doubleValue() : superValue.doubleValue();
     }
 
     @Override

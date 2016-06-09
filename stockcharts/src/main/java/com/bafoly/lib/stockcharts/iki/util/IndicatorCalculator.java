@@ -18,14 +18,14 @@ import java.util.List;
 public class IndicatorCalculator {
 
     /**
-     * Returns the sum of array
+     * Returns the sum of specified range of array
      * @param data Double List
      * @return
      */
-    private static double getSum(List<Double> data){
+    private static double getSum(List<Double> data, int count, int endIndex){
         double sum = 0;
-        for(double current : data){
-            sum += current;
+        for(int i = endIndex + 1 - count; i<=endIndex; i ++){
+            sum += data.get(i);
         }
         return sum;
     }
@@ -35,8 +35,8 @@ public class IndicatorCalculator {
      * @param data Double List
      * @return
      */
-    private static double getAverage(List<Double> data){
-        return getSum(data) / data.size();
+    private static double getAverage(List<Double> data, int count, int endIndex){
+        return getSum(data, count, endIndex) / count;
     }
 
 
@@ -46,12 +46,12 @@ public class IndicatorCalculator {
      * @param typicalPriceMovingAverage
      * @return
      */
-    private static double getMeanDeviation(List<Double> typicalPrice, double typicalPriceMovingAverage){
+    private static double getMeanDeviation(List<Double> typicalPrice, double typicalPriceMovingAverage, int count, int endIndex){
         double meanDeviation = 0;
-        for(double current : typicalPrice){
-            meanDeviation = meanDeviation+Math.abs(typicalPriceMovingAverage-current);
+        for(int i = endIndex + 1 - count; i<=endIndex; i ++){
+            meanDeviation = meanDeviation+Math.abs(typicalPriceMovingAverage-typicalPrice.get(i));
         }
-        return meanDeviation/typicalPrice.size();
+        return meanDeviation/count;
     }
 
     /**
@@ -59,14 +59,14 @@ public class IndicatorCalculator {
      * @param data
      * @return
      */
-    private static double getStandardDeviation(List<Double> data){
-        double average = getAverage(data);
+    private static double getStandardDeviation(List<Double> data, int count, int endIndex){
+        double average = getAverage(data, count, endIndex);
 
         double squareSum = 0d;
-        for(double d: data){
-            squareSum += Math.pow(d-average,2);
+        for(int i = endIndex + 1 - count; i<=endIndex; i ++){
+            squareSum += Math.pow(data.get(i)-average,2);
         }
-        return Math.sqrt(squareSum/data.size());
+        return Math.sqrt(squareSum/count);
     }
 
     /**
@@ -89,9 +89,9 @@ public class IndicatorCalculator {
                 values.add(0d);
             }
             if(i<period-1){
-                emaData.add(null);
+                emaData.add(0d);
             } else if(i==period-1){
-                emaData.add(getAverage(values.subList(i+1-period, i+1)));
+                emaData.add(getAverage(values, period, i));
             } else if(i>=period-1){
                 double previousEma = emaData.get(i-1);
                 if(data.get(i)!=null){
@@ -119,7 +119,7 @@ public class IndicatorCalculator {
             smaData.add((Z)(data.get(i)).copy());
             values.add(data.get(i).getOne().doubleValue());
             if(i>=period-1){
-                smaData.get(i).setOne(getAverage(values.subList(i+1-period, i+1)));
+                smaData.get(i).setOne(getAverage(values, period, i));
             }
         }
 
@@ -130,10 +130,9 @@ public class IndicatorCalculator {
         return smaData;
     }
 
-    // Smoothed / Modified / Running Moving Average
-    // https://en.wikipedia.org/wiki/Moving_average#Modified_moving_average
     /**
-     * Smoother / Modified / Running Moving Average
+     * Smoothed / Modified / Running Moving Average
+     * https://en.wikipedia.org/wiki/Moving_average#Modified_moving_average
      * @param data
      * @param period
      * @return
@@ -145,7 +144,7 @@ public class IndicatorCalculator {
             ssmaData.add((Z)(data.get(i)).copy());
             values.add(data.get(i).getOne().doubleValue());
             if(i==period-1){
-                ssmaData.get(i).setOne(getAverage(values.subList(i+1-period, i+1)));
+                ssmaData.get(i).setOne(getAverage(values, period, i));
             } else if (i > period -1 ){
                 double result = (((period - 1) * ssmaData.get(i-1).getOne().doubleValue()) + data.get(i).getOne().doubleValue())/period;
                 ssmaData.get(i).setOne(result);
@@ -159,8 +158,14 @@ public class IndicatorCalculator {
         return ssmaData;
     }
 
-    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:relative_strength_index_rsi
-    // https://en.wikipedia.org/wiki/Relative_strength_index#Calculation
+    /**
+     * Relative Strength Index
+     * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:relative_strength_index_rsi
+     * https://en.wikipedia.org/wiki/Relative_strength_index#Calculation
+     * @param data
+     * @param period
+     * @return
+     */
     public static <Z extends SingleData> List<Z> getRSI(List<? extends SingleData> data, int period){
         List<Z> rsiData = new ArrayList<>(data.size());
 
@@ -199,8 +204,8 @@ public class IndicatorCalculator {
                 rsiAverageGain.add(0d);
                 rsiAverageLoss.add(0d);
             } else if(i==period){
-                rsiAverageGain.add(getAverage(gain.subList(i+1-period, i+1)));
-                rsiAverageLoss.add(getAverage(loss.subList(i+1-period, i+1)));
+                rsiAverageGain.add(getAverage(gain, period, i));
+                rsiAverageLoss.add(getAverage(loss, period, i));
                 rsi.add(100-(100/(1+(rsiAverageGain.get(i)/rsiAverageLoss.get(i)))));
             } else {
                 rsiAverageGain.add(((rsiAverageGain.get(i-1)*(period-1))+gain.get(i))/period);
@@ -219,7 +224,13 @@ public class IndicatorCalculator {
     }
 
 
-    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:stochrsi
+    /**
+     * Stochastic RSI
+     * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:stochrsi
+     * @param data
+     * @param period
+     * @return
+     */
     public static <Z extends SingleData> List<Z> getStochasticRSI(List<? extends SingleData> data, int period){
         List<Z> rsiData = getRSI(data, period);
         List<Z> stochasticRSIData = new ArrayList<>();
@@ -251,7 +262,14 @@ public class IndicatorCalculator {
         return stochasticRSIData;
     }
 
-    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:commodity_channel_index_cci
+    /**
+     * Commodity Channel Index
+     * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:commodity_channel_index_cci
+     * @param data
+     * @param period
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static <X, Y extends Number> List<SingleData<X, Y>> getCCI(List<? extends SingleData<X, Y>> data, int period) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
@@ -273,9 +291,8 @@ public class IndicatorCalculator {
             typicalPrice.add(typicalVal);
 
             if(i>=period - 1){
-                List<Double> temp = typicalPrice.subList(i+1-period, i+1);
-                double typicalPriceSMA = getAverage(temp);
-                double meanDeviation = getMeanDeviation(temp, typicalPriceSMA);
+                double typicalPriceSMA = getAverage(typicalPrice, period, i);
+                double meanDeviation = getMeanDeviation(typicalPrice, typicalPriceSMA, period, i);
                 Double cciResult = (typicalVal - typicalPriceSMA)/(constant*meanDeviation);
                 cciData.get(i).setOne((Y)cciResult);
             }
@@ -289,7 +306,14 @@ public class IndicatorCalculator {
 
     }
 
-    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:williams_r
+    /**
+     * Williams %R
+     * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:williams_r
+     * @param data
+     * @param period
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static <X, Y extends Number> List<SingleData<X, Y>> getWilliamsR(List<? extends SingleData<X, Y>> data, int period) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
@@ -328,7 +352,16 @@ public class IndicatorCalculator {
         return williamsRData;
     }
 
-    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
+
+
+    /**
+     * Bollinger Bands
+     * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
+     * @param data
+     * @param period
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static <X, Y extends Number> List<TripleData<X, Y>> getBollinger(List<? extends SingleData> data, int period) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
@@ -346,10 +379,8 @@ public class IndicatorCalculator {
             close.add(td.getOne().doubleValue());
 
             if(i>=period-1){
-                List<Double> temp = close.subList(i+1-period, i+1);
-                Double sma = getAverage(temp);
-                double sdev = getStandardDeviation(temp);
-
+                Double sma = getAverage(close, period, i);
+                double sdev = getStandardDeviation(close, period, i);
                 Double up = sma + (sdev*2);
                 Double low = sma - (sdev*2);
 
@@ -367,7 +398,16 @@ public class IndicatorCalculator {
     }
 
 
-    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:money_flow_index_mfi
+
+
+    /**
+     * Money Flow Index
+     * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:money_flow_index_mfi
+     * @param data
+     * @param period
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static <X, Y extends Number> List<SingleData<X, Y>> getMFI(List<? extends SingleData<X, Y>> data, int period) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
@@ -404,8 +444,8 @@ public class IndicatorCalculator {
                 negativeMoneyFlow.add(tp*td.getFive().doubleValue());
             }
             if(i>=period-1) {
-                double posFlow = getSum(positiveMoneyFlow.subList(i+1-period, i+1));
-                double negFlow = getSum(negativeMoneyFlow.subList(i+1-period, i+1));
+                double posFlow = getSum(positiveMoneyFlow, period, i);
+                double negFlow = getSum(negativeMoneyFlow, period, i);
 
                 double ratio = posFlow/negFlow;
 
@@ -423,8 +463,15 @@ public class IndicatorCalculator {
         return mfiData;
     }
 
-
-    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:moving_average_convergence_divergence_macd
+    /**
+     * Moving Average Convergence/Divergence Oscillator
+     * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:moving_average_convergence_divergence_macd
+     * @param data
+     * @param periodEmaFirst
+     * @param periodEmaSecond
+     * @param periodSignal
+     * @return
+     */
     public static <X, Y extends Number> List<TripleData<X, Y>> getMACD(List<? extends SingleData> data, int periodEmaFirst, int periodEmaSecond, int periodSignal){
 
         List<TripleData<X, Y>> macdData = new ArrayList<>();
@@ -447,12 +494,18 @@ public class IndicatorCalculator {
             }
         }
 
-        List<Double> signalEma = getEMA(macdLine, periodSignal);
+        List<Double> signalEma = getEMA(macdLine.subList(periodEmaSecond-1, macdLine.size()), periodSignal);
+
+        List<Double> temp = new ArrayList<>(Collections.nCopies(data.size()-signalEma.size(),0d));
+        signalEma.addAll(0, temp);
 
         for(int i = 0 ; i<data.size();i++){
             if(macdLine.get(i)!=null){
-                Double val = macdLine.get(i).getOne().doubleValue() - signalEma.get(i);
-                macdData.get(i).setTwo((Y)signalEma.get(i));
+                Double signal = signalEma.get(i);
+                Double val = macdLine.get(i).getOne().doubleValue() - signal;
+                if(i==33)
+                    System.out.println("b");
+                macdData.get(i).setTwo((Y)signal);
                 macdData.get(i).setOne((Y)val);
             } else {
                 macdData.set(i, null);
@@ -462,7 +515,15 @@ public class IndicatorCalculator {
         return macdData;
     }
 
-    // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:stochastic_oscillator_fast_slow_and_full
+    /**
+     * Stochastic Oscillator
+     * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:stochastic_oscillator_fast_slow_and_full
+     * @param data
+     * @param periodK
+     * @param periodS
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static <X, Y extends Number> List<DoubleData<X, Y>> getStochasticOscillator(List<? extends SingleData<X, Y>> data, int periodK, int periodS) throws IllegalArgumentException{
 
         if(data != null && data.size()>0){
@@ -494,7 +555,7 @@ public class IndicatorCalculator {
                 stochasticOscillator.get(i).setOne((Y)valueK);
                 Double valueS = 0d;
                 if(ks.size()>=periodS){
-                    valueS = getAverage(ks.subList(ks.size()-periodS, ks.size()));
+                    valueS = getAverage(ks, periodS, i+1-periodK);
                 }
                 stochasticOscillator.get(i).setTwo((Y)valueS);
             }
