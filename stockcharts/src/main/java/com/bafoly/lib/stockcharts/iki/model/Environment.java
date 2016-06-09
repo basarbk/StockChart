@@ -186,12 +186,10 @@ public class Environment {
             }
         }
 
-
-
         gridValueSteps = (max - min)/horizontalGrid;
 
         multiplierX = (canvasAdapter.getWidth() - paddingLeft - paddingRight)/(float)(dataCount+1); // - padding left, right
-        multiplierY = (float)((canvasAdapter.getHeight()-paddingTop - paddingBottom)/(max-min)); // - pedding bottom top
+        multiplierY = (float)((canvasAdapter.getHeight()-paddingTop - paddingBottom)/(max-min)); // - padding bottom top
 
         chartWidth = canvasAdapter.getWidth() - paddingLeft - paddingRight;
         chartHeight = canvasAdapter.getHeight() - paddingTop - paddingBottom;

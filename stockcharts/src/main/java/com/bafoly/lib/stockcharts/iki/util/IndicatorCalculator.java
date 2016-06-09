@@ -503,8 +503,6 @@ public class IndicatorCalculator {
             if(macdLine.get(i)!=null){
                 Double signal = signalEma.get(i);
                 Double val = macdLine.get(i).getOne().doubleValue() - signal;
-                if(i==33)
-                    System.out.println("b");
                 macdData.get(i).setTwo((Y)signal);
                 macdData.get(i).setOne((Y)val);
             } else {
