@@ -40,7 +40,7 @@ public class ActivityMain extends AppCompatActivity {
         instrument = new Instrument(new StringDateAxis("MMM dd, yyyy"), new NumberAxis("#.##"));
         instrument.setPainter(new DefaultPainter());
         instrument.setData(getData());
-        instrument.setDataDrawStrategy(new DrawLine());
+        instrument.setDataDrawStrategy(new DrawCandleStick());
 
 
         Indicator<String, Double> indicator = new Indicator(new StringDateAxis("MMM dd, yyyy"), new NumberAxis("#.##"));

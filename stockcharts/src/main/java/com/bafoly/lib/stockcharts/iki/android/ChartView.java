@@ -98,9 +98,14 @@ public class ChartView extends View {
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
         float xfirst;
+        boolean touched = false;
 
         @Override
         public boolean onDown(MotionEvent e) {
+            touched = environment.touchingToChart(e.getX(), e.getY());
+            if(!touched)
+                return false;
+
             xfirst = e.getX();
             return true;
         }
@@ -113,6 +118,9 @@ public class ChartView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            if(!touched)
+                return false;
+
             if(Math.abs(xfirst-e2.getX())>environment.multiplierX){
                 scrollMe((int)((xfirst-e2.getX())/environment.multiplierX));
                 xfirst = e2.getX();

@@ -1,5 +1,7 @@
 package com.bafoly.lib.stockcharts.iki.model;
 
+import android.util.Log;
+
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
 
@@ -193,6 +195,17 @@ public class Environment {
 
         chartWidth = canvasAdapter.getWidth() - paddingLeft - paddingRight;
         chartHeight = canvasAdapter.getHeight() - paddingTop - paddingBottom;
+
+    }
+
+    public boolean touchingToChart(float x, float y){
+        if(x<paddingLeft || y<paddingTop)
+            return false;
+
+        if(x>(chartWidth+paddingLeft) || y>(chartHeight+paddingBottom))
+            return false;
+
+        return true;
     }
 
     public boolean scroll(int count){

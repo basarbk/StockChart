@@ -42,4 +42,9 @@ public abstract class CanvasAdapter<X, Y> {
     public abstract Bounds getBounds(String text, Y paint);
 
     public abstract void drawText(String text, float x1, float y1, Y paint);
+
+    public abstract void restoreCanvas();
+
+    public abstract void clip(Environment environment);
+
 }
