@@ -60,7 +60,7 @@ public class ChartView extends View {
         chartModel = main;
         chartModel.getPainter().setDensity(context.getResources().getDisplayMetrics().density);
 
-        chartModel.getPainter().init();
+//        chartModel.getPainter().init();
 
         environment = main.getEnvironment();
 
@@ -78,7 +78,7 @@ public class ChartView extends View {
         if(chartModel!=null){
             canvasAdapter.setCanvas(canvas);
             environment.calculateMaxMin(chartModel);
-            chartModel.draw();
+            chartModel.draw(null);
 
         } else {
             // empty

@@ -31,13 +31,6 @@ public abstract class XYData<X, Y extends Number> {
         this.yAxis = yAxis;
     }
 
-
-
-    /**
-     * This method will be implemented to call the draw strategy
-     */
-    public abstract void draw(Environment environment);
-
     public Axis getxAxis() {
         return xAxis;
     }
@@ -77,4 +70,9 @@ public abstract class XYData<X, Y extends Number> {
     public void setPainter(Painter painter) {
         this.painter = painter;
     }
+
+    /**
+     * This method will be implemented to call the draw strategy
+     */
+    public abstract void draw(Environment environment);
 }

@@ -18,11 +18,15 @@ public class DefaultPainter implements Painter<Paint> {
 
     float density = 1.0f;
 
-    public DefaultPainter(){}
+    public DefaultPainter(){
+        init();
+    }
 
     @Override
     public void setDensity(float density) {
         this.density = density;
+
+        getPaint(AXIS_TEXT_COLOR).setTextSize(12*density);
     }
 
     @Override

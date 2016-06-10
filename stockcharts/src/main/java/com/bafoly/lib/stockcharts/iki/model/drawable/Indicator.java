@@ -55,12 +55,4 @@ public class Indicator<X, Y extends Number>  extends ChartModel<X,Y> {
         this.overlay = overlay;
     }
 
-    @Override
-    public void draw() {
-        if(overlay){
-            draw(parent.getEnvironment());
-        } else {
-            draw(getEnvironment());
-        }
-    }
 }

@@ -9,12 +9,56 @@ import com.bafoly.lib.stockcharts.iki.model.Painter;
 import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by basarb on 6/10/2016.
+ * Stock object has it's own Chart Data.<br>
+ * Stock may have indicators and technical analyses<br>
+ * When the draw method is called from the framework, this instance will be responsible for<br>
+ * drawing the sub instances.<br>
+ * It's more convenient to instantiate the Stock object with the Builder.
  */
-public class Stock<X, Y extends Number> extends Instrument<X, Y> {
+public class Stock<X, Y extends Number> extends ChartModel<X, Y> {
+
+    private List<Indicator> indicators = new ArrayList<>();
+
+    private List<TechnicalAnalysis> technicalAnalyses = new ArrayList<>();
+
+    private Stock(Axis xAxis, Axis yAxis) {
+        super(xAxis, yAxis);
+    }
+
+    public void addIndicator(Indicator indicator){
+        indicator.setParent(this);
+        indicators.add(indicator);
+    }
+
+    public List<TechnicalAnalysis> getTechnicalAnalyses() {
+        return technicalAnalyses;
+    }
+
+    public void setTechnicalAnalyses(List<TechnicalAnalysis> technicalAnalyses) {
+        this.technicalAnalyses = technicalAnalyses;
+    }
+
+    public void addTechnicalAnalyses(TechnicalAnalysis technicalAnalysis){
+        this.technicalAnalyses.add(technicalAnalysis);
+    }
+
+    @Override
+    public void draw(Environment environment) {
+        super.draw(null);
+
+        for(Indicator indicator:indicators){
+            if(indicator.isOverlay())
+                indicator.draw(getEnvironment());
+        }
+
+        for(TechnicalAnalysis technicalAnalysis: technicalAnalyses){
+            technicalAnalysis.draw(getEnvironment());
+        }
+    }
 
     public static class Builder<X, Y extends Number>{
 
@@ -54,7 +98,7 @@ public class Stock<X, Y extends Number> extends Instrument<X, Y> {
         }
 
         public Stock build(){
-            Stock<X,Y> s = new Stock();
+            Stock<X,Y> s = new Stock(null, null);
             s.setEnvironment(new Environment());
             s.setAxisDrawStrategy(new DrawGrid());
             s.setData(data);

@@ -8,7 +8,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ChartModel is for main chart content.
+ * ChartModel is for main chart content which is either Stock or Indicator<br>
+ * Each chart may have it's custom positioning references which is calculated & stored in Environment<br>
+ * Indicators are dependent on to the Stocks therefore Stock can make draw call with it's own Environment<br>
+ * object.
  */
 public abstract class ChartModel<X, Y extends Number> extends XYData<X, Y> {
 
@@ -27,6 +30,9 @@ public abstract class ChartModel<X, Y extends Number> extends XYData<X, Y> {
      */
     private Environment environment;
 
+    /**
+     * This is the data array of chart
+     */
     private List<? extends SingleData<X, Y>> data = Collections.emptyList();
 
     public ChartModel(Axis xAxis, Axis yAxis) {
@@ -51,18 +57,15 @@ public abstract class ChartModel<X, Y extends Number> extends XYData<X, Y> {
 
     @Override
     public void draw(Environment environment){
-        //axisDrawStrategy.draw(environment, this);
+
+        Environment env = environment==null ? this.environment : environment;
+
         if(axisDrawStrategy!=null){
-            axisDrawStrategy.draw(environment, this);
+            axisDrawStrategy.draw(env, this);
         }
 
-        dataDrawStrategy.draw(environment, this);
+        dataDrawStrategy.draw(env, this);
 
-//        this.axisDrawStrategy.draw(environment, painter, this);
-//
-//        this.drawStrategy.draw(environment, painter, this);
     }
-
-    public abstract void draw();
 
 }

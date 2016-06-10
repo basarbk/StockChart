@@ -36,11 +36,16 @@ public class ActivityMain extends AppCompatActivity {
         chartView = (ChartView) findViewById(R.id.chart);
 
 
+        DefaultPainter dp = new DefaultPainter();
+        dp.setColor(Painter.HIGH_COLOR, Color.rgb(38, 127, 200));
+
         stock = new Stock.Builder<String, Double>()
                 .setData(Data.getData())
                 .setDrawStrategy(new DrawCandleStick())
                 .setAxisX(new StringDateAxis("MMM dd, yyy"))
-                .setAxisY(new NumberAxis("#.##")).build();
+                .setAxisY(new NumberAxis("#.##"))
+                .setPainter(dp)
+                .build();
 
 
 
@@ -71,10 +76,10 @@ public class ActivityMain extends AppCompatActivity {
 
                 switch (counter){
                     case 0:
-                        stock.setDataDrawStrategy(new DrawLine());
+                        stock.setDataDrawStrategy(new DrawCandleStick());
                         break;
                     case 1:
-                        stock.setDataDrawStrategy(new DrawCandleStick());
+                        stock.setDataDrawStrategy(new DrawLine());
                         break;
                     default:
                         stock.setDataDrawStrategy(new DrawOHLC());
