@@ -1,8 +1,5 @@
 package com.bafoly.lib.stockcharts.iki.draw;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-
 import com.bafoly.lib.stockcharts.iki.model.Bounds;
 import com.bafoly.lib.stockcharts.iki.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
@@ -49,7 +46,7 @@ public class DrawLine implements DrawStrategy<ChartModel> {
                 canvasAdapter.lineTo(x,y);
             }
 
-            if(axisX.isPaintable(i)){
+            if(axisX.isPrintable(i)){
                 float yy = environment.getPaddingTop()+environment.getChartHeight();
                 String val = axisX.getTextValue(sd.get(i).getX());
 

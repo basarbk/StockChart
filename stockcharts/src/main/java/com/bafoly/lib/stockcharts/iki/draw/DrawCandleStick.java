@@ -46,7 +46,7 @@ public class DrawCandleStick implements DrawStrategy<ChartModel> {
             float yClose = environment.getY(sd.get(i).getFour().floatValue());
             float x = environment.getX(i-environment.visibleXbegin);
 
-            if(axisX.isPaintable(i)){
+            if(axisX.isPrintable(i)){
                 float yy = environment.getPaddingTop()+environment.getChartHeight();
                 String val = axisX.getTextValue(sd.get(i).getX());
 

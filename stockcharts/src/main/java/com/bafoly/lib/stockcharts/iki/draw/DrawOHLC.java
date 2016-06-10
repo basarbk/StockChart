@@ -54,7 +54,7 @@ public class DrawOHLC implements DrawStrategy<ChartModel> {
                 canvasAdapter.drawLine(x, yClose, x+barWidth, yClose, chartModel.getPainter().getPaint(Painter.FRAME_COLOR));
             }
 
-            if(axisX.isPaintable(i)){
+            if(axisX.isPrintable(i)){
                 float yy = environment.getPaddingTop()+environment.getChartHeight();
                 String val = axisX.getTextValue(sd.get(i).getX());
 

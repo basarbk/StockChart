@@ -46,7 +46,7 @@ public abstract class Axis<T> {
         this.indexes.add(index);
     }
 
-    public boolean isPaintable(Number idx){
+    public boolean isPrintable(Number idx){
         if(indexes.contains(idx))
             return true;
         return false;
