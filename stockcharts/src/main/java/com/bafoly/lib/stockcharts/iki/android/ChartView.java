@@ -31,6 +31,15 @@ public class ChartView extends View {
 
     private Scroller mScroller;
 
+    public static final int TOUCH_REGULAR = 0;
+    public static final int INSPECT = 1;
+    public static final int DRAW_SUPPORT_LINE = 2;
+    public static final int DRAW_TREND_LINE = 3;
+    public static final int DRAW_FIBONACCI = 4;
+
+
+    int touchAction = TOUCH_REGULAR;
+
 
     public ChartView(Context context) {
         this(context, null);
