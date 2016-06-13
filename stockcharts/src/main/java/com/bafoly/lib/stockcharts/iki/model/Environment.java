@@ -176,6 +176,8 @@ public class Environment {
         for(int i = visibleXbegin; i<visibleXend; i++){
             if(i>=dataCount)
                 break;
+            if(chartModel.getData().get(i) == null)
+                continue;
             double currentMax = ((SingleData) chartModel.getData().get(i)).getMax();
             double currentMin = ((SingleData) chartModel.getData().get(i)).getMin();
 

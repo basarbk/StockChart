@@ -30,6 +30,8 @@ public class Stock<X, Y extends Number> extends ChartModel<X, Y> {
     }
 
     public void addIndicator(Indicator indicator){
+        if(indicator==null)
+            return;
         indicator.setParent(this);
         indicators.add(indicator);
     }

@@ -20,26 +20,30 @@ public class ActivityContent extends AppCompatActivity{
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Bundle bundle = getIntent().getExtras();
-
-        int listItem = bundle.getInt("item", 0);
-
-
-        fragmentTransaction.replace(R.id.content, getFragment(listItem)).commit();
+        fragmentTransaction.replace(R.id.content, getFragment(getIntent().getExtras())).commit();
 
     }
 
-    private Fragment getFragment(int idx){
-
-        switch (idx){
-            case 0:
-                return new FragmentChartCandle();
-            case 1:
-                return new FragmentChartOHLC();
+    private Fragment getFragment(Bundle bundle){
+        int listItem = bundle.getInt("item", 0);
+        Fragment fragment;
+        switch (listItem){
+//            case ActivityMain.CANDLE_CHART:
+//            case ActivityMain.OHLC_CHART:
+//            case ActivityMain.LINE_CHART:
+//            case ActivityMain.CANDLE_WITH_SMA_CHART:
+//            case ActivityMain.OHLC_WITH_BOLLINGER:
+//                fragment = new FragmentSingleChart();
+//                break;
+            case ActivityMain.CANDLE_WITH_MACD_CHART:
+            case ActivityMain.CANDLE_STOCHASTIC_OSCILLATOR:
+                fragment = new FragmentTwoCharts();
+                break;
             default:
-                return new FragmentChartLine();
+                fragment = new FragmentSingleChart();
+                break;
         }
-
-
+        fragment.setArguments(bundle);
+        return fragment;
     }
 }
