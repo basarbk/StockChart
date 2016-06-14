@@ -29,16 +29,6 @@ public abstract class CanvasAdapter<X, Y> {
 
     public abstract int getHeight();
 
-    public abstract void createPath();
-
-    public abstract <T extends Number> void moveTo(T t1, T t2);
-
-    public abstract <T extends Number> void lineTo(T t1, T t2);
-
-    public abstract void drawPath(Object object, Y paint);
-
-    public abstract void drawPath(Y paint);
-
     public abstract Bounds getBounds(String text, Y paint);
 
     public abstract void drawText(String text, float x1, float y1, Y paint);
@@ -46,5 +36,9 @@ public abstract class CanvasAdapter<X, Y> {
     public abstract void restoreCanvas();
 
     public abstract void clip(Environment environment);
+
+    public abstract PathAdapter getPath();
+
+    public abstract void drawPath(PathAdapter pathAdapter, Y paint);
 
 }

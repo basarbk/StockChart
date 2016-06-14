@@ -4,18 +4,17 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.util.Log;
 
 import com.bafoly.lib.stockcharts.iki.model.Bounds;
 import com.bafoly.lib.stockcharts.iki.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
+import com.bafoly.lib.stockcharts.iki.model.PathAdapter;
 
 /**
  * Created by basarb on 5/6/2016.
  */
 public class AndroidCanvas extends CanvasAdapter<Canvas, Paint> {
 
-    Path path;
 
     public AndroidCanvas(){
         super(null);
@@ -36,11 +35,6 @@ public class AndroidCanvas extends CanvasAdapter<Canvas, Paint> {
     }
 
     @Override
-    public void drawPath(Object object, Paint paint) {
-        canvas.drawPath((Path)object, paint);
-    }
-
-    @Override
     public int getWidth() {
         return canvas.getWidth();
     }
@@ -50,25 +44,6 @@ public class AndroidCanvas extends CanvasAdapter<Canvas, Paint> {
         return canvas.getHeight();
     }
 
-    @Override
-    public void createPath() {
-        path = new Path();
-    }
-
-    @Override
-    public <T extends Number> void moveTo(T t1, T t2) {
-        path.moveTo(t1.floatValue(), t2.floatValue());
-    }
-
-    @Override
-    public <T extends Number> void lineTo(T t1, T t2) {
-        path.lineTo(t1.floatValue(), t2.floatValue());
-    }
-
-    @Override
-    public void drawPath(Paint paint) {
-        canvas.drawPath(path, paint);
-    }
 
     @Override
     public Bounds getBounds(String text, Paint paint) {
@@ -107,4 +82,15 @@ public class AndroidCanvas extends CanvasAdapter<Canvas, Paint> {
         float bottom = environment.getPaddingTop()+environment.getChartHeight();
         canvas.clipRect(left, top, right, bottom);
     }
+
+    @Override
+    public PathAdapter getPath() {
+        return new AndroidPath();
+    }
+
+    @Override
+    public void drawPath(PathAdapter pathAdapter, Paint paint) {
+        canvas.drawPath(((Path)pathAdapter.getPath()), paint);
+    }
+
 }

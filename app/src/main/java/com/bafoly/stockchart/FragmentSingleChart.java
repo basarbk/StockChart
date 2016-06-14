@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.bafoly.lib.stockcharts.iki.android.ChartView;
 import com.bafoly.lib.stockcharts.iki.android.DefaultPainter;
+import com.bafoly.lib.stockcharts.iki.draw.DrawBollinger;
 import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
 import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
 import com.bafoly.lib.stockcharts.iki.draw.DrawOHLC;
@@ -92,7 +93,7 @@ public class FragmentSingleChart extends Fragment {
             indicator.getPainter().setColor(Painter.LINE_COLOR, Color.BLUE);
             indicator.getPainter().setColor(Painter.HIGH_COLOR, Color.BLUE);
             indicator.getPainter().setColor(Painter.LOW_COLOR, Color.BLUE);
-            indicator.setDataDrawStrategy(new DrawLine());
+            indicator.setDataDrawStrategy(new DrawBollinger());
             return indicator;
         }
 

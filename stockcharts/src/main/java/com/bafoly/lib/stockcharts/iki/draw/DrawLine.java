@@ -4,6 +4,7 @@ import com.bafoly.lib.stockcharts.iki.model.Bounds;
 import com.bafoly.lib.stockcharts.iki.model.CanvasAdapter;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
+import com.bafoly.lib.stockcharts.iki.model.PathAdapter;
 import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
@@ -26,6 +27,8 @@ public class DrawLine implements DrawStrategy<ChartModel> {
         List<SingleData> sd = chartModel.getData();
         boolean pathStarted = false;
 
+        PathAdapter path = canvasAdapter.getPath();
+
         for(int i = environment.visibleXbegin;i<environment.visibleXend;i++){
             if(i>=sd.size())
                 break;
@@ -38,12 +41,11 @@ public class DrawLine implements DrawStrategy<ChartModel> {
             float x = environment.getX(i-environment.visibleXbegin);
 
             if(!pathStarted){
-                canvasAdapter.createPath();
-                canvasAdapter.moveTo(x, y);
+                path.moveTo(x, y);
                 pathStarted = true;
             }
             else{
-                canvasAdapter.lineTo(x,y);
+                path.lineTo(x,y);
             }
 
             if(axisX.isPrintable(i)){
@@ -65,7 +67,7 @@ public class DrawLine implements DrawStrategy<ChartModel> {
         }
 
         canvasAdapter.clip(environment);
-        canvasAdapter.drawPath(chartModel.getPainter().getPaint(Painter.LINE_COLOR));
+        canvasAdapter.drawPath(path, chartModel.getPainter().getPaint(Painter.LINE_COLOR));
 
     }
 }
