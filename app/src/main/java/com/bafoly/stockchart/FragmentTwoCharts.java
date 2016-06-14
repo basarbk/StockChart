@@ -12,6 +12,7 @@ import com.bafoly.lib.stockcharts.iki.android.ChartView;
 import com.bafoly.lib.stockcharts.iki.android.DefaultPainter;
 import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
 import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
+import com.bafoly.lib.stockcharts.iki.draw.DrawMACD;
 import com.bafoly.lib.stockcharts.iki.draw.DrawStrategy;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
@@ -80,8 +81,9 @@ public class FragmentTwoCharts extends Fragment {
             List<TripleData<String, Double>> singleData = IndicatorCalculator.getMACD(stock.getData(),12, 26, 9);
             indicator.setData(singleData);
             indicator.setPainter(new DefaultPainter());
-            indicator.getPainter().setColor(Painter.LINE_COLOR, Color.RED);
-            indicator.setDataDrawStrategy(new DrawLine());
+            indicator.getPainter().setColor(Painter.LINE_COLOR, Color.BLUE);
+            indicator.getPainter().setColor(Painter.BAR_COLOR, Color.RED);
+            indicator.setDataDrawStrategy(new DrawMACD());
             indicator.setEnvironment(new Environment());
             return indicator;
         } else if( idx == ActivityMain.CANDLE_STOCHASTIC_OSCILLATOR){

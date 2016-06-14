@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by basarb on 6/14/2016.
  */
-public class DrawBollinger implements DrawStrategy<ChartModel> {
+public class DrawMACD implements DrawStrategy<ChartModel> {
 
     @Override
     public void draw(Environment environment, ChartModel drawableContent) {
@@ -23,20 +23,28 @@ public class DrawBollinger implements DrawStrategy<ChartModel> {
         List<SingleData> data = drawableContent.getData();
 
         int size = data.size();
+
         SingleData sd = data.get(size-1);
 
         if(!(sd instanceof TripleData)){
             return;
         }
 
-        PathAdapter pathUp = canvasAdapter.getPath();
-        PathAdapter pathDown = canvasAdapter.getPath();
+        PathAdapter path12 = canvasAdapter.getPath();
+        PathAdapter path26 = canvasAdapter.getPath();
 
         TripleData pos = null;
 
         boolean pathStarted = false;
 
-        for(int i = environment.visibleXbegin; i<environment.visibleXend; i++){
+        float zeroLine = environment.getY(0);
+        if(zeroLine > environment.getChartHeight() - environment.getPaddingBottom()){
+            zeroLine = environment.getChartHeight() - environment.getPaddingBottom();
+        }
+
+        float barWidth = environment.multiplierX/3;
+
+        for(int i = environment.visibleXbegin;i<environment.visibleXend;i++){
             if(i>=size)
                 break;
 
@@ -45,25 +53,36 @@ public class DrawBollinger implements DrawStrategy<ChartModel> {
 
             pos = (TripleData) data.get(i);
 
-
             float yup = environment.getY(pos.getThree().floatValue());
             float ydown = environment.getY(pos.getTwo().floatValue());
+
+            float histogram = pos.getOne().floatValue();
+            float yhistogram = environment.getY(histogram);
+
             float x = environment.getX(i-environment.visibleXbegin);
 
             if(!pathStarted){
-                pathUp.moveTo(x, yup);
-                pathDown.moveTo(x, ydown);
+                path12.moveTo(x, yup);
+                path26.moveTo(x, ydown);
                 pathStarted = true;
             }
             else{
-                pathUp.lineTo(x, yup);
-                pathDown.lineTo(x, ydown);
+                path12.lineTo(x, yup);
+                path26.lineTo(x, ydown);
             }
+
+            if(histogram>0){
+                canvasAdapter.drawRect(x-barWidth, yhistogram, x+barWidth, zeroLine, drawableContent.getPainter().getPaint(Painter.BAR_COLOR));
+            } else {
+                canvasAdapter.drawRect(x-barWidth, zeroLine, x+barWidth, yhistogram, drawableContent.getPainter().getPaint(Painter.BAR_COLOR));
+            }
+
         }
 
         canvasAdapter.clip(environment);
-        canvasAdapter.drawPath(pathUp, drawableContent.getPainter().getPaint(Painter.LINE_COLOR));
-        canvasAdapter.drawPath(pathDown, drawableContent.getPainter().getPaint(Painter.LINE_COLOR));
+        canvasAdapter.drawPath(path12, drawableContent.getPainter().getPaint(Painter.LINE_COLOR));
+        canvasAdapter.drawPath(path26, drawableContent.getPainter().getPaint(Painter.LINE_COLOR));
+
 
     }
 }
