@@ -29,8 +29,8 @@ public class DrawOHLC implements DrawStrategy<ChartModel> {
         for(int i = environment.visibleXbegin;i<environment.visibleXend;i++){
             if(i>=sd.size())
                 break;
-            float open = sd.get(i).getOne().floatValue();
-            float close = sd.get(i).getFour().floatValue();
+            float close = sd.get(i).getOne().floatValue();
+            float open = sd.get(i).getFour().floatValue();
             float high = sd.get(i).getThree().floatValue();
             float low = sd.get(i).getTwo().floatValue();
 

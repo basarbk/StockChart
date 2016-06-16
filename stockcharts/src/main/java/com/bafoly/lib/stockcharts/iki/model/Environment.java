@@ -1,7 +1,5 @@
 package com.bafoly.lib.stockcharts.iki.model;
 
-import android.util.Log;
-
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
 

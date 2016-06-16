@@ -37,13 +37,13 @@ public class DrawCandleStick implements DrawStrategy<ChartModel> {
         for(int i = environment.visibleXbegin;i<environment.visibleXend;i++){
             if(i>=sd.size())
                 break;
-            double open = sd.get(i).getOne().doubleValue();
-            double close = sd.get(i).getFour().doubleValue();
+            double close = sd.get(i).getOne().doubleValue();
+            double open = sd.get(i).getFour().doubleValue();
 
-            float yOpen = environment.getY(sd.get(i).getOne().floatValue());
+            float yClose = environment.getY(sd.get(i).getOne().floatValue());
             float yLow = environment.getY(sd.get(i).getTwo().floatValue());
             float yHigh = environment.getY(sd.get(i).getThree().floatValue());
-            float yClose = environment.getY(sd.get(i).getFour().floatValue());
+            float yOpen = environment.getY(sd.get(i).getFour().floatValue());
             float x = environment.getX(i-environment.visibleXbegin);
 
             if(axisX.isPrintable(i)){

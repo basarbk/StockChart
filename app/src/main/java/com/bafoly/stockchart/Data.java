@@ -57,6 +57,15 @@ public class Data {
         data.add(new OHLCVolumeData("Jun 03, 2016", 7.82, 8.06, 7.80, 8.00, 27610000));
         data.add(new OHLCVolumeData("Jun 06, 2016", 8.04, 8.10, 8.00, 8.07, 15870000));
         data.add(new OHLCVolumeData("Jun 07, 2016", 8.11, 8.13, 7.89, 7.89, 28070000));
+        data.add(new OHLCVolumeData("Jun 08, 2016", 7.91, 8.06, 7.80, 8.05, 25170000));
+        data.add(new OHLCVolumeData("Jun 09, 2016", 8.04, 8.08, 7.90, 7.92, 18250000));
+        data.add(new OHLCVolumeData("Jun 10, 2016", 7.90, 7.97, 7.83, 7.85, 16820000));
+        data.add(new OHLCVolumeData("Jun 13, 2016", 7.80, 7.83, 7.68, 7.83, 21110000));
+        data.add(new OHLCVolumeData("Jun 14, 2016", 7.81, 7.94, 7.73, 7.79, 25670000));
+        data.add(new OHLCVolumeData("Jun 15, 2016", 7.85, 7.92, 7.84, 7.85, 15650000));
+        data.add(new OHLCVolumeData("Jun 16, 2016", 7.80, 7.83, 7.69, 7.69, 17800000));
+
+
         return data;
     }
 }

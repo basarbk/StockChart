@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.bafoly.lib.stockcharts.iki.android.ChartView;
 import com.bafoly.lib.stockcharts.iki.android.DefaultPainter;
 import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
+import com.bafoly.lib.stockcharts.iki.draw.DrawGrid;
 import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
 import com.bafoly.lib.stockcharts.iki.draw.DrawMACD;
 import com.bafoly.lib.stockcharts.iki.draw.DrawStrategy;
@@ -83,6 +84,7 @@ public class FragmentTwoCharts extends Fragment {
             indicator.setPainter(new DefaultPainter());
             indicator.getPainter().setColor(Painter.LINE_COLOR, Color.BLUE);
             indicator.getPainter().setColor(Painter.BAR_COLOR, Color.RED);
+            indicator.setAxisDrawStrategy(new DrawGrid());
             indicator.setDataDrawStrategy(new DrawMACD());
             indicator.setEnvironment(new Environment());
             return indicator;
@@ -95,6 +97,7 @@ public class FragmentTwoCharts extends Fragment {
             indicator.getPainter().setColor(Painter.LOW_COLOR, Color.BLUE);
             indicator.setDataDrawStrategy(new DrawLine());
             indicator.setEnvironment(new Environment());
+            indicator.setAxisDrawStrategy(new DrawGrid());
             return indicator;
         }
 

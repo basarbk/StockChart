@@ -7,7 +7,7 @@
     <com.bafoly.lib.stockcharts.iki.android.ChartView
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="300dp">
     </com.bafoly.lib.stockcharts.iki.android.ChartView>
 
     <com.bafoly.lib.stockcharts.iki.android.ChartView

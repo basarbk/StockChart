@@ -500,13 +500,13 @@ public class IndicatorCalculator {
         signalEma.addAll(0, temp);
 
         for(int i = 0 ; i<data.size();i++){
-            if(macdLine.get(i)!=null){
+            if(i<periodEmaFirst+periodEmaSecond){
+                macdData.set(i, null);
+            } else {
                 Double signal = signalEma.get(i);
                 Double val = macdLine.get(i).getOne().doubleValue() - signal;
                 macdData.get(i).setTwo((Y)signal);
                 macdData.get(i).setOne((Y)val);
-            } else {
-                macdData.set(i, null);
             }
         }
 
