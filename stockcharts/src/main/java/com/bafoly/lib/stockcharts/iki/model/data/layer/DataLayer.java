@@ -8,7 +8,7 @@ import com.bafoly.lib.stockcharts.iki.model.data.layer.dataset.DataSet;
 /**
  * A Financial Stock chart can have multiple sub charts on it.<br>
  * From this library's point of view, these sub charts are considered as a Layer<br>
- * this object is responsible for each layer's drawing algorithms, styles and legends.
+ * DataLayer object is the base class for layer's drawing algorithms, styles and legends.
  */
 public class DataLayer<T> {
 

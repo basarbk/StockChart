@@ -1,9 +1,11 @@
 package com.bafoly.lib.stockcharts.iki.model.data.layer;
 
 import com.bafoly.lib.stockcharts.iki.model.Environment;
+import com.bafoly.lib.stockcharts.iki.model.data.layer.dataset.DataSet;
 import com.bafoly.lib.stockcharts.iki.model.data.layer.dataset.OHLCDataSet;
 import com.bafoly.lib.stockcharts.iki.model.data.layer.dataset.OHLCVolumeDataSet;
 import com.bafoly.lib.stockcharts.iki.model.data.layer.dataset.SingleDataSet;
+import com.bafoly.lib.stockcharts.iki.model.data.layer.dataset.XYPair;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,7 @@ public class Stockk<X, Y extends Number> extends ChartWrapper<X, Y> {
                 dataLayer.setDataSet(new OHLCVolumeDataSet());
             }
         }
+
         dataLayer.getDataSet().add(y);
     }
 
