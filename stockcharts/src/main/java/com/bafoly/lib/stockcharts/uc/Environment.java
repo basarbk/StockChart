@@ -6,4 +6,12 @@ package com.bafoly.lib.stockcharts.uc;
 public interface Environment {
 
     CanvasAdapter getCanvasAdapter();
+
+    int getXBegin();
+
+    int getXEnd();
+
+    <T extends Number> float getX(T value);
+
+    <T extends Number> float getY(T value);
 }

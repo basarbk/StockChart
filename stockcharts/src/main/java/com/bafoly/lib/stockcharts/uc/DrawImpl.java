@@ -10,8 +10,12 @@ public class DrawImpl implements DrawStrategy {
         CanvasAdapter canvasAdapter = environment.getCanvasAdapter();
 
 
+        for(int i = environment.getXBegin() ; i <environment.getXEnd() ; i++){
 
 
+
+
+        }
 
 
     }
