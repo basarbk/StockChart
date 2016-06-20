@@ -19,6 +19,8 @@ public class DrawImpl implements DrawStrategy {
 
         DataSet<List<Double>> values = drawable.getDataSet();
 
+
+
         for(int i = environment.getXBegin() ; i <environment.getXEnd() ; i++){
 
 

@@ -3,15 +3,49 @@ package com.bafoly.lib.stockcharts.uc;
 /**
  * Y is the type of data set. It's either List (array of Stock data) or XYPair (Technical Analysis)
  */
-public interface Drawable<Y> {
+public abstract class Drawable<Y> {
 
-    boolean highlightAxisX();
+    PaintAdapter paintAdapter;
 
-    boolean highlightAxisY();
+    DataSet<Y> dataSet;
 
-    void invalidate(Environment environment, Timeline timeline);
+    DrawStrategy drawStrategy;
 
-    PaintAdapter getPaint();
+    boolean highlightAxisX;
 
-    DataSet<Y> getDataSet();
+    boolean highlightAxisY;
+
+    abstract void invalidate(Environment environment, Timeline timeline);
+
+    public boolean isHighlightAxisX() {
+        return highlightAxisX;
+    }
+
+    public void setHighlightAxisX(boolean highlightAxisX) {
+        this.highlightAxisX = highlightAxisX;
+    }
+
+    public boolean isHighlightAxisY() {
+        return highlightAxisY;
+    }
+
+    public void setHighlightAxisY(boolean highlightAxisY) {
+        this.highlightAxisY = highlightAxisY;
+    }
+
+    public PaintAdapter getPaintAdapter() {
+        return paintAdapter;
+    }
+
+    public void setPaintAdapter(PaintAdapter paintAdapter) {
+        this.paintAdapter = paintAdapter;
+    }
+
+    public DataSet<Y> getDataSet() {
+        return dataSet;
+    }
+
+    public void setDataSet(DataSet<Y> dataSet) {
+        this.dataSet = dataSet;
+    }
 }

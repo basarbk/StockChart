@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ChartModel is for main chart content which is either Stock or Indicator<br>
+ * ChartModel is for main chart content which is either Stock or TimeSeries<br>
  * Each chart may have it's custom positioning references which is calculated & stored in Environment<br>
  * Indicators are dependent on to the Stocks therefore Stock can make draw call with it's own Environment<br>
  * object.

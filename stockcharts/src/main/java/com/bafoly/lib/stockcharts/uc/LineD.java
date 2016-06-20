@@ -3,30 +3,11 @@ package com.bafoly.lib.stockcharts.uc;
 /**
  * Created by basarb on 6/20/2016.
  */
-public class LineD<Y extends Number> implements Drawable<DataSet<Y>> {
+public class LineD<Y> extends Drawable<Y> {
 
     @Override
-    public boolean hasXaxis() {
-        return false;
+    public void invalidate(Environment environment, Timeline timeline) {
+        drawStrategy.draw(environment, timeline, this);
     }
 
-    @Override
-    public boolean isOverlay() {
-        return false;
-    }
-
-    @Override
-    public void invalidate() {
-
-    }
-
-    @Override
-    public PaintAdapter getPaint() {
-        return null;
-    }
-
-    @Override
-    public DataSet<Y> getDataSet() {
-        return null;
-    }
 }

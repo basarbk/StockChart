@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This is the base for Stock, Indicator and Technical Analysis
+ * This is the base for Stock, TimeSeries and Technical Analysis
  */
 public abstract class ChartWrapper<X, Y extends Number> {
 

@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Utility class for Indicator Calculation<br>
+ * Utility class for TimeSeries Calculation<br>
  * Algorithm reference is at http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators
  */
 public class IndicatorCalculator {
