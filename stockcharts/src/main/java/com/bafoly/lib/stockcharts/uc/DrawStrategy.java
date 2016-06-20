@@ -5,11 +5,5 @@ package com.bafoly.lib.stockcharts.uc;
  */
 public interface DrawStrategy {
 
-    /**
-     * Calculate the position of each variable then draw it on to the screen
-     * @param environment
-     * @param drawable
-     * @param parent
-     */
-    public void draw(Environment environment, Drawable drawable, Drawable parent);
+    public void draw(Environment environment, Timeline timeline, Drawable drawable);
 }

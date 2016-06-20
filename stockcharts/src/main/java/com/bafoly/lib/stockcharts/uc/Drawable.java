@@ -1,19 +1,17 @@
 package com.bafoly.lib.stockcharts.uc;
 
 /**
- * Created by basarb on 6/19/2016.
+ * Y is the type of data set. It's either List (array of Stock data) or XYPair (Technical Analysis)
  */
-public interface Drawable<X, Y extends Number> {
+public interface Drawable<Y> {
 
-    boolean hasXaxis();
+    boolean highlightAxisX();
 
-    boolean isOverlay();
+    boolean highlightAxisY();
 
-    X getAxisX();
-
-    Y getAxisY();
-
-    void invalidate();
+    void invalidate(Environment environment, Timeline timeline);
 
     PaintAdapter getPaint();
+
+    DataSet<Y> getDataSet();
 }

@@ -4,6 +4,7 @@ import com.bafoly.lib.stockcharts.iki.draw.DrawStrategy;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public abstract class ChartWrapper<X, Y extends Number> {
     /** This is the x axis data which is generally the timeline */
     List<X> axis = Collections.emptyList();
 
-    DataLayer<Y> dataLayer = new DataLayer<>();
+    List<DataLayer<Y>> dataLayer = new ArrayList<>();
 
     DrawStrategy axisDrawStrategy;
 
@@ -43,11 +44,11 @@ public abstract class ChartWrapper<X, Y extends Number> {
         this.axis = axis;
     }
 
-    public DataLayer<Y> getDataLayer() {
+    public List<DataLayer<Y>> getDataLayer() {
         return dataLayer;
     }
 
-    public void setDataLayer(DataLayer<Y> dataLayer) {
+    public void setDataLayer(List<DataLayer<Y>> dataLayer) {
         this.dataLayer = dataLayer;
     }
 
