@@ -3,12 +3,14 @@ package com.bafoly.lib.stockcharts.iki.model.drawable;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
+import com.bafoly.lib.stockcharts.iki.model.data.layer.DataLayer;
+import com.bafoly.lib.stockcharts.uc.Timeline;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * ChartModel is for main chart content which is either Stock or TimeSeries<br>
+ * ChartModel is for main chart content which is either Stock or Indicator<br>
  * Each chart may have it's custom positioning references which is calculated & stored in Environment<br>
  * Indicators are dependent on to the Stocks therefore Stock can make draw call with it's own Environment<br>
  * object.
@@ -33,18 +35,24 @@ public abstract class ChartModel<X, Y extends Number> extends XYData<X, Y> {
     /**
      * This is the data array of chart
      */
-    private List<? extends SingleData<X, Y>> data = Collections.emptyList();
+    DataLayer<List<Y>> mainData;
+
+    Timeline<X> timeLine;
+
+    public Timeline<X> getTimeLine(){
+        return timeLine;
+    }
 
     public ChartModel(Axis xAxis, Axis yAxis) {
         super(xAxis, yAxis);
     }
 
-    public List<? extends SingleData> getData() {
-        return data;
+    public DataLayer getData() {
+        return mainData;
     }
 
-    public void setData(List<? extends SingleData<X, Y>> data) {
-        this.data = data;
+    public void setData(DataLayer mainData) {
+        this.mainData = mainData;
     }
 
     public Environment getEnvironment() {
@@ -65,6 +73,8 @@ public abstract class ChartModel<X, Y extends Number> extends XYData<X, Y> {
         }
 
         dataDrawStrategy.draw(env, this);
+
+        mainData.invalidate(env);
 
     }
 

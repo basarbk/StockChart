@@ -7,6 +7,7 @@ import com.bafoly.lib.stockcharts.iki.model.Painter;
 import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
+import com.bafoly.lib.stockcharts.uc.Timeline;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class DrawCandleStick implements DrawStrategy<ChartModel> {
     private static final String TAG = "StockChart-CandleStick";
 
     @Override
-    public void draw(Environment environment, ChartModel chartModel) {
+    public void draw(Environment environment, Timeline timeline, ChartModel chartModel) {
 
         Axis<Number> axisY = chartModel.getyAxis();
         Axis axisX = chartModel.getxAxis();

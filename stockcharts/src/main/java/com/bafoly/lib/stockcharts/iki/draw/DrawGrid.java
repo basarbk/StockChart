@@ -5,6 +5,7 @@ import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
 import com.bafoly.lib.stockcharts.iki.model.axis.Axis;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
+import com.bafoly.lib.stockcharts.uc.Timeline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 public class DrawGrid implements DrawStrategy<ChartModel> {
 
     @Override
-    public void draw(Environment environment, ChartModel chartModel) {
+    public void draw(Environment environment, Timeline timeline, ChartModel chartModel) {
 
         CanvasAdapter canvasAdapter = environment.getCanvasAdapter();
 

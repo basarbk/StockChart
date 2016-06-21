@@ -11,10 +11,10 @@ public class Indicator extends TimeSeries {
     public void draw(Environment environment, Timeline timeline) {
 
 
+    }
 
-
-
-
+    @Override
+    public void add(Object o, Number... n) {
 
     }
 }

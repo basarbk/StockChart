@@ -3,7 +3,7 @@ package com.bafoly.lib.stockcharts.uc;
 /**
  * Created by basarb on 6/20/2016.
  */
-public class Stock extends TimeSeries {
+public class Stock<T, Y> extends TimeSeries<T, Y> {
 
     Timeline timeline;
 
@@ -17,6 +17,11 @@ public class Stock extends TimeSeries {
 
     @Override
     public void draw(Environment environment, Timeline timeline) {
+
+    }
+
+    @Override
+    public void add(T t, Number... n) {
 
     }
 }

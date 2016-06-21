@@ -7,6 +7,7 @@ import com.bafoly.lib.stockcharts.iki.model.PathAdapter;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.data.TripleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
+import com.bafoly.lib.stockcharts.uc.Timeline;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class DrawBollinger implements DrawStrategy<ChartModel> {
 
     @Override
-    public void draw(Environment environment, ChartModel drawableContent) {
+    public void draw(Environment environment, Timeline timeline, ChartModel drawableContent) {
 
         CanvasAdapter canvasAdapter = environment.getCanvasAdapter();
 

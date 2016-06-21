@@ -4,6 +4,7 @@ import com.bafoly.lib.stockcharts.iki.draw.DrawStrategy;
 import com.bafoly.lib.stockcharts.iki.model.Environment;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
 import com.bafoly.lib.stockcharts.iki.model.data.layer.dataset.DataSet;
+import com.bafoly.lib.stockcharts.uc.Timeline;
 
 /**
  * A Financial Stock chart can have multiple sub charts on it.<br>
@@ -54,6 +55,10 @@ public class DataLayer<T> {
 
     public void draw(Environment environment){
         drawStrategy.draw(environment, this);
+    }
+
+    public void invalidate(Environment environment, Timeline timeline){
+
     }
 
 }

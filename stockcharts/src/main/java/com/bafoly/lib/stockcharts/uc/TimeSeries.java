@@ -29,6 +29,7 @@ public abstract class TimeSeries<T, Y> {
         Environment env = this.environment == null ? environment : this.environment;
         Timeline timeLine = this.timeline == null ? timeline : this.timeline;
 
+
         mainDrawable.invalidate(env, timeLine);
 
         for(Drawable d : overlayDrawable){
@@ -40,4 +41,15 @@ public abstract class TimeSeries<T, Y> {
     public void addOverlayDrawable(Drawable<Y> drawable){
         this.overlayDrawable.add(drawable);
     }
+
+    public Drawable<Y> getMainDrawable() {
+        return mainDrawable;
+    }
+
+    public void setMainDrawable(Drawable<Y> mainDrawable) {
+        this.mainDrawable = mainDrawable;
+    }
+
+    public abstract void add(T t, Number... n);
+
 }
