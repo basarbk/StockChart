@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 /**
  * {@inheritDoc}
  */
-public class NumberAxis extends Axis<Number> {
+public class NumberAxis<Number> extends Axis<Number> {
 
     DecimalFormat decimalFormat;
 

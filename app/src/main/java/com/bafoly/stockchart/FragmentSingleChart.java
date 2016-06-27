@@ -16,6 +16,8 @@ import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
 import com.bafoly.lib.stockcharts.iki.draw.DrawOHLC;
 import com.bafoly.lib.stockcharts.iki.draw.DrawStrategy;
 import com.bafoly.lib.stockcharts.iki.model.Painter;
+import com.bafoly.lib.stockcharts.iki.model.axis.CategoryAxis;
+import com.bafoly.lib.stockcharts.iki.model.axis.DateAxis;
 import com.bafoly.lib.stockcharts.iki.model.axis.NumberAxis;
 import com.bafoly.lib.stockcharts.iki.model.axis.StringDateAxis;
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
@@ -24,6 +26,7 @@ import com.bafoly.lib.stockcharts.iki.model.drawable.Indicator;
 import com.bafoly.lib.stockcharts.iki.model.drawable.Stock;
 import com.bafoly.lib.stockcharts.iki.util.IndicatorCalculator;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,7 +36,7 @@ public class FragmentSingleChart extends Fragment {
 
     ChartView chartView;
 
-    Stock<String, Double> stock;
+    Stock<Date, Double> stock;
 
     int counter = 0;
 
@@ -48,9 +51,13 @@ public class FragmentSingleChart extends Fragment {
         stock = new Stock.Builder<String, Double>()
                 .setData(Data.getData())
                 .setDrawStrategy(getDrawStrategy(item))
-                .setAxisX(new StringDateAxis("MMM dd, yyy"))
-                .setAxisY(new NumberAxis("#.##"))
+                .setAxisX(new CategoryAxis("MMM dd, yyy"))
+                .setAxisY(new NumberAxis(""))
                 .build();
+
+
+        Stock.Builder<Date, Double> builder = new Stock.Builder<>().setAxisX(new DateAxis("")).setAxisY(new NumberAxis(""));
+
 
         stock.addIndicator(getIndicator(stock, item));
 

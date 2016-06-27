@@ -74,32 +74,32 @@ public class Stock<X, Y extends Number> extends ChartModel<X, Y> {
 
         private Painter painter = new DefaultPainter();
 
-        public Builder setData(List<? extends SingleData<X, Y>> data){
+        public Builder<X,Y> setData(List<? extends SingleData<X, Y>> data){
             this.data = data;
             return this;
         }
 
-        public Builder setAxisX(Axis<X> x){
+        public Builder<X,Y> setAxisX(Axis<X> x){
             this.x = x;
             return this;
         }
 
-        public Builder setAxisY(Axis<Y> y){
+        public Builder<X,Y> setAxisY(Axis<Y> y){
             this.y = y;
             return this;
         }
 
-        public Builder setDrawStrategy(DrawStrategy drawStrategy){
+        public Builder<X,Y> setDrawStrategy(DrawStrategy drawStrategy){
             this.drawStrategy = drawStrategy;
             return this;
         }
 
-        public Builder setPainter(Painter painter) {
+        public Builder<X,Y> setPainter(Painter painter) {
             this.painter = painter;
             return this;
         }
 
-        public Stock build(){
+        public Stock<X, Y> build(){
             Stock<X,Y> s = new Stock(null, null);
             s.setEnvironment(new Environment());
             s.setAxisDrawStrategy(new DrawGrid());

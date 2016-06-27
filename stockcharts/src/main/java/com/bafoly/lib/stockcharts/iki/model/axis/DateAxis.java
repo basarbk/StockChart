@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * {@inheritDoc}
  */
-public class DateAxis extends Axis<Date> {
+public class DateAxis<Date> extends Axis<Date> {
 
     SimpleDateFormat sdf;
 
