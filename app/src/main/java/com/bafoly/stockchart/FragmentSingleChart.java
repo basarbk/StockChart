@@ -36,7 +36,7 @@ public class FragmentSingleChart extends Fragment {
 
     ChartView chartView;
 
-    Stock<Date, Double> stock;
+    Stock<String, Double> stock;
 
     int counter = 0;
 
@@ -56,7 +56,7 @@ public class FragmentSingleChart extends Fragment {
                 .build();
 
 
-        Stock.Builder<Date, Double> builder = new Stock.Builder<>().setAxisX(new DateAxis("")).setAxisY(new NumberAxis(""));
+        //Stock.Builder<Date, Double> builder = new Stock.Builder<>().setAxisX(new DateAxis("")).setAxisY(new NumberAxis(""));
 
 
         stock.addIndicator(getIndicator(stock, item));

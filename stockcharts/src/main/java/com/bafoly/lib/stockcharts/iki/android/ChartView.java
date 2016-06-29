@@ -3,6 +3,7 @@ package com.bafoly.lib.stockcharts.iki.android;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -121,8 +122,9 @@ public class ChartView extends View {
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            //TODO
-            return super.onDoubleTap(e);
+            environment.tapZoom();
+            postInvalidate();
+            return true;
         }
 
         @Override
@@ -153,16 +155,26 @@ public class ChartView extends View {
 
     private final ScaleGestureDetector.OnScaleGestureListener mScaleGestureListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
 
+        float spanX;
+        float diff;
+
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            //TODO
-            return super.onScale(detector);
+            float currentSpanX = detector.getCurrentSpanX();
+            diff = spanX - currentSpanX;
+
+            environment.scale(diff);
+            postInvalidate();
+            spanX = currentSpanX;
+            Log.d("basar", "scale ..");
+            return true;
         }
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
-            //TODO
-            return super.onScaleBegin(detector);
+            spanX = detector.getCurrentSpanX();
+            Log.d("basar", "scale begin");
+            return true;
         }
     };
 

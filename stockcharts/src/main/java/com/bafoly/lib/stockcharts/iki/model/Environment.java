@@ -1,5 +1,7 @@
 package com.bafoly.lib.stockcharts.iki.model;
 
+import android.util.Log;
+
 import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
 import com.bafoly.lib.stockcharts.iki.model.drawable.ChartModel;
 
@@ -24,7 +26,7 @@ public class Environment {
     public int visibleDataCount = 50;
 
     /** we shouldn't be displaying less than this much entity */
-    private int minimumVisibleData = 20;
+    private int minimumVisibleData = 10;
 
     /** index of begin */
     public int visibleXbegin;
@@ -172,7 +174,7 @@ public class Environment {
         min = Double.NaN;
 
         for(int i = visibleXbegin; i<visibleXend; i++){
-            if(i>=dataCount)
+            if(i>=visibleDataCount)
                 break;
             if(chartModel.getData().get(i) == null)
                 continue;
@@ -190,11 +192,13 @@ public class Environment {
 
         gridValueSteps = (max - min)/horizontalGrid;
 
-        multiplierX = (canvasAdapter.getWidth() - paddingLeft - paddingRight)/(float)(dataCount+1); // - padding left, right
+        multiplierX = (canvasAdapter.getWidth() - paddingLeft - paddingRight)/(float)(visibleDataCount+1); // - padding left, right
         multiplierY = (float)((canvasAdapter.getHeight()-paddingTop - paddingBottom)/(max-min)); // - padding bottom top
 
         chartWidth = canvasAdapter.getWidth() - paddingLeft - paddingRight;
         chartHeight = canvasAdapter.getHeight() - paddingTop - paddingBottom;
+
+        Log.d("basar","max min calculation - visibleDataCount: "+visibleDataCount);
 
     }
 
@@ -220,6 +224,29 @@ public class Environment {
         visibleXbegin += count;
 
         return true;
+    }
+
+    public void scale(float span){
+        float val = 3*span/multiplierX;
+        visibleDataCount += (int)(val);
+        Log.d("basar","multiplierX: "+multiplierX+" - val: "+val+" - span: "+span+" - visibleDataCount: "+visibleDataCount);
+        if(visibleDataCount<minimumVisibleData){
+            visibleDataCount = minimumVisibleData;
+        } else if(visibleDataCount>dataCount){
+            visibleDataCount = dataCount;
+        }
+    }
+
+    public void tapZoom(){
+
+        visibleDataCount = (int)(visibleDataCount * 0.5f);
+
+        Log.d("basar","zoom: "+visibleDataCount);
+        if(visibleDataCount<minimumVisibleData){
+            visibleDataCount = minimumVisibleData;
+        } else if(visibleDataCount>dataCount){
+            visibleDataCount = dataCount;
+        }
     }
 
     public float getX(int index){
