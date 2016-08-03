@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.bafoly.lib.stockcharts.iki.android.ChartView
+    <com.bafoly.lib.stockcharts.android.ChartView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 

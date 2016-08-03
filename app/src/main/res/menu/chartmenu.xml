@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/extension_chart_ohlc"
+        android:title="OHLC"/>
+
+    <item android:id="@+id/extension_chart_candle"
+        android:title="Candle Stick"/>
+
+    <item android:id="@+id/extension_chart_line"
+        android:title="Line"/>
+
+</menu>

@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/Coordinate.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/UserInputData.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/UserInputTechnicalAnalysisData.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/UserInputUserHelperData.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndicatorCalculator.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorBollingerBands.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorCCI.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorCorrelation.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorMA.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorMACD.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorMFI.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorRSI.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorStochasticOscillator.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorStochasticRSI.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorVolume.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/indicator/IndikatorWilliamsR.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/technicalanalysis/TechnicalAnalysisFibonacci.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/technicalanalysis/TechnicalAnalysisSupportResistance.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/technicalanalysis/TechnicalAnalysisTrendline.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/userhelper/UserComment.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/data/userhelper/UserHighlight.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartBar.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartCandleStick.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartCustomInputDraw.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartDraw.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartGrid.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartInspector.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartLine.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartOHLC.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartOverlay.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartTeknikAnaliz.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/stockcharts/src/main/java/com/bafoly/lib/stockcharts/bir/chart/draw/ChartUserInput.java" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

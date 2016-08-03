@@ -8,37 +8,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bafoly.lib.stockcharts.iki.android.ChartView;
-import com.bafoly.lib.stockcharts.iki.android.DefaultPainter;
-import com.bafoly.lib.stockcharts.iki.draw.DrawBollinger;
-import com.bafoly.lib.stockcharts.iki.draw.DrawCandleStick;
-import com.bafoly.lib.stockcharts.iki.draw.DrawLine;
-import com.bafoly.lib.stockcharts.iki.draw.DrawOHLC;
-import com.bafoly.lib.stockcharts.iki.draw.DrawStrategy;
-import com.bafoly.lib.stockcharts.iki.model.Painter;
-import com.bafoly.lib.stockcharts.iki.model.axis.CategoryAxis;
-import com.bafoly.lib.stockcharts.iki.model.axis.DateAxis;
-import com.bafoly.lib.stockcharts.iki.model.axis.NumberAxis;
-import com.bafoly.lib.stockcharts.iki.model.axis.StringDateAxis;
-import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
-import com.bafoly.lib.stockcharts.iki.model.data.TripleData;
-import com.bafoly.lib.stockcharts.iki.model.drawable.Indicator;
-import com.bafoly.lib.stockcharts.iki.model.drawable.Stock;
-import com.bafoly.lib.stockcharts.iki.util.IndicatorCalculator;
+import com.bafoly.lib.stockcharts.android.ChartView;
+import com.bafoly.lib.stockcharts.android.DefaultPainter;
+import com.bafoly.lib.stockcharts.draw.DrawBollinger;
+import com.bafoly.lib.stockcharts.draw.DrawCandleStick;
+import com.bafoly.lib.stockcharts.draw.DrawLine;
+import com.bafoly.lib.stockcharts.draw.DrawOHLC;
+import com.bafoly.lib.stockcharts.draw.DrawStrategy;
+import com.bafoly.lib.stockcharts.model.adapter.Painter;
+import com.bafoly.lib.stockcharts.model.axis.CategoryAxis;
+import com.bafoly.lib.stockcharts.model.axis.NumberAxis;
+import com.bafoly.lib.stockcharts.model.axis.StringDateAxis;
+import com.bafoly.lib.stockcharts.model.data.SingleData;
+import com.bafoly.lib.stockcharts.model.data.TripleData;
+import com.bafoly.lib.stockcharts.model.drawable.Indicator;
+import com.bafoly.lib.stockcharts.model.drawable.Stock;
+import com.bafoly.lib.stockcharts.util.IndicatorCalculator;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by basarb on 6/10/2016.
  */
-public class FragmentSingleChart extends Fragment {
-
-    ChartView chartView;
-
-    Stock<String, Double> stock;
-
-    int counter = 0;
+public class FragmentSingleChart extends BaseFragment {
 
     @Nullable
     @Override
@@ -56,9 +48,6 @@ public class FragmentSingleChart extends Fragment {
                 .build();
 
 
-        //Stock.Builder<Date, Double> builder = new Stock.Builder<>().setAxisX(new DateAxis("")).setAxisY(new NumberAxis(""));
-
-
         stock.addIndicator(getIndicator(stock, item));
 
         chartView.draw(stock);
@@ -67,7 +56,8 @@ public class FragmentSingleChart extends Fragment {
         return view;
     }
 
-    private DrawStrategy getDrawStrategy(int idx){
+    @Override
+    public DrawStrategy getDrawStrategy(int idx){
         switch (idx){
             case ActivityMain.CANDLE_CHART:
             case ActivityMain.CANDLE_WITH_SMA_CHART:
@@ -82,7 +72,8 @@ public class FragmentSingleChart extends Fragment {
         }
     }
 
-    private Indicator getIndicator(Stock stock, int idx){
+    @Override
+    public Indicator getIndicator(Stock stock, int idx){
 
         if(idx == ActivityMain.CANDLE_WITH_SMA_CHART) {
             Indicator<String, Double> indicator = new Indicator(new StringDateAxis("MMM dd, yyyy"), new NumberAxis("#.##"));
@@ -103,8 +94,7 @@ public class FragmentSingleChart extends Fragment {
             indicator.setDataDrawStrategy(new DrawBollinger());
             return indicator;
         }
-
-
         return null;
     }
+
 }

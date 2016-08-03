@@ -1,12 +1,11 @@
 package com.bafoly.lib.stockcharts;
 
-import com.bafoly.lib.stockcharts.iki.model.data.DoubleData;
-import com.bafoly.lib.stockcharts.iki.model.data.OHLCVolumeData;
-import com.bafoly.lib.stockcharts.iki.model.data.QuadrupleData;
-import com.bafoly.lib.stockcharts.iki.model.data.SingleData;
-import com.bafoly.lib.stockcharts.iki.model.data.TripleData;
-import com.bafoly.lib.stockcharts.iki.model.drawable.Indicator;
-import com.bafoly.lib.stockcharts.iki.util.IndicatorCalculator;
+import com.bafoly.lib.stockcharts.model.data.DoubleData;
+import com.bafoly.lib.stockcharts.model.data.OHLCVolumeData;
+import com.bafoly.lib.stockcharts.model.data.QuadrupleData;
+import com.bafoly.lib.stockcharts.model.data.SingleData;
+import com.bafoly.lib.stockcharts.model.data.TripleData;
+import com.bafoly.lib.stockcharts.util.IndicatorCalculator;
 
 import org.junit.Test;
 

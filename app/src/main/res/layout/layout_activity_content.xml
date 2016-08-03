@@ -3,8 +3,33 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/content"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:background="@color/colorPrimary"
+        android:maxHeight="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+
+        <com.bafoly.widget.menu.MenuExtension
+            android:id="@+id/menuExtension"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"/>
+
+    </RelativeLayout>
+
 </LinearLayout>

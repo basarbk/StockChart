@@ -1,6 +1,6 @@
 package com.bafoly.stockchart;
 
-import com.bafoly.lib.stockcharts.iki.model.data.OHLCVolumeData;
+import com.bafoly.lib.stockcharts.model.data.OHLCVolumeData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,18 @@ public class Data {
         data.add(new OHLCVolumeData("Jun 13, 2016", 7.80, 7.83, 7.68, 7.83, 21110000));
         data.add(new OHLCVolumeData("Jun 14, 2016", 7.81, 7.94, 7.73, 7.79, 25670000));
         data.add(new OHLCVolumeData("Jun 15, 2016", 7.85, 7.92, 7.84, 7.85, 15650000));
-        data.add(new OHLCVolumeData("Jun 16, 2016", 7.80, 7.83, 7.69, 7.69, 17800000));
+        data.add(new OHLCVolumeData("Jun 16, 2016", 7.80, 7.83, 7.69, 7.69, 17830000));
+        data.add(new OHLCVolumeData("Jun 17, 2016", 7.75, 7.98, 7.75, 7.93, 29350000));
+        data.add(new OHLCVolumeData("Jun 20, 2016", 8.06, 8.20, 8.06, 8.20, 19080000));
+        data.add(new OHLCVolumeData("Jun 21, 2016", 8.19, 8.27, 8.18, 8.23, 17400000));
+        data.add(new OHLCVolumeData("Jun 22, 2016", 8.24, 8.30, 8.18, 8.18, 16420000));
+        data.add(new OHLCVolumeData("Jun 23, 2016", 8.22, 8.42, 8.20, 8.38, 20710000));
+        data.add(new OHLCVolumeData("Jun 24, 2016", 7.91, 8.17, 7.86, 8.17, 26540000));
+        data.add(new OHLCVolumeData("Jun 27, 2016", 8.19, 8.28, 8.07, 8.11, 26400000));
+        data.add(new OHLCVolumeData("Jun 28, 2016", 8.21, 8.26, 8.17, 8.21, 21510000));
+        data.add(new OHLCVolumeData("Jun 29, 2016", 8.20, 8.25, 8.11, 8.14, 19450000));
+        data.add(new OHLCVolumeData("Jun 30, 2016", 8.15, 8.25, 8.14, 8.20, 13020000));
+
 
 
         return data;
